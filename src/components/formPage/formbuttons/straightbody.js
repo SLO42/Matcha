@@ -39,15 +39,60 @@ const PurpleRadio = withStyles({
   checked: {}
 })(props => <Radio color="default" {...props} />);
 
-export default function FormControlLabelPosition() {
+const options = [
+	{name: "Blonde/Brunette/Ginger xD", color: 2},
+	{name: "Tall", color: 1},
+	{name: "T H I C C", color: 0},
+	{name: "short", color: 1},
+	{name: "thin mint", color: 1},
+	{name: "Athletic", color: 0},
+	{name: "Heavyset", color: 2},
+];
+
+const FormLabelController = () => {
+	return options.map((value) => {
+		if (value.color === 2){
+			return (
+				<FormControlLabel
+					value={value.name}
+					control={<PurpleRadio color="primary" />}
+					label={value.name}
+					labelPlacement="top"
+				/>
+			);
+		} else if (value.color === 1) {
+			return (
+				<FormControlLabel
+					value={value.name}
+					control={<BlueRadio color="primary" />}
+					label={value.name}
+					labelPlacement="top"
+				/>
+			);
+		} else if (value.color === 0) {
+			return (
+				<FormControlLabel
+					value={value.name}
+					control={<GreenRadio color="primary" />}
+					label={value.name}
+					labelPlacement="top"
+				/>
+			);
+		}
+	})
+};
+
+
+const FormControlLabelPosition = ({userObj}) => {
   const [value, setValue] = React.useState("female");
 
   function handleChange(event) {
-    setValue(event.target.value);
+	setValue(event.target.value);
+	userObj.bodytype = event.target.value;
   }
 
   return (
-    <FormControl component="fieldset">
+    <FormControl component="fieldset" required>
       <FormLabel component="legend">Body Types</FormLabel>
       <RadioGroup
         aria-label="position"
@@ -56,56 +101,10 @@ export default function FormControlLabelPosition() {
         onChange={handleChange}
         row
       >
-        <FormControlLabel
-          value="top"
-          control={<BlueRadio color="primary" />}
-          label="Daddy"
-          labelPlacement="top"
-        />
-        <FormControlLabel
-          value="top"
-          control={<BlueRadio color="primary" />}
-          label="Otter"
-          labelPlacement="top"
-        />
-        <FormControlLabel
-          value="top"
-          control={<BlueRadio color="primary" />}
-          label="Bear"
-          labelPlacement="top"
-        />
-        <FormControlLabel
-          value="top"
-          control={<BlueRadio color="primary" />}
-          label="Twink"
-          labelPlacement="top"
-        />
-        <FormControlLabel
-          value="top"
-          control={<BlueRadio color="primary" />}
-          label="Twunk"
-          labelPlacement="top"
-        />
-         <FormControlLabel
-          value="top"
-          control={<BlueRadio color="primary" />}
-          label="Dwarf"
-          labelPlacement="top"
-        />
-         <FormControlLabel
-          value="top"
-          control={<BlueRadio color="primary" />}
-          label="Femboy"
-          labelPlacement="top"
-        />
-        <FormControlLabel
-          value="top"
-          control={<BlueRadio color="primary" />}
-          label="Jock"
-          labelPlacement="top"
-        />
+		  <FormLabelController/>
       </RadioGroup>
     </FormControl>
   );
 }
 
+export default FormControlLabelPosition;

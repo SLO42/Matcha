@@ -6,87 +6,103 @@ import Slider from '@material-ui/core/Slider';
 import Typography from '@material-ui/core/Typography';
 import Tooltip from '@material-ui/core/Tooltip';
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    width: 300 + 24 * 2,
-    padding: 24,
-  },
-  margin: {
-    height: theme.spacing(3),
-  },
-}));
+// const useStyles = makeStyles(theme => ({
+//   root: {
+//     width: 300 + 24 * 2,
+//     padding: 24,
+//   },
+//   margin: {
+//     height: theme.spacing(3),
+//   },
+// }));
 
-function ValueLabelComponent(props) {
-  const { children, open, value } = props;
+// function ValueLabelComponent(props) {
+//   const { children, open, value } = props;
 
-  const popperRef = React.useRef(null);
-  React.useEffect(() => {
-    if (popperRef.current) {
-      popperRef.current.update();
-    }
-  });
+//   const popperRef = React.useRef(null);
+//   React.useEffect(() => {
+//     if (popperRef.current) {
+//       popperRef.current.update();
+//     }
+//   });
 
-  return (
-    <Tooltip
-      PopperProps={{
-        popperRef,
-      }}
-      open={open}
-      enterTouchDelay={0}
-      placement="top"
-      title={value}
-    >
-      {children}
-    </Tooltip>
-  );
-}
+//   return (
+//     <Tooltip
+//       PopperProps={{
+//         popperRef,
+//       }}
+//       open={open}
+//       enterTouchDelay={0}
+//       placement="top"
+//       title={value}
+//     >
+//       {children}
+//     </Tooltip>
+//   );
+// }
 
-ValueLabelComponent.propTypes = {
-  children: PropTypes.element.isRequired,
-  open: PropTypes.bool.isRequired,
-  value: PropTypes.number.isRequired,
-};
+// ValueLabelComponent.propTypes = {
+//   children: PropTypes.element.isRequired,
+//   open: PropTypes.bool.isRequired,
+//   value: PropTypes.number.isRequired,
+// };
 
 
-const PrettoSlider = withStyles({
-  root: {
-    color: '#52af77',
-    height: 8,
-  },
-  thumb: {
-    height: 24,
-    width: 24,
-    backgroundColor: '#fff',
-    border: '2px solid currentColor',
-    marginTop: -8,
-    marginLeft: -12,
-    '&:focus,&:hover,&$active': {
-      boxShadow: 'inherit',
-    },
-  },
-  active: {},
-  valueLabel: {
-    left: 'calc(-50% + 4px)',
-  },
-  track: {
-    height: 8,
-    borderRadius: 4,
-  },
-  rail: {
-    height: 8,
-    borderRadius: 4,
-  },
-})(Slider);
+// const PrettoSlider = withStyles({
+//   root: {
+//     color: '#52af77',
+//     height: 8,
+//   },
+//   thumb: {
+//     height: 24,
+//     width: 24,
+//     backgroundColor: '#fff',
+//     border: '2px solid currentColor',
+//     marginTop: -8,
+//     marginLeft: -12,
+//     '&:focus,&:hover,&$active': {
+//       boxShadow: 'inherit',
+//     },
+//   },
+//   active: {},
+//   valueLabel: {
+//     left: 'calc(-50% + 4px)',
+//   },
+//   track: {
+//     height: 8,
+//     borderRadius: 4,
+//   },
+//   rail: {
+//     height: 8,
+//     borderRadius: 4,
+//   },
+// })(Slider);
 
-export default function myAgeSlider() {
+const myAgeSlider = ({userObj}) => {
+	const onChangeCommitted = (event, value) => {
+		// console.log(value);
+		
+		userObj.myage = value;
+	}
+
+	const markers = Array.from({length: 100}, (x, i) => ({"value": i, "label": i}));
+	let marked = markers.filter( (ele) => {
+		return ele.value % 5 == 0;
+	})
+
 
   return (
     <Paper >
       <Typography gutterBottom>Your Age</Typography>
-      <PrettoSlider valueLabelDisplay="auto" aria-label="Pretto slider" defaultValue={20} />
+	  <Slider aria-label="MyAgeSlider" defaultValue={20} min={18} max={99} 
+		onChangeCommitted={onChangeCommitted} marks={marked} valueLabelDisplay={"auto"}/>
+	  {/* <PrettoSlider valueLabelDisplay="auto" aria-label="Pretto slider" defaultValue={20} /> */}
+	  no "Matcha/src/components/sliders/myage.js" is just a bad and hard to work with...
     </Paper>
   );
-}
+};
+
+export default myAgeSlider;
 /* 
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';

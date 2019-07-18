@@ -13,26 +13,33 @@ function valuetext(value) {
   return `${value}°C`;
 }
 
-export default function MatchHeightSlider() {
+const MatchAgeSlider = ({userObj}) => {
   const classes = useStyles();
-  const [value, setValue] = React.useState([20, 37]);
+  const [value, setValue] = React.useState([20, 99]);
 
   const handleChange = (event, newValue) => {
-    setValue(newValue);
+	setValue(newValue);
+	userObj.prefage.min = value[0];
+	userObj.prefage.max = value[1];
   };
 
   return (
     <div className={classes.root}>
       <Typography id="range-slider" gutterBottom>
-        Your Height Preference
+        Your Age Preference
       </Typography>
       <Slider
         value={value}
-        onChange={handleChange}
+		onChange={handleChange}
+		min={18}
+		max={99}
         valueLabelDisplay="auto"
         aria-labelledby="range-slider"
         getAriaValueText={valuetext}
       />
+	  {value[0] + " - " + value[1]}
     </div>
   );
 }
+
+export default MatchAgeSlider;

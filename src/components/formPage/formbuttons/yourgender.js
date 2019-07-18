@@ -4,21 +4,10 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
-import { pink, cyan, green  } from "@material-ui/core/colors";
+import { pink, cyan } from "@material-ui/core/colors";
 import RadioButtonUncheckedIcon from "@material-ui/icons/RadioButtonUnchecked";
 import RadioButtonCheckedIcon from "@material-ui/icons/RadioButtonChecked";
 import { withStyles } from "@material-ui/core/styles";
-
-const GreenRadio = withStyles({
-    root: {
-      color: green[400],
-      "&$checked": {
-        color: green[600]
-      }
-    },
-    checked: {}
-  })(props => <Radio color="default" {...props} />);
-  
 
 const CyanRadio = withStyles({
   root: {
@@ -40,16 +29,17 @@ const PinkRadio = withStyles({
   checked: {}
 })(props => <Radio color="default" {...props} />);
 
-export default function FormControlLabelPosition() {
-  const [value, setValue] = React.useState("female");
+const FormControlLabelPosition = ({userObj}) => {
+  const [value, setValue] = React.useState("none");
 
   function handleChange(event) {
-    setValue(event.target.value);
+	setValue(event.target.value);
+	userObj.mysex = event.target.value;
   }
 
   return (
-    <FormControl component="fieldset">
-      <FormLabel component="legend">What is your Sexual Prefrence?</FormLabel>
+    <FormControl component="fieldset" required>
+      <FormLabel component="legend">What is your Sex?</FormLabel>
       <RadioGroup
         aria-label="position"
         name="position"
@@ -58,25 +48,21 @@ export default function FormControlLabelPosition() {
         row
       >
         <FormControlLabel
-          value="top"
+          value="Male"
           control={<PinkRadio color="primary" />}
-          label="Straight"
+          label="Male"
           labelPlacement="top"
         />
         <FormControlLabel
-          value="top"
+          value="Female"
           control={<CyanRadio color="primary" />}
-          label="Gay"
-          labelPlacement="top"
-        />
-        <FormControlLabel
-          value="top"
-          control={<GreenRadio color="primary" />}
-          label="Bisexual"
+          label="Female"
           labelPlacement="top"
         />
       </RadioGroup>
     </FormControl>
   );
 }
+
+export default FormControlLabelPosition;
 

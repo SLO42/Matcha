@@ -7,16 +7,17 @@ import checkLocationPermission from "./components/getLocation/locationpermission
 import Taskbar from './components/taskbar/taskbar';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Race from './components/formbuttons/race';
-import Body from './components/formbuttons/gaybody';
-import Straight from './components/formbuttons/straightbody';
-import Interests from './components/formbuttons/interests';
-import MyHeightSlider from './components/sliders/myheight.js';
-import MyAgeSlider from './components/sliders/myage.js';
-import MatchHeightSlider from './components/sliders/matchheight.js';
-import MatchAgeSlider from './components/sliders/matchage.js';
-import GenderChoice from './components/formbuttons/yourgender';
-import SexualPreference from './components/formbuttons/matchgender';
+// import Race from './components/formPage/formbuttons/race';
+// import Body from './components/formPage/formbuttons/gaybody';
+// import Straight from './components/formPage/formbuttons/straightbody';
+// import Interests from './components/formPage/formbuttons/interests';
+// import MyHeightSlider from './components/formPage/sliders/myheight.js.js';
+// import MyAgeSlider from './components/formPage/sliders/myage.js.js';
+// import MatchHeightSlider from './components/formPage/sliders/matchheight.js.js';
+// import MatchAgeSlider from './components/formPage/sliders/matchage.js.js';
+// import GenderChoice from './components/formPage/formbuttons/yourgender';
+// import SexualPreference from './components/formPage/formbuttons/matchgender';
+import FormPage from './components/formPage';
 
 
 const theme = createMuiTheme({
@@ -122,21 +123,22 @@ class App extends Component {
           onSuggestSelect={this.onSuggestSelect}
         /> */}
         </div>
-        <Race/>
-        <br/>
-        <Body/>
-        <br/>
-        <Straight/>
-        <br/>
-        <Interests/>
-        <br/>
-        <MyHeightSlider/>
-        <MyAgeSlider/>
-        <MatchAgeSlider/>
-        <MatchHeightSlider/>
-        <GenderChoice/>
-        <br/>
-        <SexualPreference/>
+		<FormPage />
+			{/* <Race/>
+			<br/>
+			<Body/>
+			<br/>
+			<Straight/>
+			<br/>
+			<Interests/>
+			<br/>
+			<MyHeightSlider/>
+			<MyAgeSlider/>
+			<MatchAgeSlider/>
+			<MatchHeightSlider/>
+			<GenderChoice/>
+			<br/>
+			<SexualPreference/> */}
         <div textColor="#26FFFF">
           <p>
           Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
