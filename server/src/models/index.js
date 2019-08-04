@@ -2,7 +2,10 @@ import mongoose from 'mongoose';
 
 import User from './user';
 import Message from './message';
+import Profile from './profile';
+import BannedUsers from './banned';
 
+// connect to MongoDB with Mongoose. using ENV
 const connectDb = () => {
 	return mongoose.connect(process.env.DATABASE_URL, { 
 		auth: {
@@ -13,7 +16,7 @@ const connectDb = () => {
 	 });
 };
 
-const models = { User, Message };
+const models = { User, Message, Profile, BannedUsers };
 
 export { connectDb };
 

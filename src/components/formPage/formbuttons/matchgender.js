@@ -59,21 +59,21 @@ const FormControlLabelPosition = ({userObj}) => {
         row
       >
         <FormControlLabel
-          value="Straight"
+          value="Male"
           control={<PinkRadio color="primary" />}
-          label="Straight"
+          label="Male"
           labelPlacement="top"
         />
         <FormControlLabel
-          value="Gay"
+          value="Female"
           control={<CyanRadio color="primary" />}
-          label="Gay"
+          label="Female"
           labelPlacement="top"
         />
         <FormControlLabel
           value="Bisexual"
           control={<GreenRadio color="primary" />}
-          label="Bisexual"
+          label="All of the above"
           labelPlacement="top"
         />
       </RadioGroup>

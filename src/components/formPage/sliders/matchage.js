@@ -5,7 +5,7 @@ import Slider from '@material-ui/core/Slider';
 
 const useStyles = makeStyles({
   root: {
-    width: 300,
+	width: 300,
   },
 });
 
@@ -24,21 +24,21 @@ const MatchAgeSlider = ({userObj}) => {
   };
 
   return (
-    <div className={classes.root}>
-      <Typography id="range-slider" gutterBottom>
-        Your Age Preference
-      </Typography>
-      <Slider
-        value={value}
+	<div className={classes.root}>
+	  <Typography id="range-slider" gutterBottom>
+		Your Age Preference
+	  </Typography>
+	  <Slider
+		value={value}
 		onChange={handleChange}
 		min={18}
 		max={99}
-        valueLabelDisplay="auto"
-        aria-labelledby="range-slider"
-        getAriaValueText={valuetext}
-      />
+		valueLabelDisplay="auto"
+		aria-labelledby="range-slider"
+		getAriaValueText={valuetext}
+	  />
 	  {value[0] + " - " + value[1]}
-    </div>
+	</div>
   );
 }
 

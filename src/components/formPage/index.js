@@ -9,6 +9,14 @@ import MatchHeightSlider from './sliders/matchheight.js';
 import MatchAgeSlider from './sliders/matchage.js';
 import GenderChoice from './formbuttons/yourgender';
 import SexualPreference from './formbuttons/matchgender';
+import TextFieldUsername from './textfield';
+
+import axios from 'axios';
+import { ButtonBase } from '@material-ui/core';
+
+const apiUserAdd = `http://localhost:3001/users/add`;
+const apiProfileCreate = `http://localhost:3001/profiles/add`;
+const apiGet = `http://localhost:3001/users/`;
 
 class FormPageBase extends React.Component {
 	constructor(props){
@@ -18,12 +26,14 @@ class FormPageBase extends React.Component {
 			loading: false,
 			
 			userObj: {
+				username: "",
+				
 				race: "",
 				bodytype: "",
 				interest: [],
 				
 				myheight: 0,
-				myage: "",
+				myage: 0,
 				mysex: "",
 				
 				prefheight: {min: 18, max: 99},
@@ -31,12 +41,31 @@ class FormPageBase extends React.Component {
 				prefsex: "",
 
 			},
-			// setFormState: userObj => {
-			// 	console.log(userObj)
-			// 	// await this.setState(this.state);
-			// 	// return null;
-			// },
+			stop: true,
 		};
+	}
+
+	postUser = () => {
+		axios.get(apiGet)
+		.then(res => {
+			const userObject = JSON.stringify(res);
+			if (userObject
+				.search(`"username":"${this.state.userObj.username}"`) !== -1){
+					return window.alert("Username in use");
+			} else {
+				const { userObj } = this.state;
+
+				axios.post(apiUserAdd, userObj)
+				.then(response => console.log(response))
+				.catch(err => console.log(err));
+
+				axios.post(apiProfileCreate, userObj)
+				.then(response => console.log(response))
+				.catch(err => console.log(err));
+			}
+		})
+		.catch(err => {
+			if (err) { console.log(err)}});
 	}
 
 	componentDidMount() {
@@ -51,6 +80,7 @@ class FormPageBase extends React.Component {
 		const {userObj} = this.state;
 		return(
 			<div>
+				<TextFieldUsername userObj={userObj} />
 				<Race userObj={userObj}/>
 				<br/>
 				<Body userObj={userObj}/>
@@ -66,6 +96,8 @@ class FormPageBase extends React.Component {
 				<GenderChoice userObj={userObj}/>
 				<br/>
 				<SexualPreference userObj={userObj}/>
+				<br />
+				<ButtonBase onClick={() => this.postUser()}>button</ButtonBase>
 			</div>
 		)
 	}
