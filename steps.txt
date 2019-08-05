@@ -1,0 +1,8 @@
+docker run -d -p 27017:27017 -p 3002:27018 --network my-net -v linker:/etc/mongo --restart=always --name=mongodb -e MONGO_INITDB_ROOT_USERNAME=Cancer -e MONGO_INITDB_ROOT_PASSWORD=Toxic -e MONGOD_DATABASE=matcha mongo --authenticationDatabase "admin"
+
+docker run -it --rm --network my-net mongo \
+	mongo --host mongodb \
+		-u Cancer \
+		-p Toxic \
+		--authenticationDatabase admin \
+	matcha
