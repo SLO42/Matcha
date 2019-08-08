@@ -6,7 +6,7 @@
   "scripts": {
     "start": "concurrently \"cd Matcha && npm start\" \"cd Matcha/server && npm start\""
   },
-  "author": "Saolivei & Jpickett",
+  "author": "Apickett & Saolivei",
   "license": "ISC",
   "dependencies": {
     "concurrently": "^4.1.1"

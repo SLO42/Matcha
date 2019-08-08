@@ -113,18 +113,18 @@ class SignUpFormBase extends React.Component {
     this.props.firebase
       .doCreateUserWithEmailAndPassword(email, passwordOne)
       .then(authUser => {
-        return this.props.firebase.user(authUser.user.uid).set({
+        return console.log(this.props.firebase.user(authUser.user.uid).set({
           username,
           email,
           //roles,
-        });
+        }));
       })
       .then(() => {
-        return this.props.firebase.doSendEmailVerification();
+        return console.log(this.props.firebase.doSendEmailVerification());
       })
       .then(() => {
-        this.setState({ ...INITIAL_STATE });
-        this.props.history.push(ROUTES.HOME);
+        console.log(this.setState({ ...INITIAL_STATE }));
+        console.log(this.props.history.push(ROUTES.LANDING));
       })
       .catch(error => {
         if (error.code === ERROR_CODE_ACCOUNT_EXISTS) {
@@ -203,17 +203,6 @@ class SignUpFormBase extends React.Component {
                 type="password"
                 placeholder="Confirm Password"
               /><br/>
-              {/* <label style={{ float: "center", width: "50%"}}>
-                Admin:
-                <Input
-                style={{ width: "5%", float: "center"}}
-                  disableUnderline={true}
-                  name="isAdmin"
-                  type="checkbox"
-                  checked={isAdmin}
-                  onChange={this.onChangeCheckbox}
-                />
-              </label> */}
               <br></br>
               <Button 
               style={styles.button}
