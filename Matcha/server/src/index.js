@@ -82,12 +82,9 @@ machine.isRunning(async (err, running) => {
 			await console.log("DockerMachine Started");
 			// change num to fit the good time
 			await setTimeout(async () => { await runServer();}, 3000);
-			await console.log("did i wait?");
 		})
 	}
-		console.log("wat");
-	}
-)
+});
 
 // Connects To MongoDB (Dockerized) and starts the express 
 // server after successfully connecting to MongoDB
