@@ -2,7 +2,7 @@ import React from 'react';
 
 import AuthUserContext from './context';
 import { withFirebase } from '../firebase';
-
+import Button from '@material-ui/core/Button';
 const needsEmailVerification = authUser =>
   authUser &&
   !authUser.emailVerified &&
@@ -44,13 +44,13 @@ const withEmailVerification = Component => {
                   </p>
                 )}
 
-                <button
+                <Button
                   type="button"
                   onClick={this.onSendEmailVerification}
                   disabled={this.state.isSent}
                 >
                   Send confirmation E-Mail
-                </button>
+                </Button>
               </div>
             ) : (
               <Component {...this.props} />

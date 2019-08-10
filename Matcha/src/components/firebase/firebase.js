@@ -25,7 +25,7 @@ const firebaseConfig = {
     constructor() {
       firebase.initializeApp(firebaseConfig);
       this.auth = firebase.auth();
-      this.db = firebase.database();
+       this.db = firebase.database();
       this.serverValue = firebase.database.ServerValue;
       this.emailAuthProvider = firebase.auth.EmailAuthProvider;
       this.googleProvider = new firebase.auth.GoogleAuthProvider();
@@ -55,7 +55,7 @@ doPasswordReset = email => this.auth.sendPasswordResetEmail(email);
 
 doSendEmailVerification = () =>
 this.auth.currentUser.sendEmailVerification({
-  url: 'localhost:3000',
+  url: 'https://www.localhost:3000',
 });
 
 doEmailUpdate = email =>

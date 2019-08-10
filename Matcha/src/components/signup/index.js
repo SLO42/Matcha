@@ -3,7 +3,6 @@ import { Link, withRouter } from 'react-router-dom';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { withFirebase } from '../firebase';
 import * as ROUTES from '../constants/routes';
-//import * as ROLES from '../constants/roles';
 import { Input } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -103,28 +102,22 @@ class SignUpFormBase extends React.Component {
   
 
   onSubmit = event => {
-    const { username, email, passwordOne, isAdmin } = this.state;
-    /* const roles = {};
-    
-    if (isAdmin) {
-      roles.push(ROLES.ADMIN);
-    } */
+    const { username, email, passwordOne } = this.state;
 
     this.props.firebase
       .doCreateUserWithEmailAndPassword(email, passwordOne)
       .then(authUser => {
-        return console.log(this.props.firebase.user(authUser.user.uid).set({
+        return this.props.firebase.user(authUser.user.uid).set({
           username,
           email,
-          //roles,
-        }));
+        });
       })
       .then(() => {
-        return console.log(this.props.firebase.doSendEmailVerification());
+        return this.props.firebase.doSendEmailVerification();
       })
       .then(() => {
-        console.log(this.setState({ ...INITIAL_STATE }));
-        console.log(this.props.history.push(ROUTES.LANDING));
+        this.setState({ ...INITIAL_STATE });
+        this.props.history.push(ROUTES.HOME);
       })
       .catch(error => {
         if (error.code === ERROR_CODE_ACCOUNT_EXISTS) {
@@ -203,6 +196,17 @@ class SignUpFormBase extends React.Component {
                 type="password"
                 placeholder="Confirm Password"
               /><br/>
+              {/* <label style={{ float: "center", width: "50%"}}>
+                Admin:
+                <Input
+                style={{ width: "5%", float: "center"}}
+                  disableUnderline={true}
+                  name="isAdmin"
+                  type="checkbox"
+                  checked={isAdmin}
+                  onChange={this.onChangeCheckbox}
+                />
+              </label> */}
               <br></br>
               <Button 
               style={styles.button}

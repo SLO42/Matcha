@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { AuthUserContext } from '../session';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/core/styles';
-
+import SignOutButton from '../signout';
 const theme = createMuiTheme({
   palette: {
     primary: {
@@ -39,12 +39,15 @@ const NavigationAuth = () => (
       <li>
         <Link to={ROUTES.ACCOUNT}>Account</Link>
       </li>
-       <li>
-        <Link to={ROUTES.ADMIN}>Admin</Link>
+      <li>
+        <Link to={ROUTES.PROFILE}>PROFILE</Link>
       </li>
       <li>
-{/*         <SignOutButton />
- */}      </li>
+        <Link to={ROUTES.PROFILE_CREATION}>CREATE YOUR PROFILE</Link>
+      </li>
+      <li>
+        <SignOutButton/>
+      </li>
     </ul>
 );
 

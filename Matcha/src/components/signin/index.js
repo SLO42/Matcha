@@ -7,8 +7,6 @@ import * as ROUTES from '../constants/routes';
 import Card from '@material-ui/core/Card';
 import { CardContent, Input } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
-import { faGoogle, faFacebook, faTwitter } from '@fortawesome/free-brands-svg-icons';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 /** signin fixed for mobile*/
 const styles = {
