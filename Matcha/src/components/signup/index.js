@@ -117,7 +117,7 @@ class SignUpFormBase extends React.Component {
       })
       .then(() => {
         this.setState({ ...INITIAL_STATE });
-        this.props.history.push(ROUTES.HOME);
+        this.props.history.push(ROUTES.PROFILE_CREATION);
       })
       .catch(error => {
         if (error.code === ERROR_CODE_ACCOUNT_EXISTS) {
@@ -144,7 +144,6 @@ class SignUpFormBase extends React.Component {
       email,
       passwordOne,
       passwordTwo,
-      isAdmin,
       error,
     } = this.state;
 
@@ -164,14 +163,6 @@ class SignUpFormBase extends React.Component {
               >
               <CardContent>
             <form onSubmit={this.onSubmit}>
-              <Input
-              style={{ float: "center", width: "50%"}}
-                name="username"
-                value={username}
-                onChange={this.onChange}
-                type="text"
-                placeholder="Enter a Username"
-              /><br/>
               <Input
               style={{ float: "center", width: "50%"}}
                 name="email"
@@ -196,17 +187,6 @@ class SignUpFormBase extends React.Component {
                 type="password"
                 placeholder="Confirm Password"
               /><br/>
-              {/* <label style={{ float: "center", width: "50%"}}>
-                Admin:
-                <Input
-                style={{ width: "5%", float: "center"}}
-                  disableUnderline={true}
-                  name="isAdmin"
-                  type="checkbox"
-                  checked={isAdmin}
-                  onChange={this.onChangeCheckbox}
-                />
-              </label> */}
               <br></br>
               <Button 
               style={styles.button}

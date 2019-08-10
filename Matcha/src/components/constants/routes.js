@@ -11,3 +11,4 @@ export const PROFILE_CREATION = '/profile-creation';
 export const MESSAGE_PAGE = '/messages';
 export const REPORT = '/report';
 export const SETTINGS = '/settings';
+export const FIND_USERS = '/swiping';
