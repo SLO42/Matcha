@@ -24,6 +24,7 @@ import {
   BrowserRouter as Router,
   Route,
 } from 'react-router-dom';
+import UserCard from './components/userCard';
 
 const theme = createMuiTheme({
   palette: {
@@ -131,6 +132,7 @@ class App extends Component {
       <Route path={ROUTES.PROFILE} component={ProfilePage} />
       <Route path={ROUTES.PROFILE_CREATION} component={ProfileCreation}/>
       <Route path={ROUTES.ACCOUNT} component={AccountPage} />
+      <Route path={ROUTES.FIND_USERS} component={UserCard} />
         </Router>
         </MuiThemeProvider>
     )

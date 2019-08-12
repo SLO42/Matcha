@@ -142,7 +142,6 @@ class SignUpFormBase extends React.Component {
       email,
       passwordOne,
       passwordTwo,
-      isAdmin,
       error,
     } = this.state;
 
@@ -185,17 +184,6 @@ class SignUpFormBase extends React.Component {
                 type="password"
                 placeholder="Confirm Password"
               /><br/>
-              {/* <label style={{ float: "center", width: "50%"}}>
-                Admin:
-                <Input
-                style={{ width: "5%", float: "center"}}
-                  disableUnderline={true}
-                  name="isAdmin"
-                  type="checkbox"
-                  checked={isAdmin}
-                  onChange={this.onChangeCheckbox}
-                />
-              </label> */}
               <br></br>
               <Button 
               style={styles.button}

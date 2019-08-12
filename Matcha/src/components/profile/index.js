@@ -12,6 +12,11 @@ import Navigation from '../navigation';
 import * as ROUTES from '../constants/routes';
 import Rating from '@material-ui/lab/Rating';
 import Box from '@material-ui/core/Box';
+import Avatar from '@material-ui/core/Avatar';
+import TTY from './tty.jpg';
+import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import { Paper } from '@material-ui/core';
 
 const theme = createMuiTheme({
     palette: {
@@ -20,16 +25,46 @@ const theme = createMuiTheme({
       },
       secondary: {
           main: '#33eaff',
-      }
+      },
   },
   });
   
-  const styles = theme => ({
+  const styles = {
+      tty: {
+          width: "650px",
+      },
+      panel: {
+          justify: "right",
+          alignItems: "right",
+          width: "30vw",
+      },
+  }
+
+  const useStyles = makeStyles({
+    avatar: {
+      margin: 10,
+    },
+    bigAvatar: {
+      margin: 10,
+      width: 600,
+      height: 600,
+    },
     root: {
-      width: '100%',
-      paddingBottom: "40px",
-    }
-});
+        width: '100%',
+        paddingBottom: "40px",
+      },
+      notif: {
+          height: 100,
+          width: 600,
+      },
+      rightPanel: {
+          position: 'right',
+          justify: "right",
+          height: "100vh",
+          width: "30vw"
+      },
+  });
+
 
 export function SimpleRating() {
     const [value, setValue] = React.useState(2);
@@ -46,19 +81,44 @@ export function SimpleRating() {
             }}
           />
         </Box>
-        {/* <Box component="fieldset" mb={3} borderColor="transparent">
-          <Typography component="legend">Read only</Typography>
-          <Rating value={value} readOnly />
-        </Box>
-        <Box component="fieldset" mb={3} borderColor="transparent">
-          <Typography component="legend">Disabled</Typography>
-          <Rating value={value} disabled />
-        </Box>
-        <Box component="fieldset" mb={3} borderColor="transparent">
-          <Typography component="legend">Pristine</Typography>
-          <Rating name="pristine" value={null} />
-        </Box> */}
       </div>
+    );
+  }
+
+export function ImageAvatars() {
+    const classes = useStyles();
+  
+    return (
+      <Grid container justify="left" alignItems="left" >
+        <Avatar alt="Profile-Image" src={TTY} className={classes.bigAvatar} />
+      </Grid>
+    );
+  }
+
+export function Notifications() {
+    const classes = useStyles();
+  
+    return (
+      <Grid container justify="center" alignItems="center">
+        <Paper className={classes.notif}>
+                <p>
+                    NEW NOTIFICATIONS
+                </p>
+            </Paper>
+      </Grid>
+    );
+  }
+
+  export function RightPanel() {
+    const classes = useStyles();
+  
+    return (
+      <Grid container justify="right" alignItems="right">
+        <Paper className={classes.rightPanel}>
+            <Notifications/>
+            <SimpleRating/>
+            </Paper>
+      </Grid>
     );
   }
 
@@ -66,12 +126,15 @@ class ProfilePage extends React.Component {
     render() {
         return(
         <MuiThemeProvider theme={theme}>
-        <div>
-            <SimpleRating/>
+        <div  style={styles.tty}>
+            <ImageAvatars/>
+        </div>
+        <div style={styles.panel}>
+        <RightPanel/>
         </div>
       </MuiThemeProvider>
         );
     };
 }
 
-export default withStyles(styles)(ProfilePage);
+export default (ProfilePage);
