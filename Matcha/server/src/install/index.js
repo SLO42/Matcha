@@ -28,7 +28,7 @@ const createEverything = async () => {
 
 	// for default user list
 
-	const userOptions = [
+	let userOptions = [
 		{ username: 'saolivei', email: 'saolivei@student.42.us.org',
 			access: { level: 5, group: "admin" 	}
 		},
@@ -38,87 +38,26 @@ const createEverything = async () => {
 		{ username: `ssettle`, email: 'ssettle@student.42.us.org',
 			access: { level: 0, group: "user", },
 		},
-		{ username: `AlphaBot a`, email: 'Alphabot_a@matcha.test.com',
-			access: { level: 1, group: "test", },
-		},
-		{ username: `AlphaBot b`, email: 'Alphabot_b@matcha.test.com',
-			access: { level: 1, group: "test", },
-		},
-		{ username: `AlphaBot c`, email: 'Alphabot_c@matcha.test.com',
-			access: { level: 1, group: "test", },
-		},
-		{ username: `AlphaBot d`, email: 'Alphabot_d@matcha.test.com',
-			access: { level: 1, group: "test", },
-		},
-		{ username: `AlphaBot e`, email: 'Alphabot_e@matcha.test.com',
-			access: { level: 1, group: "test", },
-		},
-		{ username: `AlphaBot f`, email: 'Alphabot_f@matcha.test.com',
-			access: { level: 1, group: "test", },
-		},
-		{ username: `AlphaBot g`, email: 'Alphabot_g@matcha.test.com',
-			access: { level: 1, group: "test", },
-		},
-		{ username: `AlphaBot h`, email: 'Alphabot_h@matcha.test.com',
-			access: { level: 1, group: "test", },
-		},
-		{ username: `AlphaBot i`, email: 'Alphabot_i@matcha.test.com',
-			access: { level: 1, group: "test", },
-		},
-		{ username: `AlphaBot j`, email: 'Alphabot_a@matcha.test.com',
-			access: { level: 1, group: "test", },
-		},
-		{ username: `AlphaBot k`, email: 'Alphabot_a@matcha.test.com',
-			access: { level: 1, group: "test", },
-		},
-		{ username: `AlphaBot l`, email: 'Alphabot_l@matcha.test.com',
-			access: { level: 1, group: "test", },
-		},
-		{ username: `AlphaBot m`, email: 'Alphabot_m@matcha.test.com',
-			access: { level: 1, group: "test", },
-		},
-		{ username: `AlphaBot n`, email: 'Alphabot_n@matcha.test.com',
-			access: { level: 1, group: "test", },
-		},
-		{ username: `AlphaBot o`, email: 'Alphabot_o@matcha.test.com',
-			access: { level: 1, group: "test", },
-		},
-		{ username: `AlphaBot p`, email: 'Alphabot_a@matcha.test.com',
-			access: { level: 1, group: "test", },
-		},
-		{ username: `AlphaBot q`, email: 'Alphabot_q@matcha.test.com',
-			access: { level: 1, group: "test", },
-		},
-		{ username: `AlphaBot r`, email: 'Alphabot_r@matcha.test.com',
-			access: { level: 1, group: "test", },
-		},
-		{ username: `AlphaBot s`, email: 'Alphabot_s@matcha.test.com',
-			access: { level: 1, group: "test", },
-		},
-		{ username: `AlphaBot t`, email: 'Alphabot_t@matcha.test.com',
-			access: { level: 1, group: "test", },
-		},
-		{ username: `AlphaBot u`, email: 'Alphabot_u@matcha.test.com',
-			access: { level: 1, group: "test", },
-		},
-		{ username: `AlphaBot v`, email: 'Alphabot_v@matcha.test.com',
-			access: { level: 1, group: "test", },
-		},
-		{ username: `AlphaBot w`, email: 'Alphabot_w@matcha.test.com',
-			access: { level: 1, group: "test", },
-		},
-		{ username: `AlphaBot x`, email: 'Alphabot_x@matcha.test.com',
-			access: { level: 1, group: "test", },
-		},
-		{ username: `AlphaBot y`, email: 'Alphabot_y@matcha.test.com',
-			access: { level: 1, group: "test", },
-		},
-		{ username: `AlphaBot z`, email: 'Alphabot_z@matcha.test.com',
-			access: { level: 1, group: "test", },
-		}
 	];
+	/*--> 
+	** Bewarned that going further has rusulted in slow or no connectivity 
+	** Please don't raise these numbers. they already make the result size 1.8mb
+	<--*/
+	let extra = 5000;
+	while(extra){
+		const username = "AutoBot #" + extra--;
+		const email = Math.random().toString(36).substring(2, 15) +  "@" + Math.random().toString(36).substring(2, 7) + ".com";
+		let access = {};
+		access["level"] = Math.floor(Math.random() * 10) % 5;
+		if (access["level"] === 1 ) access["group"] = "test";
+		else if (access["level"] === 2 ) access["group"] = "alpha";
+		else if (access["level"] === 3 ) access["group"] = "beta";
+		else if (access["level"] === 4 ) access["group"] = "kilo";
+		else if (access["level"] === 0 ) access["group"] = "user";
+		await userOptions.push({username, email, access});
+	}
 
-	userOptions.map(async (userObj) => {
+	await userOptions.map(async (userObj) => {
 		const firstname = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 		const lastname = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 		const myage = Math.floor(Math.random(81) * 10) + 18;
@@ -135,17 +74,16 @@ const createEverything = async () => {
 			"Concerts","Hunting","Reading"];
 		interets = shuffle(interets)
 		const interest = interets.slice(0, amountofinterest);
-		
-		// console.log(interest);  // This is s consoleLOG!!!!!!!!!!!!!!!!!!!!!!
-		// console.log(amountofinterest);
 		const mystats = {
 			bio: Math.random().toString(36) + Math.random().toString(36).substring(2, 25),
-			race: "Human",
 			myage, mysex, interest: interest,
 		}
 		const prefheigh = {min: 69, max: 420};
-		const prefage = {min: `${Math.floor((Math.random(18) * 100) + 18)}`,
-			max: `${Math.floor((Math.random(45) * 100) + 36)}`}
+		const num1 = Math.floor((Math.random(18) * 100) + 18);
+		const num2 = Math.floor((Math.random(18) * 100) + 18);
+		const min = num1 > num2 ? num2 : num1;
+		const max = num1 > num2 ? num1 : num2;
+		const prefage = {min, max}
 		const wants = {
 			prefheigh, prefage, prefsex
 		}
@@ -158,6 +96,12 @@ const createEverything = async () => {
 		await user.save();
 		await profile.save();
 	})
+
+	const samsGallery = new models.Gallery({
+		username: 'saolivei',
+		gallery: {0: "Dude its an image, trust", 1: "FirstImg", 2: "secondImg"}
+	});
+	await samsGallery.save();
 
 };
 

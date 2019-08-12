@@ -4,6 +4,8 @@ import User from './user';
 import Message from './message';
 import Profile from './profile';
 import BannedUsers from './banned';
+import Gallery from './gallery';
+import Report from './report';
 
 // connect to MongoDB with Mongoose. using ENV
 const connectDb = () => {
@@ -16,7 +18,7 @@ const connectDb = () => {
 	 });
 };
 
-const models = { User, Message, Profile, BannedUsers };
+const models = { User, Message, Profile, BannedUsers, Gallery, Report };
 
 export { connectDb };
 

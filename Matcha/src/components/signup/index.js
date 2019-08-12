@@ -74,7 +74,6 @@ const styles = theme => ({
 }});
 
 const INITIAL_STATE = {
-  username: '',
   email: '',
   passwordOne: '',
   passwordTwo: '',
@@ -117,7 +116,7 @@ class SignUpFormBase extends React.Component {
       })
       .then(() => {
         this.setState({ ...INITIAL_STATE });
-        this.props.history.push(ROUTES.HOME);
+        this.props.history.push(ROUTES.PROFILE_CREATION);
       })
       .catch(error => {
         if (error.code === ERROR_CODE_ACCOUNT_EXISTS) {
@@ -140,7 +139,6 @@ class SignUpFormBase extends React.Component {
 
   render() {
     const {
-      username,
       email,
       passwordOne,
       passwordTwo,
@@ -151,8 +149,7 @@ class SignUpFormBase extends React.Component {
     const isInvalid =
       passwordOne !== passwordTwo ||
       passwordOne === '' ||
-      email === '' ||
-      username === '';
+      email === '';
 
       const renderMobile = (
         <MuiThemeProvider theme={theme}>
@@ -164,14 +161,6 @@ class SignUpFormBase extends React.Component {
               >
               <CardContent>
             <form onSubmit={this.onSubmit}>
-              <Input
-              style={{ float: "center", width: "50%"}}
-                name="username"
-                value={username}
-                onChange={this.onChange}
-                type="text"
-                placeholder="Enter a Username"
-              /><br/>
               <Input
               style={{ float: "center", width: "50%"}}
                 name="email"

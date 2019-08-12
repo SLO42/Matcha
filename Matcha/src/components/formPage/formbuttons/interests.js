@@ -40,6 +40,35 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+// list of options/buttons 
+const interestOptions = [
+	{name: "Camping", value: faCampground},
+	{name: "Coffee", value: faCoffee},
+	{name: "Beer", value: faBeer},
+	{name: "Wine Tasting", value: faWineGlassAlt},
+	{name: "Gaming", value: faHeadset},
+
+	{name: "Karaoke", value: faMicrophone},
+	{name: "Religion", value: faAnkh},
+	{name: "Shopping", value: faShoppingBag},
+	{name: "Star Gazing", value: faStar},
+	{name: "Running", value: faRunning},
+
+	{name: "Handicap Access", value: faWheelchair},
+	{name: "Travel", value: faPlaneDeparture},
+	{name: "Theatre", value: faShoppingBag},
+	{name: "Cooking", value: faUtensils},
+	{name: "Biking", value: faBicycle},
+
+	{name: "Fishing", value: faFish},
+	{name: "Smoking", value: faCannabis},
+	{name: "Concerts", value: faMusic},
+	{name: "Hunting", value: faMusic},
+	{name: "Reading", value: faBookOpen},
+	{name: "Skiing", value: faSkiing},
+];
+
+
 const Chips = ({ userObj }) => {
   const classes = useStyles();
 
@@ -65,170 +94,24 @@ const Chips = ({ userObj }) => {
 //    console.log(userObj.interest);
   }
 
+  const ChipCreator = () => {
+	return interestOptions.map((pair) => {
+		return (
+			<Chip
+			icon={<FontAwesomeIcon icon={pair.value} size="2x" />}
+			label={pair.name}
+			clickable
+			className={classes.chip}
+			onClick={() => handleClick(`${pair.name}`)}
+			color="primary"
+		  />
+		)
+	})
+}
+
   return (
     <div className={classes.root}>
-      <Chip
-        icon={<FontAwesomeIcon icon={faCampground} size="2x" />}
-		label="Camping"
-		clickable
-		className={classes.chip}
-		onClick={() => handleClick("Camping")}
-        color="primary"
-      />
-      <Chip
-        icon={<FontAwesomeIcon icon={faCoffee} size="2x" />}
-        label="Coffee"
-        clickable
-		className={classes.chip}
-		onClick={() => handleClick("Coffee")}
-        color="primary"
-      />
-      <Chip
-        icon={<FontAwesomeIcon icon={faBeer} size="2x" />}
-        label="Beer"
-        clickable
-		className={classes.chip}
-		onClick={() => handleClick("Beer")}
-        color="primary"
-      />
-      <Chip
-        icon={<FontAwesomeIcon icon={faWineGlassAlt} size="2x" />}
-        label="Wine Tasting"
-        clickable
-		className={classes.chip}
-		onClick={() => handleClick("Wine Tasting")}
-        color="primary"
-      />
-       <Chip
-        icon={<FontAwesomeIcon icon={faHeadset} size="2x" />}
-        label="Gaming"
-        clickable
-		className={classes.chip}
-		onClick={() => handleClick("Gaming")}
-        color="primary"
-      />
-      <Chip
-        icon={<FontAwesomeIcon icon={faMicrophone} size="2x" />}
-        label="Karaoke"
-        clickable
-		className={classes.chip}
-		onClick={() => handleClick("Karaoke")}
-        color="primary"
-      />
-      <Chip
-        icon={<FontAwesomeIcon icon={faAnkh} size="2x" />}
-        label="Religion"
-        clickable
-		className={classes.chip}
-		onClick={() => handleClick("Religion")}
-        color="primary"
-      />
-      <Chip
-        icon={<FontAwesomeIcon icon={faShoppingBag} size="2x" />}
-        label="Shopping"
-        clickable
-		className={classes.chip}
-		onClick={() => handleClick("Shopping")}
-        color="primary"
-      />
-      <Chip
-        icon={<FontAwesomeIcon icon={faStar} size="2x" />}
-        label="Star Gazing"
-        clickable
-		className={classes.chip}
-		onClick={() => handleClick("Star Gazing")}
-        color="primary"
-      />
-       <Chip
-        icon={<FontAwesomeIcon icon={faRunning} size="2x" />}
-        label="Running"
-        clickable
-		className={classes.chip}
-		onClick={() => handleClick("Running")}
-        color="primary"
-      />
-<Chip
-        icon={<FontAwesomeIcon icon={faWheelchair} size="2x" />}
-        label="Handicap Access"
-        clickable
-		className={classes.chip}
-		onClick={() => handleClick("Handicap Access")}
-        color="primary"
-      />
-      <Chip
-        icon={<FontAwesomeIcon icon={faPlaneDeparture} size="2x" />}
-        label="Travel"
-        clickable
-		className={classes.chip}
-		onClick={() => handleClick("Travel")}
-        color="primary"
-      />
-      <Chip
-        icon={<FontAwesomeIcon icon={faTheaterMasks} size="2x" />}
-        label="Theatre"
-        clickable
-		className={classes.chip}
-		onClick={() => handleClick("Theatre")}
-        color="primary"
-      />
-      <Chip
-        icon={<FontAwesomeIcon icon={faUtensils} size="2x" />}
-        label="Cooking"
-        clickable
-		className={classes.chip}
-		onClick={() => handleClick("Cooking")}
-        color="primary"
-      />
-       <Chip
-        icon={<FontAwesomeIcon icon={faBicycle} size="2x" />}
-        label="Biking"
-        clickable
-		className={classes.chip}
-		onClick={() => handleClick("Biking")}
-        color="primary"
-      />
-<Chip
-        icon={<FontAwesomeIcon icon={faFish} size="2x" />}
-        label="Fishing"
-        clickable
-		className={classes.chip}
-		onClick={() => handleClick("Fishing")}
-        color="primary"
-      />
-      <Chip
-        icon={<FontAwesomeIcon icon={faCannabis} size="2x" />}
-        label="Smoking"
-        clickable
-		className={classes.chip}
-		onClick={() => handleClick("Smoking")}
-        color="primary"
-      />
-      <Chip
-        icon={<FontAwesomeIcon icon={faMusic} size="2x" />}
-        label="Concerts"
-        clickable
-		className={classes.chip}
-		onClick={() => handleClick("Concerts")}
-        color="primary"
-      />
-      <Chip
-        icon={<FontAwesomeIcon icon={faHippo} size="2x" />}
-        label="Hunting"
-        clickable
-		className={classes.chip}
-		onClick={() => handleClick("Hunting")}
-        color="primary"
-      />
-       <Chip
-        icon={<FontAwesomeIcon icon={faBookOpen} size="2x" />}
-        label="Reading"
-        clickable
-		className={classes.chip}
-		onClick={() => handleClick("Reading")}
-        color="primary"
-      />
-
-    
+		<ChipCreator />
     </div>
   );
 }

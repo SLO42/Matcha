@@ -26,6 +26,7 @@ const userSchema = new mongoose.Schema({
 		level: Number,
 		group: String,
 	},
+	swiped: [{username: String, liked: Boolean}]
 })
 
 // IDK how this works but im sure it works somehow... was added
@@ -46,6 +47,7 @@ userSchema.statics.findByLogin = async function (login) {
 // something for on remove. not sure. again from the website thing.
 userSchema.pre('remove', (next) => {
 	this.model('Message').deleteMany({ user: this._id }, next);
+	this.model('Gallery').deleteMany({ username: this.username }, next);
 });
 
 const User = mongoose.model('User', userSchema);

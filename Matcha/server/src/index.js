@@ -69,7 +69,7 @@ machine.isRunning(async (err, running) => {
 		console.log(err);
 	}
 	if (running === true){
-		console.log("Docker Machine is running");
+		console.log("Docker Machine is already running\nStarting Backend Communication Server");
 		runServer();
 	} else {
 		console.log("Docker Machine is not running");
@@ -79,13 +79,12 @@ machine.isRunning(async (err, running) => {
 				console.log(err);
 				throw err;
 			}
-			await console.log("DockerMachine Started");
+			await console.log("DockerMachine Started\nWaiting 5 seconds before Starting Backend Communication Server");
 			// change num to fit the good time
-			await setTimeout(async () => { await runServer();}, 3000);
+			await setTimeout(async () => { await runServer();}, 5000);
 		})
 	}
 });
-
 // Connects To MongoDB (Dockerized) and starts the express 
 // server after successfully connecting to MongoDB
 // connectDb().then(async () => {

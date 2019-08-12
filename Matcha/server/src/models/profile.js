@@ -6,7 +6,6 @@ const profileSchema = new mongoose.Schema({
 	firstname: String,
 	lastname: String,
 	mystats: {
-		race: String,
 		bodytype: String,
 		myheight: Number,
 		myage: Number,

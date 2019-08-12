@@ -5,8 +5,8 @@ const bannedSchema = new mongoose.Schema({
 		user: String,
 		email: String,
 		reason: String,
-		TOB: {type: Date, default: Date.now
-	}}],
+		TOB: {type: Date, default: Date.now},
+	}],
 })
 
 const BannedUsers = mongoose.model("BannedUsers", bannedSchema);
