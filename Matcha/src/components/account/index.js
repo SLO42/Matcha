@@ -1,24 +1,22 @@
 import React, { Component } from 'react';
 import { compose } from 'recompose';
+import {
+  AuthUserContext,
+  withAuthorization,
+  withEmailVerification,
+} from '../session';
+import { Button } from '@material-ui/core';
+import EmailChangeForm from '../emailchange';
+import { withFirebase } from '../firebase';
+import { PasswordForgetForm } from '../passwordforgot';
+import PasswordChangeForm from '../passwordchange';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { Input } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import red from '@material-ui/core/colors/red';
-import { Button, Paper, InputBase, CircularProgress } from '@material-ui/core';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import {
-	withAuthorization,
-	withEmailVerification,
-	AuthUserContext,
-	withProfileVerification,
- } from '../session';
-import { Switch, Route, Link } from 'react-router-dom';
-import * as ROUTES from '../constants/routes';
-import { withFirebase } from '../firebase';
-import { GridList, GridListTile } from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
 
-const theme = createMuiTheme({
+ const theme = createMuiTheme({
   palette: {
     primary: {
       main: '#2c387e',
@@ -29,17 +27,34 @@ const theme = createMuiTheme({
 },
 });
 
+const SIGN_IN_METHODS = [
+  {
+    id: 'password',
+    provider: null,
+  },
+  {
+    id: 'google.com',
+    provider: 'googleProvider',
+  },
+  {
+    id: 'facebook.com',
+    provider: 'facebookProvider',
+  },
+  {
+    id: 'twitter.com',
+    provider: 'twitterProvider',
+  },
+];
+
 const styles = {
-	paper: {
-		rounded: true,
-		width: "30vw",
-		align: "center",
-	},
-	input: {
-		width: "18vw",
-	},
-	button: {
-		width: "6vw",
+  list: {
+    listStyleType: "none",
+    marginBottom: 0,
+  },
+  button: {
+    padding: 10,
+    margin: "auto",
+    width: "20vw",
     background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
       border: 0,
       borderRadius: 3,
@@ -48,134 +63,282 @@ const styles = {
       rounded: "true",
       variant: "contained",
       textColor: "primary",
-	},
-	messages: {
-    width: "70%",
-    position: "center",
+  },
+  card: {
+    width: "60vw",
+    alignItems: "center",
+    justifyContent: "center",
+    display: "flex",
     margin: "auto",
   },
-  card2: {
+  topCard: {
+    width: "60vw",
+    alignItems: "center",
+    justifyContent: "center",
+    display: "flex",
     margin: "auto",
-  width: "25vh",
-  position: "center",
   },
-  delete: {
-    type: "submit",
-    variant: "contained",
-    size: "medium",
-    background: 'linear-gradient(45deg, #FE6B8B 30%, #bb0a1e 90%)',
-    border: '0',
-    borderRadius: '3',
-    boxShadow: '0 3px 5px 2px rgba(33, 203, 243, .3)',
-    color: 'white',
-    rounded: "true",
+  passwordchange: {
+    width: "60vw",
+    paddingTop: 10,
+    paddingBottom: 10,
+    margin: "auto",
+    alignItems: "center",
+    justifyContent: "center",
   },
-  edit: {
-    type: "submit",
-    variant: "contained",
-    size: "medium",
-    background: 'linear-gradient(50deg, #2c387e 20%, #33eaff 80%)',
-    border: '0',
-    borderRadius: '3',
-    boxShadow: '0 3px 5px 2px rgba(33, 203, 243, .3)',
-    color: 'white',
-    rounded: "true",
-    textColor: "primary",
+  buttons: {
+    paddingBottom: 10,
   },
 }
 
-const useStyles = makeStyles(theme => ({
-	card: {
-	  minWidth: "25vw",
-	  maxWidth: "25vw",
-		height: 460,
-		rounded: true,
-	},
-	media: {
-	  height: 0,
-	  paddingTop: '56.25%', // 16:9
-	},
-	expand: {
-	  transform: 'rotate(0deg)',
-	  marginLeft: 'auto',
-	  transition: theme.transitions.create('transform', {
-		duration: theme.transitions.duration.shortest,
-	  }),
-	},
-	expandOpen: {
-	  transform: 'rotate(180deg)',
-	},
-	avatar: {
-	  backg4roundColor: red[500],
-	},
-	root: {
-		paddingBottom: 5,
-		outlineColor: 'black',
-		justifyContent: 'center',
-	},
-	images: {
-		maxWidth: 420,
-		minWidth: 420,
-		// position: "absolute",
-		margin: "auto",
-	},
-	pageMain: {
-		minWidth: '720vl',
-	  	backgroundColor: 'white',
-	},
-	pageMedia: {
-		height: 0,
-
-		paddingTop: '56.25%',
-	},
-
-  }));
-
-const HomePageRoutes = () => {
-
-	return(
-			<div align="center">
-				<Switch>
-					<Route exact path={ROUTES.HOME} component={HomePage} />
-				</Switch>
-			</div>
-)};
 
 
-class HomePage extends Component {
+function AccountPage() {
+  return (
+    <MuiThemeProvider theme={theme}>
+    <AuthUserContext.Consumer>
+    {authUser => (
+      <div>
+        <h1>Account: {authUser.email}</h1>
+        <h2>Here you can manage your password and link other accounts.</h2>
+        
+        <div style={styles.passwordchange} >
+        {/* <UsernameChangeForm style={styles.topCard}/> */}
+        </div>
+        
+        <Card
+        style={styles.card}
+        >
+        <CardContent
+        >
+        <EmailChangeForm/>
+        </CardContent>
+        </Card>
+        <div style={styles.passwordchange} >
+        <PasswordForgetForm style={styles.topCard}/>
+        </div>
+        <Card
+        style={styles.card}
+        >
+        <CardContent
+        >
+        <PasswordChangeForm/>
+        </CardContent>
+        </Card>
+        <Grid item md={12} direction="row"> 
+        <LoginManagement style={styles.buttons} authUser={authUser} />
+          </Grid>
+
+     </div>
+    )}
+  </AuthUserContext.Consumer>
+  </MuiThemeProvider>
+  );
+};
+
+class LoginManagementBase extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      users: null,
+      activeSignInMethods: [],
+      error: null,
     };
   }
 
   componentDidMount() {
-    this.props.firebase.users().on('value', snapshot => {
-      this.setState({
-        users: snapshot.val(),
-      });
-    });
+    this.fetchSignInMethods();
   }
 
-  componentWillUnmount() {
-    this.props.firebase.users().off();
-  }
+  fetchSignInMethods = () => {
+    this.props.firebase.auth
+      .fetchSignInMethodsForEmail(this.props.authUser.email)
+      .then(activeSignInMethods =>
+        this.setState({ activeSignInMethods, error: null }),
+      )
+      .catch(error => this.setState({ error }));
+  };
+
+  onSocialLoginLink = provider => {
+    this.props.firebase.auth.currentUser
+      .linkWithPopup(this.props.firebase[provider])
+      .then(this.fetchSignInMethods)
+      .catch(error => this.setState({ error }));
+  };
+
+  onDefaultLoginLink = password => {
+    const credential = this.props.firebase.emailAuthProvider.credential(
+      this.props.authUser.email,
+      password,
+    );
+
+    this.props.firebase.auth.currentUser
+      .linkAndRetrieveDataWithCredential(credential)
+      .then(this.fetchSignInMethods)
+      .catch(error => this.setState({ error }));
+  };
+
+  /* onUnlink = providerId => {
+    this.props.firebase.auth.currentUser
+      .unlink(providerId)
+      .then(this.fetchSignInMethods)
+      .catch(error => this.setState({ error }));
+  }; */
 
   render() {
+    const { activeSignInMethods, error } = this.state;
+
     return (
-      <div align="center">
-		  <p>ACCOUNT PAGE</p>
+      <div width="40%" height="40vh">
+        <ul style={styles.list}>
+          {SIGN_IN_METHODS.map(signInMethod => {
+            //const onlyOneLeft = activeSignInMethods.length === 1;
+            const isEnabled = activeSignInMethods.includes(
+              signInMethod.id,
+            );
+
+            return (
+              <li style={styles.list} key={signInMethod.id}>
+                {signInMethod.id === 'password' ? (
+                  <DefaultLoginToggle
+                    //onlyOneLeft={onlyOneLeft}
+                    isEnabled={isEnabled}
+                    signInMethod={signInMethod}
+                    onLink={this.onDefaultLoginLink}
+                    onUnlink={this.onUnlink}
+                  />
+                ) : (
+                  <SocialLoginToggle
+                    //onlyOneLeft={onlyOneLeft}
+                    isEnabled={isEnabled}
+                    signInMethod={signInMethod}
+                    onLink={this.onSocialLoginLink}
+                    onUnlink={this.onUnlink}
+                  />
+                )}
+              </li>
+            );
+          })}
+        </ul>
+        {error && error.message}
       </div>
     );
   }
 }
 
+const SocialLoginToggle = ({
+  onlyOneLeft,
+  isEnabled,
+  signInMethod,
+  onLink,
+  onUnlink,
+}) =>
+  isEnabled ? (
+    <div style={styles.buttons}>
+      <Button
+      style={styles.button}
+    variant="contained"
+    color="primary"
+      textColor="primary"
+      onClick={() => onUnlink(signInMethod.id)}
+      disabled={onlyOneLeft}
+    >
+      Un-link {signInMethod.id}
+    </Button>
+    </div>
+  ) : (
+    <div style={styles.buttons}>
+      <Button
+      style={styles.button}
+      variant="contained"
+      color="primary"
+      type="Button"
+      onClick={() => onLink(signInMethod.provider)}
+    >
+      Link {signInMethod.id}
+    </Button>
+    </div>
+  );
+
+class DefaultLoginToggle extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = { passwordOne: '', passwordTwo: '' };
+  }
+
+  onSubmit = event => {
+    event.preventDefault();
+
+    this.props.onLink(this.state.passwordOne);
+    this.setState({ passwordOne: '', passwordTwo: '' });
+  };
+
+  onChange = event => {
+    this.setState({ [event.target.name]: event.target.value });
+  };
+
+  render() {
+    const {
+      //onlyOneLeft,
+      isEnabled,
+      signInMethod,
+      //onUnlink,
+    } = this.props;
+
+    const { passwordOne, passwordTwo } = this.state;
+
+    const isInvalid =
+      passwordOne !== passwordTwo || passwordOne === '';
+
+    return isEnabled ? (
+      <div style={styles.card}>
+      {/* <Button
+      style={styles.button}
+      variant="contained"
+        color="primary"
+        type="Button"
+        onClick={() => onUnlink(signInMethod.id)}
+        disabled={onlyOneLeft}
+      >
+        Deactivate {signInMethod.id}
+      </Button> */}
+      </div>
+    ) : (
+      <form onSubmit={this.onSubmit}>
+        <Input
+          name="passwordOne"
+          value={passwordOne}
+          onChange={this.onChange}
+          type="password"
+          placeholder="New Password"
+        />
+        <Input
+          name="passwordTwo"
+          value={passwordTwo}
+          onChange={this.onChange}
+          type="password"
+          placeholder="Confirm New Password"
+        />
+
+        <Button
+        style={styles.button}
+        variant="contained"
+        color="primary"
+         disabled={isInvalid} type="submit">
+          Link {signInMethod.id}
+        </Button>
+      </form>
+    );
+  }
+}
+
+
+const LoginManagement = withFirebase(LoginManagementBase);
+
 const condition = authUser => !!authUser;
 
 export default compose(
-	withProfileVerification,
-	withEmailVerification,
-	withAuthorization(condition),
-)(HomePage);
+  withEmailVerification,
+  withAuthorization(condition),
+)(AccountPage);

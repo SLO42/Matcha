@@ -11,7 +11,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import MenuIcon from '@material-ui/icons/Menu';
-
+import Navigation from '../navigation';
+import MenuButton from './menubutton';
 const useStyles = makeStyles({
   list: {
     width: 250,
@@ -46,22 +47,17 @@ export default function TemporaryDrawer() {
       onKeyDown={toggleDrawer(side, false)}
     >
       <List>
-        {['Account', 'Profile', 'Sign Out', 'Messages'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
+      <MenuButton iconType={MenuIcon} items={[<Navigation/>]}/>
       </List>
       <Divider />
-      <List>
+{/*       <List>
         {['Landing', 'Sign Up', 'Sign In'].map((text, index) => (
           <ListItem button key={text}>
             <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
             <ListItemText primary={text} />
           </ListItem>
         ))}
-      </List>
+      </List> */}
     </div>
   );
 

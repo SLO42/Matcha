@@ -39,6 +39,23 @@ const theme = createMuiTheme({
 },
 });
 
+const styles = {
+  container: {
+    minHeight: "100vh",
+      textAlign: 'center',
+      minWidth: '100vw',
+      background:
+      "url(http://www.backgroundsimg.com/picdir/md/black-and-gold/backgroundsimg-black-background-design-gold-pattern-UQ5RJ.png) no-repeat center center fixed",
+    backgroundSize: '100vw 100vh',
+    position: "flex",
+    fontSize: 'calc(10px + 2vmin)',
+    color: 'rgba(255, 255, 255, 0.6)',
+    flexGrow: 1,
+  },
+  taskbar: {
+    paddingBottom: '5vh',
+  }
+};
 
 class App extends Component {
   constructor(props) {
@@ -75,7 +92,6 @@ class App extends Component {
 
   getLocation = () => {
     if ("geolocation" in navigator) {
-      // get the longitude & latitude then update the map center as the new user location
       navigator.geolocation.watchPosition(position => {
         let location = { lat: position.coords.latitude, lng: position.coords.longitude };
 
@@ -122,22 +138,23 @@ class App extends Component {
     return (
 		<MuiThemeProvider theme={theme}>
 			<Router>
-				<div backgroundColor="#26282a">
+				<div style={styles.container}>
 					{isRendering &&
 						<div>
 							<CircularProgress color="secondary"/>
 						</div>
-					}
-					<Taskbar/>
-					<Navigation/>
-				</div>
-				<Route path={ROUTES.SIGN_UP} component={SignUpPage} />
+          }
+          <div style={styles.taskbar}>
+          <Taskbar/>
+          </div>
+        <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
 				<Route path={ROUTES.SIGN_IN} component={SignInPage} />
 				<Route path={ROUTES.HOME} component={HomePage} />
 				<Route path={ROUTES.PROFILE} component={ProfilePage} />
 				<Route path={ROUTES.PROFILE_CREATION} component={ProfileCreation}/>
 				<Route path={ROUTES.ACCOUNT} component={AccountPage} />
 				<Route path={ROUTES.FIND_USERS} component={UserCard} />
+        </div>
 			</Router>
 		</MuiThemeProvider>
     )

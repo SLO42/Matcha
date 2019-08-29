@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-/* import SignOutButton from '../signout';
- */import * as ROUTES from '../constants/routes';
+/* import SignOutButton from '../signout';*/
+import Divider from '@material-ui/core/Divider';
+import * as ROUTES from '../constants/routes';
 import { AuthUserContext } from '../session';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/core/styles';
@@ -29,11 +30,11 @@ const Navigation = ({ authUser }) => (
 );
 
 const NavigationAuth = () => (
-    <ul >
+    <ul style={{listStyleType: 'none'}}>
     <li>
       <Link to={ROUTES.LANDING}>Landing</Link>
     </li>
-      <li>
+    <li>
         <Link to={ROUTES.HOME}>Home</Link>
       </li>
       <li>

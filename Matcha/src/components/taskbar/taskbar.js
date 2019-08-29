@@ -17,7 +17,8 @@ import TemporaryDrawer from './menu';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { Paper } from '@material-ui/core';
 import axios from 'axios';
-
+import MenuButton from './menubutton';
+import Navigation from '../navigation';
 
 let results = "";
 
@@ -234,6 +235,7 @@ const PrimarySearchAppBar = () => {
       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
+      items={[<Navigation/>]}
     >
       <MenuItem>
         <IconButton aria-label="Show 4 new mails" color="">
@@ -324,12 +326,10 @@ const PrimarySearchAppBar = () => {
             </IconButton>
           </div>
         </Toolbar>
-      </AppBar>
-      {renderMobileMenu}
-	  {renderMenu}
-	  <div>
+        <div>
 		  {results !== "" ?<p> {results} </p> : <p>Waiting For search</p>}
 	  </div>
+      </AppBar>
     </div>
     </MuiThemeProvider>
   );

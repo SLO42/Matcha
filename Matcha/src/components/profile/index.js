@@ -167,7 +167,7 @@ class ProfilePage extends React.Component {
     };
 }
 
-const condition = authUser => !!authUser && !!authUser.profile && authUser.profile.__v !== 0;
+const condition = authUser => !!authUser;
 
 export default compose(
 	withProfileVerification,
