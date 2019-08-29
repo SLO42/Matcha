@@ -1,30 +1,73 @@
 import React from 'react';
 import TextField from '@material-ui/core/TextField';
 
-const TextFeildUsername = ({userObj}) => {
-	const [value, setValue] = React.useState(userObj.username);
 
-	const handleChange = (event) => {
-		setValue(event.target.value);
-		userObj.username = event.target.value;
-	}
+const TextFields = [
+	// {name: "firstname", value: `firstname`},
+	// {name: "lastname", value: `lastname`},
+	{name: "bio", value: `bio`},
+];
+
+
+const CreateFields = ({handleChange}) => {
+	return TextFields.map(obj => (
+		<div className={obj.name} >
+			<TextField
+				margin="normal"
+				onChange={handleChange}
+				fullWidth
+				multiline
+				rowsMax={42}
+				id={obj.name}
+				label={"Tell us a little bit about youself"}
+				name={obj.name}
+			/>
+		</div>
+	))
+	
+}
+
+const TextBio = ({profile, checkStage}) => {
+	// const [firstname, setFirst] = React.useState("");
+	// const [lastname, setLast] = React.useState("");
+	const [bio, setBio] = React.useState("");
+
+
+	const handleChange = event => {
+		// if (event.target.name === 'firstname'){
+		// 	setFirst(event.target.value);
+		// }
+		// else if (event.target.name === 'lastname'){
+		// 	setLast(event.target.value);
+		// }
+		if (event.target.name === 'bio'){
+			setBio(event.target.value);
+			setTimeout(() => profile.mystats.bio = bio, 2500);
+			checkStage(2)
+		}
+		// const save = async () => {
+		// 	profile.firstname = await firstname;
+		// 	profile.lastname = await lastname;  
+		// 	profile.mystats.bio = await bio;  
+		// }
+		// save();
+		// profile.firstname =  firstname;
+		// profile.lastname =  lastname;  
+		// profile.mystats.bio =  bio;  
+		// profile.username = event.target.value;
+		// profile.lastname = event.target.value;
+		// profile.mystats.bio = event.target.value;
+		
+	}	
+
+
+
 
 	return (
-		<div className="TextFeildUsername">
-			<TextField
-              variant="outlined"
-			  margin="normal"
-			  onChange={handleChange}
-              required
-              fullWidth
-              id="username"
-              label="Username"
-              name="username"
-              autoComplete="username"
-              autoFocus
-			  />
+		<div className="TextFeilds">
+			<CreateFields handleChange={handleChange}/>
 		</div>
 	)
 }
 
-export default TextFeildUsername;
+export default TextBio;

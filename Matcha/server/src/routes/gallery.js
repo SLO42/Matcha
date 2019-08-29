@@ -9,6 +9,7 @@ router.get('/', async (req, res) => {
 })
 
 // for new users with no pictures only.
+// wondering if we should instead of username use fireid. so universial search;
 router.post('/add', async (req, res) => {
 	const userGallery = await req.context.models.Gallery.create({
 		username: req.context.me,
@@ -24,6 +25,7 @@ router.put('/update', async (req, res) => {
 		arrayFilters: [ { elem : req.body.imgnum } ] // sets $[elem] to imgnum 
 	})
 })
+
 router.delete('/remove', async (req, res) => {
 	const imgnum = req.body.imgnum;
 	const userGalleryRemove = await req.context.models.Gallery.findAndModify({remove: true,}).

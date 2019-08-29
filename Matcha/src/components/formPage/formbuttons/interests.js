@@ -4,6 +4,16 @@ import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
 import FaceIcon from '@material-ui/icons/Face';
 import DoneIcon from '@material-ui/icons/Done';
+import Grid from '@material-ui/core/Grid';
+import List from '@material-ui/core/List';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import Checkbox from '@material-ui/core/Checkbox';
+import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCampground } from '@fortawesome/free-solid-svg-icons';
 import { faFootballBall } from '@fortawesome/free-solid-svg-icons';
@@ -38,6 +48,22 @@ const useStyles = makeStyles(theme => ({
   chip: {
     margin: theme.spacing(1),
   },
+  boot: {
+	margin: 'auto',  
+  },
+  CardHeader: { 
+	  padding: theme.spacing(1, 2),
+  },
+  list: {
+	  width: 250,
+	  height: '40vh',
+	  backgroundColor: theme.palette.background.paper,
+	  overflowY: 'auto',
+	  overflowX: 'hidden',
+  },
+  button: {
+	  margin: theme.spacing(0.5, 0),
+  },
 }));
 
 // list of options/buttons 
@@ -69,8 +95,178 @@ const interestOptions = [
 ];
 
 
-const Chips = ({ userObj }) => {
+
+const not = (a, b) => {
+	return a.filter(value => b.indexOf(value) === -1);
+}
+
+const intersection = (a, b) => {
+	return a.filter(value => b.indexOf(value) !== -1);
+}
+
+const union = (a, b) => {
+	return [...a, ...not(b, a)];
+}
+
+const Chips = ({profile, checkStage}) => {
   const classes = useStyles();
+
+  const TransferList = () => {
+	const interestNames = [
+		"Camping",
+		"Coffee",
+		"Beer",
+		"Wine Tasting",
+		"Gaming",
+		"Karaoke",
+		"Religion",
+		"Shopping",
+		"Star Gazing",
+		"Running",
+		"Handicap Access",
+		"Travel", 
+		"Theatre", 
+		"Cooking", 
+		"Biking", 
+		"Fishing",
+		"Smoking",
+		"Concerts",
+		"Hunting",
+		"Reading",
+		"Skiing",
+	];
+	const [checked, setChecked] = React.useState([]);
+	
+
+	const [left, setLeft] = 
+		React.useState( profile ? profile.mystats.interest : []);
+
+	const [right, setRight] =
+		React.useState(not(interestNames, left));
+
+	const leftChecked = intersection(checked, left);
+	const rightChecked = intersection(checked, right);
+	
+	const handleToggle = value => () => {
+		const currentIndex = checked.indexOf(value);
+		const newChecked = [...checked];
+
+		if (currentIndex === -1) {
+			newChecked.push(value);
+		} else {
+			newChecked.splice(currentIndex, 1);
+		}
+
+		setChecked(newChecked);
+	};
+
+	const numberOfChecked = items => intersection(checked, items).length;
+
+	const handleToggleAll = items => () => {
+		if (numberOfChecked(items) === items.length){
+			setChecked(not(checked, items));
+		} else {
+			setChecked(union(checked, items));
+		}
+	};
+
+	const handleCheckedRight = () => {
+		setRight(right.concat(leftChecked));
+		setLeft(not(left, leftChecked));
+		profile.mystats.interest = not(profile.mystats.interest, leftChecked);
+		setChecked(not(checked, leftChecked));
+		checkStage(6);
+	};
+	
+	const handleCheckedLeft = () => {
+		setLeft(left.concat(rightChecked));
+		setRight(not(right, rightChecked));
+		profile.mystats.interest = profile.mystats.interest.concat(rightChecked);
+		setChecked(not(checked, rightChecked));
+		checkStage(6);
+	};
+
+	const customList = (title, items) => (
+		<Card>
+			<CardHeader
+				className={classes.CardHeader}
+				avatar={
+					<Checkbox
+					onClick={handleToggleAll(items)}
+					checked={numberOfChecked(items) === items.length && items.length !== 0}
+					indeterminate={numberOfChecked(items) !== items.length && numberOfChecked(items) !== 0}
+					disabled={items.length === 0}
+					inputProps={{ 'aria-label': 'All items selected' }}
+					/>
+				}
+				title={title}
+				subheader={`${numberOfChecked(items)}/${items.length} selected`}
+			/>
+			<Divider />
+			<List className={classes.list} dense component="div" role="list">
+				{items.map(value => {
+					const labelId = `transfer-list-all-item-${value}-label`;
+					let icon = null;
+					interestOptions.map(val => {
+						if (val.name === value){
+							icon = val.value;
+						}
+					});
+					
+					return (
+						<ListItem key={value} role="listitem" button onClick={handleToggle(value)}>
+							<Checkbox
+							checked={checked.indexOf(value) !== -1}
+							tabIndex={-1}
+							disableRipple
+							inputProps={{ 'aria-labelledby': labelId }}
+							/>
+							<Chip
+								icon={<FontAwesomeIcon icon={icon} size="2x" />}
+								label={value}
+								clickable
+								className={classes.chip}
+								onClick={handleToggle(value)}
+								color="primary"
+							/>
+						</ListItem>
+					);
+				})}
+				<ListItem /> 
+			</List>
+		</Card>
+	);
+
+	return (
+		<Grid container spacing={2} justify="center" alignItems="center" className={classes.boot}>
+			<Grid item>{customList("Chosen", left)}</Grid>
+			<Grid item>
+				<Grid container direction="column" alignItems="center">
+					<Button
+						variant="outlined"
+						size="small"
+						className={classes.button}
+						onClick={handleCheckedRight}
+						disabled={leftChecked.length === 0}
+						aria-label="move selected right"
+						> &gt;
+					</Button>
+					<Button
+						variant="outlined"
+						size="small"
+						className={classes.button}
+						onClick={handleCheckedLeft}
+						disabled={rightChecked.length === 0}
+						aria-label="move selected left"
+						> &lt;
+					</Button>
+				</Grid>
+			</Grid>
+			<Grid item>{customList('Choices', right)}</Grid>
+		</Grid>
+	);
+}
+
 
   function handleDelete() {
     alert('You clicked the delete icon.');
@@ -83,35 +279,20 @@ const Chips = ({ userObj }) => {
   }
 
   function handleClick(anything) {
-	if (userObj.interest.includes(anything)){
-		userObj.interest = arrayRemove(userObj.interest, anything);
+	if (profile.mystats.interest.includes(anything)){
+		profile.mystats.interest = arrayRemove(profile.mystats.interest, anything);
 		alert("removed from interests: " + anything);
 	} else {
-		userObj.interest.push(anything);
-		userObj.interest.sort((a, b) => {return a - b});
+		profile.mystats.interest.push(anything);
+		profile.mystats.interest.sort((a, b) => {return a - b});
 		alert("added to interestes: " + anything); 
 	}
 //    console.log(userObj.interest);
   }
 
-  const ChipCreator = () => {
-	return interestOptions.map((pair) => {
-		return (
-			<Chip
-			icon={<FontAwesomeIcon icon={pair.value} size="2x" />}
-			label={pair.name}
-			clickable
-			className={classes.chip}
-			onClick={() => handleClick(`${pair.name}`)}
-			color="primary"
-		  />
-		)
-	})
-}
-
   return (
     <div className={classes.root}>
-		<ChipCreator />
+		<TransferList />
     </div>
   );
 }

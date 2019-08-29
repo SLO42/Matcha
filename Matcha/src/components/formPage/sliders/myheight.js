@@ -80,13 +80,13 @@ import { Card, Grid } from '@material-ui/core';
 // })(Slider);
 
 
-const myHeightSlider = ({userObj}) => {
+const myHeightSlider = ({profile}) => {
 	// const [value, setValue] = React.useState("none");
 
 	const onChangeCommitted = (event, value) => {
 		// console.log(value);
 		
-		userObj.myheight = value;
+		profile.mystats.myheight = value;
 		return height();
 	}
 
@@ -106,7 +106,7 @@ const myHeightSlider = ({userObj}) => {
   return (
     <Paper >
 		<Typography gutterBottom>Your Height</Typography> 
-		<Slider aria-label="MyHightSlider" defaultValue={60} min={18} max={300} 
+		<Slider aria-label="MyHightSlider" defaultValue={profile ? profile.mystats.myheight : 60} min={18} max={300} 
 		onChangeCommitted={onChangeCommitted} marks={marked} valueLabelDisplay={"auto"}/>
 	  {/* <PrettoSlider valueLabelDisplay="auto" aria-label="Pretto slider" defaultValue={20} min={18} max={9999} /> */}
 	  {/* no "Matcha/src/components/sliders/myheight.js" is just bad and hard to work with... */}

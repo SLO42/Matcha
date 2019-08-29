@@ -12,6 +12,16 @@ router.get('/', async (req, res) => {
 	return res.send(users);
 });
 
+router.get('/checkusers', async (req, res) => {
+	const users = await req.context.models.User.find({}, {username: 1, _id: 0});
+	return res.send(users);
+});
+
+router.get('/getid/:fireid', async (req, res) => {
+	const user = await req.context.models.User.findOne({},  {fireid: 1}).
+	where('fireid').all(req.param.fireid);
+	return res.send(user._id);
+})
 //Post request to add User info to database. 
 
 router.post('/add', async (req, res) => {
@@ -30,6 +40,7 @@ router.post('/add', async (req, res) => {
 
 
 	const user = await req.context.models.User.create({
+		fireid: req.body.fireid,
 		username: req.body.username,
 		email: req.body.email,
 		access: {

@@ -33,11 +33,25 @@ app.use(cors());
 // this is my CUSTOM middleware, the thing that will handle auth 
 // EVENTUALLY...
 app.use( async (req, res, next) => {
-	req.context = {
-		models,
-		me: await models.User.findByLogin('saolivei'),
-	};
-	next();
+	if (!req.body.profile || !req.body.fireid){
+		req.context = {
+			models,
+			me: await models.User.findByLoginEmailUid('nouser'),
+		};
+	} else {
+		if (req.body.profile){
+			req.context = {
+				models,
+				me: await models.User.findByLoginEmailUid(req.body.profile.fireid),
+			};
+		} else {
+			req.context = {
+				models,
+				me: await models.User.findByLoginEmailUid(req.body.fireid),
+			};
+		}
+	}
+		next();
 });
 
 // Sets up API Routing : Check ./routes for these files

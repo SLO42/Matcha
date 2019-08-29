@@ -11,6 +11,7 @@ import {
 	withAuthorization,
 	withEmailVerification,
 	AuthUserContext,
+	withProfileVerification,
  } from '../session';
 import { Switch, Route, Link } from 'react-router-dom';
 import * as ROUTES from '../constants/routes';
@@ -174,6 +175,7 @@ class HomePage extends Component {
 const condition = authUser => !!authUser;
 
 export default compose(
+	withProfileVerification,
 	withEmailVerification,
 	withAuthorization(condition),
 )(HomePage);

@@ -11,7 +11,7 @@ import FormPage from './components/formPage';
 import SignUpPage from './components/signup';
 import * as ROUTES from './components/constants/routes';
 import Navigation from './components/navigation';
-import { withAuthentication } from './components/session';
+import {withAuthentication, withAuthorization, }  from './components/session';
 import SignInPage from './components/signin';
 import AccountPage from './components/account';
 import HomePage from './components/home';
@@ -35,21 +35,26 @@ const theme = createMuiTheme({
         main: '#33eaff',
     },
     progress: {
-    },
+    }
 },
 });
 
 
 class App extends Component {
   constructor(props) {
-    super(props)
-
+	super(props)
+	
+	if (this.props.firebase.auth.currentUser){
+		this.props.profile.doGetProfileWithAuth(this.props.firebase.auth.currentUser.uid)
+	}
     this.state = {
-      weatherInformation: null,
+		weatherInformation: null,
       city: null,
       isRendering: false,
-      isLocationEnabled: true
-    };
+	  isLocationEnabled: true,
+	  searchData: {},
+	};
+	
   }
 
   async componentDidMount() {
@@ -101,7 +106,7 @@ class App extends Component {
   render() {
     const {
       isRendering,
-      isLocationEnabled
+	  isLocationEnabled,
     } = this.state;
 
     if (!isLocationEnabled) {
@@ -115,26 +120,26 @@ class App extends Component {
     }
 
     return (
-      <MuiThemeProvider theme={theme}>
-        <Router>
-      <div backgroundColor="#26282a">
-        {isRendering &&
-        <div>
-          <CircularProgress color="secondary"/>
-        </div>
-        }
-        <Taskbar/>
-        <Navigation/>
-        </div>
-      <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
-			<Route path={ROUTES.SIGN_IN} component={SignInPage} />
-			<Route path={ROUTES.HOME} component={HomePage} />
-      <Route path={ROUTES.PROFILE} component={ProfilePage} />
-      <Route path={ROUTES.PROFILE_CREATION} component={ProfileCreation}/>
-      <Route path={ROUTES.ACCOUNT} component={AccountPage} />
-      <Route path={ROUTES.FIND_USERS} component={UserCard} />
-        </Router>
-        </MuiThemeProvider>
+		<MuiThemeProvider theme={theme}>
+			<Router>
+				<div backgroundColor="#26282a">
+					{isRendering &&
+						<div>
+							<CircularProgress color="secondary"/>
+						</div>
+					}
+					<Taskbar/>
+					<Navigation/>
+				</div>
+				<Route path={ROUTES.SIGN_UP} component={SignUpPage} />
+				<Route path={ROUTES.SIGN_IN} component={SignInPage} />
+				<Route path={ROUTES.HOME} component={HomePage} />
+				<Route path={ROUTES.PROFILE} component={ProfilePage} />
+				<Route path={ROUTES.PROFILE_CREATION} component={ProfileCreation}/>
+				<Route path={ROUTES.ACCOUNT} component={AccountPage} />
+				<Route path={ROUTES.FIND_USERS} component={UserCard} />
+			</Router>
+		</MuiThemeProvider>
     )
   }
 }

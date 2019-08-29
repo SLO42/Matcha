@@ -1,6 +1,12 @@
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/database';
+import Profile from '../session/profile';
+import {doMongoDBGetUserIdWithFireid,
+	doMongoDBCreateUser,
+	doMongoDBGetProfileWithFireid
+} from '../axios';
+
 /* import * as admin from 'firebase-admin';
 
  var serviceAccount = require("REACT_APP_GOOGLE_APPLICATION_CREDENTIALS");
@@ -30,12 +36,15 @@ const firebaseConfig = {
       this.emailAuthProvider = firebase.auth.EmailAuthProvider;
       this.googleProvider = new firebase.auth.GoogleAuthProvider();
       this.facebookProvider = new firebase.auth.FacebookAuthProvider();
-      this.twitterProvider = new firebase.auth.TwitterAuthProvider();
+	  this.twitterProvider = new firebase.auth.TwitterAuthProvider();
+	  this.profile = new Profile();
     };
   
-doCreateUserWithEmailAndPassword = (email, password) => 
-this.auth.createUserWithEmailAndPassword(email, password);
+doDatabaseCreateUser = (username, email, uid) => 
+	doMongoDBCreateUser(username ,email, uid);
 
+doCreateUserWithEmailAndPassword = (email, password) =>
+	this.auth.createUserWithEmailAndPassword(email, password);
 
 doSignInWithEmailAndPassword = (email, password) =>
 this.auth.signInWithEmailAndPassword(email, password);
@@ -64,6 +73,7 @@ this.auth.currentUser.updateEmail(email);
 doPasswordUpdate = password =>
 this.auth.currentUser.updatePassword(password);
 
+
 // *** Merge Auth and DB User API *** //
 
 onAuthUserListener = (next, fallback) =>
@@ -72,21 +82,68 @@ this.auth.onAuthStateChanged(authUser => {
     this.user(authUser.uid)
       .once('value')
       .then(snapshot => {
-        const dbUser = snapshot.val();
-        // default empty roles
-        if (!dbUser.roles) {
-          dbUser.roles = [];
-        }
-        // merge auth and db user
-        authUser = {
-          uid: authUser.uid,
-          email: authUser.email,
-          emailVerified: authUser.emailVerified,
-          providerData: authUser.providerData,
-          ...dbUser,
-        };
-
-        next(authUser);
+		const dbUser = snapshot.val();
+		if (!(authUser.mongoId) || !(authUser.profile)) {
+			if (!(authUser.mongoId) || (authUser.mongoId === String)){
+				doMongoDBGetUserIdWithFireid(authUser.uid).
+				then(res => {
+					if (!(authUser.profile) || (authUser.profile === String)){
+						doMongoDBGetProfileWithFireid(authUser.uid).
+						then(result => {
+							authUser = {
+								profile: result,
+								mongoId: res,
+								uid: authUser.uid,
+								username: authUser.username,
+								email: authUser.email,
+								emailVerified: authUser.emailVerified,
+								providerData: authUser.providerData,
+								...dbUser,
+							};
+							next(authUser);
+						})
+					} else {
+						authUser = {
+							mongoId: res,
+							profile: authUser.profile,
+							uid: authUser.uid,
+							username: authUser.username,
+							email: authUser.email,
+							emailVerified: authUser.emailVerified,
+							providerData: authUser.providerData,
+							...dbUser,
+						};
+						next(authUser);
+					}}
+			)} else {
+				doMongoDBGetProfileWithFireid(authUser.mongoId).
+				then(profile => {
+					authUser = {
+						profile,
+						mongoId: authUser.mongoId,
+						uid: authUser.uid,
+						username: authUser.username,
+						email: authUser.email,
+						emailVerified: authUser.emailVerified,
+						providerData: authUser.providerData,
+						...dbUser,
+					};
+					next(authUser);
+				})
+			};
+		} else {
+			authUser = {
+				profile: authUser.profile,
+				mongoId: authUser.mongoId,
+				uid: authUser.uid,
+				username: authUser.username,
+				email: authUser.email,
+				emailVerified: authUser.emailVerified,
+				providerData: authUser.providerData,
+				...dbUser,
+			};
+        	next(authUser);
+		}
       });
   } else {
     fallback();

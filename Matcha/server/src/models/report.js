@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const reportSchema = new mongoose.Schema({
 	reportie: String,
-	reported: [{username: String, reason: String}]
+	reported: [{uid: String, reason: String}]
 })
 
 reportSchema.statics.findByReportie = async function (reportie) {
@@ -10,6 +10,10 @@ reportSchema.statics.findByReportie = async function (reportie) {
 		reportie,
 	})
 	return report;
+}
+reportSchema.statics.findByReported = async function (uid) {
+	let reports = await this.find({'reported.uid': uid })
+	return reports;
 }
 
 const Report = mongoose.model('Report', reportSchema);

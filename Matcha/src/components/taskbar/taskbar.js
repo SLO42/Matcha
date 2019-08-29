@@ -15,6 +15,84 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import TemporaryDrawer from './menu';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { Paper } from '@material-ui/core';
+import axios from 'axios';
+
+
+let results = "";
+
+const apiSearch = async (query) => {
+	results = "";
+	const createSearch = query => {
+		let ret = "";
+		const params = query.split(" ");
+		let ammountofvalues = params.length;
+		let i = 0;
+		while (ammountofvalues--) {
+			console.log(i);
+			let param = params[i++];
+			param = param.charAt(0).toUpperCase() + param.slice(1);
+			// search by $or: {{wants.prefsex: {`${currentuser.mystats.mysex}`}, {"Bisexual"}}}
+			const interets =
+				param === "Camping" || param === "Coffee" ||  param ===  "Beer" ||
+				param === "Wine Tasting" || param === "Gaming" || param === "Karaoke" ||
+				param === "Religion" || param === "Shopping" || param === "Star Gazing" || param === "Running" ||
+				param === "Handicap Access" || param === "Travel" || param === "Theatre" || param === "Cooking" ||
+				param === "Biking" || param === "Fishing" || param === "Smoking" ||
+				param === "Concerts" || param === "Hunting" || param === "Reading";
+				
+				const firstAdd = ret === "";
+			console.log(interets);
+			if (param === "Male" || param === "Female") {
+				if (firstAdd){
+					ret = `mystats.mysex=${param}`;
+				} else {
+					ret = `${ret}_mystats.mysex=${param}`;
+				}
+			}
+			else if (interets){
+				if (firstAdd){
+					ret = `mystats.interest=${param}`;
+				} else {
+					ret = `${ret}_mystats.interest=${param}`;
+				}
+			}
+		}
+		return ret;
+	}
+
+	await axios.get(`http://localhost:3001/search/p_${createSearch(query)}_all`).
+	then(async res => {
+		await console.log(res.data);
+		await console.log(results);
+		
+		res.data.sort((a, b) => {
+			if(a.username < b.username) return -1;
+			if(a.username > b.username) return 1;
+			return 0; 
+		})
+		await res.data.map(async (profileObject) => {
+			results += ` | ${profileObject.username}`;
+			return (
+				<div>
+					{() => console.log("FUCK")}
+				<Paper>
+					<p>
+						
+						${profileObject.username}
+						</p>
+				</Paper>
+				</div>
+			)
+		})
+		results += ' |';
+		await console.log(results);
+		return res;
+	}).
+	catch(err => {if (err) console.log(err)});
+	await window.alert(results);
+	// return `http://localhost:3001/search/p_${query}_all`;
+} 
 
 const theme = createMuiTheme({
     palette: {
@@ -91,7 +169,9 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function PrimarySearchAppBar() {
+
+
+const PrimarySearchAppBar = () => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -131,6 +211,18 @@ export default function PrimarySearchAppBar() {
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
     </Menu>
   );
+
+  const [value, setValue] = React.useState("");
+  const changeSearch = event => {
+	setValue(event.target.value);
+}
+
+  const _handleKeyDown = (e) => {
+	  if (e.key === 'Enter') {
+		console.log(value);
+		apiSearch(value);
+	  }
+  }
 
   const mobileMenuId = 'primary-search-account-menu-mobile';
   const renderMobileMenu = (
@@ -172,7 +264,6 @@ export default function PrimarySearchAppBar() {
       </MenuItem>
     </Menu>
   );
-
   return (
     <MuiThemeProvider theme={theme}>
     <div className={classes.grow}>
@@ -186,14 +277,17 @@ export default function PrimarySearchAppBar() {
             <div className={classes.searchIcon}>
               <SearchIcon />
             </div>
-            <InputBase
+            <InputBase /* this is where The Search Bar is */ 
               placeholder="Search…"
               classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ 'aria-label': 'Search' }}
-            />
+				  root: classes.inputRoot,
+				  input: classes.inputInput,
+				}}
+				value={value}
+				onChange={changeSearch}
+				onKeyDown={_handleKeyDown}
+				inputProps={{ 'aria-label': 'Search' }}
+				/>
           </div>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
@@ -232,8 +326,14 @@ export default function PrimarySearchAppBar() {
         </Toolbar>
       </AppBar>
       {renderMobileMenu}
-      {renderMenu}
+	  {renderMenu}
+	  <div>
+		  {results !== "" ?<p> {results} </p> : <p>Waiting For search</p>}
+	  </div>
     </div>
     </MuiThemeProvider>
   );
 }
+
+
+export default PrimarySearchAppBar;

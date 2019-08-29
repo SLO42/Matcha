@@ -29,21 +29,22 @@ const createEverything = async () => {
 	// for default user list
 
 	let userOptions = [
-		{ username: 'saolivei', email: 'saolivei@student.42.us.org',
-			access: { level: 5, group: "admin" 	}
-		},
-		{ username: `apickett`, email: 'apickett@student.42.us.org',
-			access: { level: 5, group: "admin" 	}
-		},
-		{ username: `ssettle`, email: 'ssettle@student.42.us.org',
-			access: { level: 0, group: "user", },
-		},
+		// { username: 'saolivei', email: 'saolivei@student.42.us.org',
+		// 	access: { level: 5, group: "admin" 	}
+		// },
+		// { username: `apickett`, email: 'apickett@student.42.us.org',
+		// 	access: { level: 5, group: "admin" 	}
+		// },
+		// { username: `ssettle`, email: 'ssettle@student.42.us.org',
+		// 	access: { level: 0, group: "user", },
+		// },
+		{ fireid: 101, username: 'nouser', access: {level : -1, group: 'nonUser'}},
 	];
 	/*--> 
 	** Bewarned that going further has rusulted in slow or no connectivity 
 	** Please don't raise these numbers. they already make the result size 1.8mb
 	<--*/
-	let extra = 5000;
+	let extra = 269;
 	while(extra){
 		const username = "AutoBot #" + extra--;
 		const email = Math.random().toString(36).substring(2, 15) +  "@" + Math.random().toString(36).substring(2, 7) + ".com";
@@ -130,6 +131,8 @@ const install = async () => {
 		models.User.deleteMany({}),
 		models.Message.deleteMany({}),
 		models.Profile.deleteMany({}),
+		models.Gallery.deleteMany({}),
+		models.Report.deleteMany({}),
 	]);
 	await createStuff();
 }

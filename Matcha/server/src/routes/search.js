@@ -38,6 +38,7 @@ router.get('/:format', async (req, res) => {
 	let accessLevel = -1;
 	let accessGroup = null;
 	let findReported = 0;
+	let fireid = "";
 
 	let i = 1;
 	let query = {};
@@ -49,6 +50,7 @@ router.get('/:format', async (req, res) => {
 		const value = values[1] ? values[1] : null;
 		
 		if (key === "mystats.mysex") gender = value;
+		else if (key === "fireid") fireid = value;
 		else if (key === "mystats.interest") interstList.push(value);
 		else if (key === "access.level") accessLevel = parseInt(value)
 		else if (key === "access.group") accessGroup = value;
@@ -56,9 +58,10 @@ router.get('/:format', async (req, res) => {
 		else if (key === "email") emailToFind = value;
 		else if (key === "reportie") userToFind = value;
 		else if (key === "reported") {findReported = 1; userToFind = value;}
-		console.log(key + " " + value + " " + ammountOfValues)
 	}
 	console.log(query);
+
+
 
 	const ifPorifle = (table === "profile" || table === "Profile" || table === "p" || table === "P");
 	const ifUser = (table === "user" || table === "User" || table === "u" || table === "U");
@@ -75,8 +78,18 @@ router.get('/:format', async (req, res) => {
 	**	This here is going to be the Profile_All Sections
 	**	This covers all searches that start with profile and end with all
 	*/
+	if (fireid !== ""){
+		const searchProfileForUserOne = await req.context.models.Profile.findOne().
+			where('fireid').all(fireid).
+			exec(function (err, result){
+				if (err){
+					res.send(err);
+				} else {
+					return res.send(result);
+				}
+			})
 
-	if (ifPorifle && qaunitityAll){
+	} else if (ifPorifle && qaunitityAll){
 		if (interstList[0]){
 			if (gender){
 				console.log("Request for Interests and Gender")
@@ -113,8 +126,8 @@ router.get('/:format', async (req, res) => {
 					})
 			}
 		} else {
+			if (gender){
 				console.log("Request for Gender")
-				if (gender){
 					const searchProfileForGenderAll = await req.context.models.Profile.find().
 						where('mystats.mysex').all(gender).
 						exec(function (err, result) {
@@ -129,23 +142,23 @@ router.get('/:format', async (req, res) => {
 								return res.send(result);
 							}
 						})
-				} else if (userToFind) {
+			} else if (userToFind) {
 					console.log("Request profile via username")
-					const searchProfileForUserAll = await req.context.models.Profile.find().
-						where('username').all(userToFind).
-						exec(function (err, result) {
-							if (err) {
-								errorHandle(req.params.format);
-								res.writeHead(301, `profile  not found`)
-								res.write(`profile not found`, (err) => {
-									if (err) { console.log(err) };
-								});
-								return res.status(404).send("does not exist");
-							} else {
-								return res.send(result);
-							}
-						})
-				} else {
+					const searchProfileForUserAll = 
+						await req.context.models.Profile.findByUsername(userToFind)
+						// .exec(function (err, result) {
+						// 	if (err) {
+						// 		errorHandle(req.params.format);
+						// 		res.writeHead(301, `profile  not found`)
+						// 		res.write(`profile not found`, (err) => {
+						// 			if (err) { console.log(err) };
+						// 		});
+						// 		return res.status(404).send("does not exist");
+						// 	} else {
+						// 		return res.send(result);
+						// 	}
+						// })
+			} else {
 					console.log("Request all Profiles")
 					const searchProfileForAll = await req.context.models.Profile.find().
 						exec(function (err, result) {
@@ -166,7 +179,6 @@ router.get('/:format', async (req, res) => {
 	else if (ifPorifle && qaunitityOne){
 		if (interstList[0]){
 			if (gender){
-				console.log("Request for Interests and Gender")
 				const searchProfileForInterstAndGenderOne = await req.context.models.Profile.findOne().
 					where('mystats.interest').all(interstList).
 					where('mystats.mysex').all(gender).
@@ -183,7 +195,6 @@ router.get('/:format', async (req, res) => {
 						}
 					})
 			} else {
-				console.log("Request for Only Interests")
 				const searchProfileForInterstOne = await req.context.models.Profile.findOne().
 					where('mystats.interest').all(interstList).
 					exec(function (err, result) {
@@ -200,7 +211,6 @@ router.get('/:format', async (req, res) => {
 					})
 			}
 		} else {
-			console.log("Request for Gender")
 			if (gender){
 				const searchProfileForGenderOne = await req.context.models.Profile.findOne().
 					where('mystats.mysex').all(gender).
@@ -217,23 +227,16 @@ router.get('/:format', async (req, res) => {
 						}
 					})
 			} else if (userToFind) {
-				console.log("Request profile via username")
 				const searchProfileForUserOne = await req.context.models.Profile.findOne().
-					where('username').all(userToFind).
-					exec(function (err, result) {
-						if (err) {
-							errorHandle(req.params.format);
-							res.writeHead(301, `profile  not found`)
-							res.write(`profile not found`, (err) => {
-								if (err) { console.log(err) };
-							});
-							return res.status(404).send("does not exist");
-						} else {
-							return res.send(result);
-						}
-					})
+					where('userid').all(userToFind).
+				exec(function (err, result){
+					if (err){
+						res.send(err);
+					} else {
+						return res.send(result);
+					}
+				})
 			}else {
-				console.log("Request all info")
 				const searchProfileForOne = await req.context.models.Profile.findOne().
 					exec(function (err, result) {
 						if (err) {
@@ -258,7 +261,6 @@ router.get('/:format', async (req, res) => {
 	*/
 	else if (ifUser && qaunitityAll){
 		if (userToFind){
-			console.log("Request for Username")
 			const searchUserForUserAll = await req.context.models.User.find().
 				where('username').all(userToFind).
 				exec(function (err, result) {
@@ -274,7 +276,6 @@ router.get('/:format', async (req, res) => {
 					}
 				})
 		} else if ( emailToFind ){
-			console.log("Request for Email")
 			const searchUserForEmailAll = await req.context.models.User.find().
 				where('email').all(emailToFind).
 				exec(function (err, result) {
@@ -290,7 +291,6 @@ router.get('/:format', async (req, res) => {
 					}
 				})
 		} else if ( accessLevel !== -1 ) {
-			console.log("Request for Access Level")
 			const searchUserForAccessLevelAll = await req.context.models.User.find().
 				where('access.level').all(accessLevel).
 				exec(function (err, result) {
@@ -306,7 +306,6 @@ router.get('/:format', async (req, res) => {
 					}
 				})
 		} else if ( accessGroup ){
-			console.log("Request for access Group")
 			const searchUserForAccessGroupAll = await req.context.models.User.find().
 				where('access.group').all(accessGroup).
 				exec(function (err, result) {
@@ -322,7 +321,6 @@ router.get('/:format', async (req, res) => {
 					}
 				})
 		} else {
-			console.log("looking for anyinfo");
 			const searchUserForAll = await req.context.models.User.find().
 				exec(function (err, result) {
 					if (err) {
@@ -346,7 +344,6 @@ router.get('/:format', async (req, res) => {
 	}
 	else if (ifUser && qaunitityOne){
 		if (userToFind){
-			console.log("Request for Username")
 			const searchUserForUserOne = await req.context.models.User.findOne().
 				where('username').all(userToFind).
 				exec(function (err, result) {
@@ -362,7 +359,6 @@ router.get('/:format', async (req, res) => {
 					}
 				})
 		} else if ( emailToFind ){
-			console.log("Request for Email")
 			const searchUserForEmailOne = await req.context.models.User.findOne().
 				where('email').all(emailToFind).
 				exec(function (err, result) {
@@ -378,7 +374,6 @@ router.get('/:format', async (req, res) => {
 					}
 				})
 		} else if ( accessLevel !== -1 ) {
-			console.log("Request for Access Level")
 			const searchUserForAccessLevelOne = await req.context.models.User.findOne().
 				where('access.level').all(accessLevel).
 				exec(function (err, result) {
@@ -394,7 +389,6 @@ router.get('/:format', async (req, res) => {
 					}
 				})
 		} else if ( accessGroup ){
-			console.log("Request for access Group")
 			const searchUserForAccessGroupOne = await req.context.models.User.findOne().
 				where('access.group').all(accessGroup).
 				exec(function (err, result) {
@@ -411,7 +405,6 @@ router.get('/:format', async (req, res) => {
 				})
 			}
 			else {
-				console.log("looking for anyinfo");
 				const searchUserForOne = await req.context.models.User.findOne().
 					exec(function (err, result) {
 						if (err) {
@@ -434,7 +427,6 @@ router.get('/:format', async (req, res) => {
 	*/
 	else if (ifGallery && qaunitityAll){
 			if (userToFind){
-				console.log("Request Gallery for Username")
 				const searchGalleryForUserAll = await req.context.models.Gallery.find().
 					where('username').all(userToFind).
 					exec(function (err, result) {
@@ -451,7 +443,6 @@ router.get('/:format', async (req, res) => {
 					})
 			}
 			else {
-				console.log("Request Gallery")
 				const searchGalleryForAll = await req.context.models.Gallery.find().
 					exec(function (err, result) {
 						if (err) {
@@ -469,7 +460,6 @@ router.get('/:format', async (req, res) => {
 	}
 	else if (ifGallery && qaunitityOne){
 			if (userToFind){
-				console.log("Request Gallery for Username")
 				const searchGalleryForUserOne = await req.context.models.Gallery.findOne().
 					where('username').all(userToFind).
 					exec(function (err, result) {
@@ -486,7 +476,6 @@ router.get('/:format', async (req, res) => {
 					})
 			}
 			else {
-				console.log("Request Gallery")
 				const searchGalleryForOne = await req.context.models.Gallery.findOne().
 					exec(function (err, result) {
 						if (err) {
@@ -510,7 +499,6 @@ router.get('/:format', async (req, res) => {
 	*/
 	else if (ifReport && qaunitityAll){
 			if (findReported) {
-				console.log("Request for reported")
 				const searchReportForReportedUserAll = await req.context.models.Report.find().
 					where('reported.username').all(userToFind).
 					exec(function (err, result) {
@@ -526,7 +514,6 @@ router.get('/:format', async (req, res) => {
 						}
 					})
 			} else if (userToFind){
-				console.log("Request for reportie")
 				const searchReportForReportieUserAll = await req.context.models.Report.find().
 					where('reportie').all(userToFind).
 					exec(function (err, result) {
@@ -542,7 +529,6 @@ router.get('/:format', async (req, res) => {
 						}
 					})
 			} else {
-				console.log("Request for all reports")
 				const searchReportForAll = await req.context.models.Report.find().
 					exec(function (err, result) {
 						if (err) {
@@ -560,7 +546,6 @@ router.get('/:format', async (req, res) => {
 	}
 	else if (ifReport && qaunitityOne) {
 			if (findReported) {
-				console.log("Request for reported")
 				const searchReportForReportedUserOne = await req.context.models.Report.findOne().
 					where('reported.username').all(userToFind).
 					exec(function (err, result) {
@@ -576,7 +561,6 @@ router.get('/:format', async (req, res) => {
 						}
 					})
 			} else if (userToFind){
-				console.log("Request for reportie")
 				const searchReportForReportieUserOne = await req.context.models.Report.findOne().
 					where('reportie').all(userToFind).
 					exec(function (err, result) {
@@ -592,7 +576,6 @@ router.get('/:format', async (req, res) => {
 						}
 					})
 			} else {
-				console.log("Request for all reports")
 				const searchReportForOne = await req.context.models.Report.findOne().
 					exec(function (err, result) {
 						if (err) {
@@ -617,7 +600,6 @@ router.get('/:format', async (req, res) => {
 	*/
 	else if (ifBanned && qaunitityAll){
 			if (userToFind){
-				console.log("Request for Username")
 				const searchBannedUserAll = await req.context.models.BannedUsers.find().
 					where('user').all(userToFind).
 					exec(function (err, result) {
@@ -634,7 +616,6 @@ router.get('/:format', async (req, res) => {
 					})
 			}
 			else if (emailToFind){
-				console.log("Request for Email")
 				const searchBannedEmailAll = await req.context.models.BannedUsers.find().
 					where('email').all(emailToFind).
 					exec(function (err, result) {
@@ -651,7 +632,6 @@ router.get('/:format', async (req, res) => {
 					})
 			}
 			else {
-				console.log("Request for all Banned")
 				const searchBannedAll = await req.context.models.BannedUsers.find().
 					exec(function (err, result) {
 						if (err) {
@@ -669,7 +649,6 @@ router.get('/:format', async (req, res) => {
 	} 
 	else if (ifBanned && qaunitityOne){
 			if (userToFind){
-				console.log("Request for Username")
 				const searchBannedUserOne = await req.context.models.BannedUsers.findOne().
 					where('user').all(userToFind).
 					exec(function (err, result) {
@@ -686,7 +665,6 @@ router.get('/:format', async (req, res) => {
 					})
 			}
 			else if (emailToFind){
-				console.log("Request for Email")
 				const searchBannedEmailOne = await req.context.models.BannedUsers.findOne().
 					where('email').all(emailToFind).
 					exec(function (err, result) {
@@ -703,7 +681,6 @@ router.get('/:format', async (req, res) => {
 					})
 			}
 			else {
-				console.log("Request for all Banned")
 				const searchBannedOne = await req.context.models.BannedUsers.findOne().
 					exec(function (err, result) {
 						if (err) {

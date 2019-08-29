@@ -1,18 +1,14 @@
 import React from 'react';
-import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
-import { fade } from '@material-ui/core/styles/colorManipulator';
 import { withStyles } from '@material-ui/core/styles';
-import MenuIcon from '@material-ui/icons/Menu';
-import AccountBox from '@material-ui/icons/AccountBox';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import Navigation from '../navigation';
-import * as ROUTES from '../constants/routes';
 import Rating from '@material-ui/lab/Rating';
 import Box from '@material-ui/core/Box';
 import FormButtons from '../formPage';
+import { withFirebase } from '../firebase';
+import { AuthUserContext} from '../session';
+import { compose } from 'recompose';
+
 const theme = createMuiTheme({
     palette: {
       primary: {
@@ -58,11 +54,23 @@ class ProfileCreation extends React.Component {
             <p>
                 CREATE YOUR PROFILE
             </p>
-            <FormButtons/>
+			<AuthUserContext.Consumer>
+				{authUser => (
+					<FormButtons authUser={authUser}/>
+				)}
+			</AuthUserContext.Consumer>
         </div>
       </MuiThemeProvider>
         );
     };
 }
 
-export default withStyles(styles)(ProfileCreation);
+
+
+export default compose(
+	withStyles(styles),
+	withFirebase,
+)(ProfileCreation);
+
+
+// export default withStyles(styles)((withFirebase((ProfileCreation))));

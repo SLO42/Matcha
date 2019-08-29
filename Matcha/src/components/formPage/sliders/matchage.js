@@ -1,43 +1,110 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Slider from '@material-ui/core/Slider';
+import Select from '@material-ui/core/Select';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import OutlinedInput from '@material-ui/core/OutlinedInput';
 
-const useStyles = makeStyles({
-  root: {
-	width: 300,
-  },
-});
+const useStyles = makeStyles(theme => ({
+	root: {
+	  display: 'flex',
+	  flexWrap: 'wrap',
+	},
+	formControl: {
+	  margin: 'auto',
+	  minWidth: 120,
+	},
+	selectEmpty: {
+	  marginTop: theme.spacing(2),
+	},
+  }));
 
-function valuetext(value) {
-  return `${value}°C`;
-}
 
-const MatchAgeSlider = ({userObj}) => {
-  const classes = useStyles();
-  const [value, setValue] = React.useState([20, 99]);
+const MatchAgeSlider = ({profile, checkStage}) => {
+	const classes = useStyles();
+	const [state, setState] = React.useState({
+	  min: '',
+	  max: '',
+	  name: 'hai',
+	});
+  
+	const inputLabel = React.useRef(null);
+	const [labelWidth, setLabelWidth] = React.useState(0);
+	React.useEffect(() => {
+	  setLabelWidth(inputLabel.current.offsetWidth);
+	}, []);
+  
+	const setMin = async() => await (profile.wants.prefage.min = state.min < state.max ? state.min : state.max);
+	const setMax = async() => await (profile.wants.prefage.max = state.max > state.min ? state.max : state.min);
 
-  const handleChange = (event, newValue) => {
-	setValue(newValue);
-	userObj.prefage.min = value[0];
-	userObj.prefage.max = value[1];
-  };
+	const update = () => {
+		setTimeout( () => { setMin(); setMax(); }, 5000);
+		setMin();
+		setMax();
+		if (state.min !== '' && state.max !== '') checkStage(3);
+	}
+
+	const handleChange = name => event => {
+	  setState({
+		...state,
+		[name]: event.target.value,
+	  });
+	  	update();
+	};
+
+	let options = [18, 19, 20]
+
+	let i = 21;
+	while (i !== 100)
+	{
+		options.push(i);
+		i++;
+	}
+	const DisplayOptions = () => options.map(i => (
+		<option value={i}>{i}</option>
+	))
+//   const handleChange = (event, newValue) => {
+// 	setValue(newValue);
+// 	profile.wants.prefage.min = value[0];
+// 	profile.wants.prefage.max = value[1];
+//   };
 
   return (
 	<div className={classes.root}>
-	  <Typography id="range-slider" gutterBottom>
-		Your Age Preference
-	  </Typography>
-	  <Slider
-		value={value}
-		onChange={handleChange}
-		min={18}
-		max={99}
-		valueLabelDisplay="auto"
-		aria-labelledby="range-slider"
-		getAriaValueText={valuetext}
-	  />
-	  {value[0] + " - " + value[1]}
+	    <FormControl variant="outlined" className={classes.formControl} onMouseOut={update}>
+			<InputLabel ref={inputLabel} htmlFor="outlined-age-native-simple">
+				Age a
+			</InputLabel>
+			<Select
+				native
+				required
+				value={state.min}
+				onChange={handleChange('min')}
+				input={
+					<OutlinedInput name="min" labelWidth={labelWidth} id="outlined-age-native-simple" />
+				}
+			>
+				<option value=""/>
+				<DisplayOptions />
+			</Select>
+      </FormControl>
+	  <FormControl variant="outlined" className={classes.formControl} onMouseOut={update}>
+			<InputLabel ref={inputLabel} htmlFor="outlined-age-native-simple">
+				Age b
+			</InputLabel>
+			<Select
+				native
+				required
+				value={state.max}
+				onChange={handleChange('max')}
+				input={
+					<OutlinedInput name="max" labelWidth={labelWidth} id="outlined-age-native-simple" />
+				}
+			>
+				<option value=""/>
+				<DisplayOptions />
+			</Select>
+      </FormControl>
 	</div>
   );
 }

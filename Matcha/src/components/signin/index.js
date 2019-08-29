@@ -109,7 +109,11 @@ class SignInFormBase extends Component {
   }
 
   onSubmit = event => {
-    const { email, password } = this.state;
+	const { email, password } = this.state;
+
+	if (email.indexOf("@") === -1){
+		
+	}
 
     this.props.firebase
       .doSignInWithEmailAndPassword(email, password)
@@ -141,7 +145,7 @@ class SignInFormBase extends Component {
           value={email}
           onChange={this.onChange}
           type="text"
-          placeholder="Email Address"
+          placeholder="Username"
         />
         <Input
          onSubmit={this.onSubmit}

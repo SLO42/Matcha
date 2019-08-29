@@ -7,6 +7,11 @@ import { Input } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
+
+import {doMongoDBGetUsers, doMongoDBCreateProfile} from '../axios';
+import { runInThisContext } from 'vm';
+
+
 const SignUpPage = () => (
   <div>
     <h1>Sign Up</h1>
@@ -74,11 +79,15 @@ const styles = theme => ({
 }});
 
 const INITIAL_STATE = {
+  username: '',
+  firstname: '',
+  lastname: '',
   email: '',
   passwordOne: '',
   passwordTwo: '',
   isAdmin: false,
   error: null,
+  users: '',
 };
 
 const ERROR_CODE_ACCOUNT_EXISTS = 'auth/email-already-in-use';
@@ -95,26 +104,36 @@ class SignUpFormBase extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { ...INITIAL_STATE };
+	this.state = { ...INITIAL_STATE };
+	// this.state = { ...INITIAL_STATE };
   }
 
-  
+
 
   onSubmit = event => {
-    const { username, email, passwordOne } = this.state;
-
+	const {username, email, firstname, lastname, 
+		passwordOne, users } = this.state;
+	let profObj = {firstname, lastname, username, userid: "", fireid: ""};
+	if (users.search(`"username":"${username}"`) === 1){
+		console.log((users.search(`"username":"${username}"`)));
+		return (window.alert("please try again"));
+	}
     this.props.firebase
       .doCreateUserWithEmailAndPassword(email, passwordOne)
       .then(authUser => {
-        return this.props.firebase.user(authUser.user.uid).set({
-          username,
-          email,
-        });
+		this.props.firebase.doDatabaseCreateUser(username, email, authUser.user.uid);
+		profObj.fireid = authUser.user.uid;
+		doMongoDBCreateProfile(profObj).then(res => authUser.profile = res)
+		.catch(err => {if(err) console.log(err)});
+		return this.props.firebase.user(authUser.user.uid).set({
+			  username,
+			  email,
+		});
       })
       .then(() => {
         return this.props.firebase.doSendEmailVerification();
       })
-      .then(() => {
+      .then(async () => {
         this.setState({ ...INITIAL_STATE });
         this.props.history.push(ROUTES.PROFILE_CREATION);
       })
@@ -129,6 +148,15 @@ class SignUpFormBase extends React.Component {
     event.preventDefault();
   };
 
+  async componentDidMount() {
+	doMongoDBGetUsers().
+	then(res => {
+		console.log(res);
+		this.setState({users: JSON.stringify(res)});
+		return res;
+	});
+  }
+
   onChange = event => {
     this.setState({ [event.target.name]: event.target.value });
   };
@@ -139,16 +167,41 @@ class SignUpFormBase extends React.Component {
 
   render() {
     const {
+	  username,
       email,
       passwordOne,
       passwordTwo,
-      error,
+	  error,
+	  firstname,
+	  lastname,
     } = this.state;
+
+	
+	// -----------> THIS IS A NOTE <-----------
+	// This is proof that i tried to use an object array to refrence
+	// This.state.a... i did not try value={this.state.`${obj.a}`}
+	// But i mean it looks crazy so i'll try it later. 
+
+	// const inputOptions = [
+	// 	{a: username, b: "text", c: "Username"},
+	// 	{a: firstname, b: "text", c: "Firstname"},
+	// 	{a: lastname, b: "text", c: "Lastname"},
+	// 	{a: email, b: "text", c: "Email"},
+	// 	{a: passwordOne, b: "password", c: "Password"},
+	// 	{a: passwordTwo, b: "password", c: "Confirm Passwird"},
+	// ]
+	//
+	// DONT DO THIS with the per-usual .map(obj => ...)
+	// something to do with M.UI <Input /> value being written 
+	// making the component re-render, losing event focus.
+
 
     const isInvalid =
       passwordOne !== passwordTwo ||
       passwordOne === '' ||
-      email === '';
+	  email === '' || 
+	  username.length < 5 ||
+	  username.length > 15;
 
       const renderMobile = (
         <MuiThemeProvider theme={theme}>
@@ -160,30 +213,66 @@ class SignUpFormBase extends React.Component {
               >
               <CardContent>
             <form onSubmit={this.onSubmit}>
-              <Input
-              style={{ float: "center", width: "50%"}}
-                name="email"
-                value={email}
-                onChange={this.onChange}
-                type="text"
-                placeholder="Email Address"
-              /><br/>
-              <Input
-              style={{ float: "center", width: "50%"}}
-                name="passwordOne"
-                value={passwordOne}
-                onChange={this.onChange}
-                type="password"
-                placeholder="Password"
-              /><br/>
-              <Input
-              style={{ float: "center", width: "50%"}}
-                name="passwordTwo"
-                value={passwordTwo}
-                onChange={this.onChange}
-                type="password"
-                placeholder="Confirm Password"
-              /><br/>
+				<Input
+					required
+					value={username}
+					type="text"
+					onChange={this.onChange}
+					placeholder={"Username"}
+					name={"username"}
+					autoComplete={"Username"}
+				/>
+				<br />
+				<Input
+					required
+					value={firstname}
+					type="text"
+					onChange={this.onChange}
+					placeholder={"Firstname"}
+					name={"firstname"}
+					autoComplete={"Firstname"}
+				/>
+				<br />
+				<Input
+					required
+					value={lastname}
+					type="text"
+					onChange={this.onChange}
+					placeholder={"Lastname"}
+					name={"lastname"}
+					autoComplete={"Lastname"}
+				/>
+				<br />
+				<Input
+					required
+					value={email}
+					type="text"
+					onChange={this.onChange}
+					placeholder={"Email"}
+					name={"email"}
+					autoComplete={"Email"}
+				/>
+				<br />
+				<Input
+					required
+					value={passwordOne}
+					type="password"
+					onChange={this.onChange}
+					placeholder={"Password"}
+					name={"passwordOne"}
+					autoComplete={"password"}
+				/>
+				<br />
+				<Input
+					required
+					value={passwordTwo}
+					type="password"
+					onChange={this.onChange}
+					placeholder={"Confirm password"}
+					name={"passwordTwo"}
+					autoComplete={"password"}
+				/>
+				<br />
               <br></br>
               <Button 
               style={styles.button}
@@ -191,8 +280,8 @@ class SignUpFormBase extends React.Component {
                 Sign Up
               </Button>
       
-              {error && <p>{error.message}</p>}
             </form>
+              {error && <p>{error.message}</p> && window.alert(error)}
             </CardContent>
             </Card>
             </div>

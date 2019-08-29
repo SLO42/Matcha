@@ -19,6 +19,7 @@ const minMax = {
 // current using Schema for creating the new user. 
 // WITHOUT ADMIN | AUTH | EMAIL VERIFY 
 const userSchema = new mongoose.Schema({
+	fireid: String,
 	username: String,
 	email: String,
 	location: {lon: Number, lat: Number},
@@ -31,10 +32,13 @@ const userSchema = new mongoose.Schema({
 
 // IDK how this works but im sure it works somehow... was added
 // from the 5 part set from https://www.robinwieruch.de/
-userSchema.statics.findByLogin = async function (login) {
+userSchema.statics.findByLoginEmailUid = async function (login) {
 	let user = await this.findOne({
 		username: login,
 	});
+	if (!user) {
+		user = await this.findOne({fireid: login });
+	}
 
 	if (!user) {
 		user = await this.findOne({ email: login });

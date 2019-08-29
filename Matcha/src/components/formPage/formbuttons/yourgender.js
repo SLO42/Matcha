@@ -29,12 +29,13 @@ const PinkRadio = withStyles({
   checked: {}
 })(props => <Radio color="default" {...props} />);
 
-const FormControlLabelPosition = ({userObj}) => {
-  const [value, setValue] = React.useState("none");
+const FormControlLabelPosition = ({profile, checkStage}) => {
+  const [value, setValue] = React.useState(profile ? profile.mystats.mysex : "none");
 
   function handleChange(event) {
 	setValue(event.target.value);
-	userObj.mysex = event.target.value;
+	profile.mystats.mysex = event.target.value;
+	checkStage(4);
   }
 
   return (

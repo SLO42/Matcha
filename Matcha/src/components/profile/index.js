@@ -16,7 +16,13 @@ import Avatar from '@material-ui/core/Avatar';
 import TTY from './tty.jpg';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import { Paper } from '@material-ui/core';
+import { Paper, CardContent } from '@material-ui/core';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+
+import ProfileCard from '../_cards';
+import { withAuthentication, AuthUserContext, withProfileVerification, withAuthorization,} from '../session';
+import { compose } from 'recompose';
 
 const theme = createMuiTheme({
     palette: {
@@ -37,7 +43,7 @@ const theme = createMuiTheme({
           justify: "right",
           alignItems: "right",
           width: "30vw",
-      },
+	  },
   }
 
   const useStyles = makeStyles({
@@ -46,23 +52,29 @@ const theme = createMuiTheme({
     },
     bigAvatar: {
       margin: 10,
-      width: 600,
-      height: 600,
+      minWidth: 145,
+      minHeight: 145,
     },
     root: {
         width: '100%',
-        paddingBottom: "40px",
+		paddingBottom: "40px",
+		backgroundColor: "forestgreen",
       },
       notif: {
           height: 100,
-          width: 600,
+		  width: 600,
       },
       rightPanel: {
           position: 'right',
           justify: "right",
           height: "100vh",
           width: "30vw"
-      },
+	  },
+	  benis: {
+		elevation: 24,
+		maxWidth: `40vw`,
+		boxShadow: '100 3px 5px 2px rgba(44, 56, 126, .3)',
+	}
   });
 
 
@@ -122,19 +134,46 @@ export function Notifications() {
     );
   }
 
+export const ChigBungusExpress = ({authUser}) => {
+	const classes = useStyles();
+	return (
+		<Paper className={classes.benis}>
+			<CardHeader title={authUser.username}  />
+				<CardContent>
+					<div  style={styles.tty}>
+						<ImageAvatars/>
+					</div>
+					<ProfileCard authUser={authUser}/>
+					<div style={styles.panel}>
+					<RightPanel/>
+					</div>
+				</CardContent>
+			</Paper>
+	);
+}
+
 class ProfilePage extends React.Component {
+
     render() {
         return(
-        <MuiThemeProvider theme={theme}>
-        <div  style={styles.tty}>
-            <ImageAvatars/>
-        </div>
-        <div style={styles.panel}>
-        <RightPanel/>
-        </div>
+		<MuiThemeProvider theme={theme}>
+			<AuthUserContext.Consumer>
+				{authUser => (
+					<ChigBungusExpress authUser={authUser} />
+				)}
+			</AuthUserContext.Consumer>
       </MuiThemeProvider>
         );
     };
 }
 
-export default (ProfilePage);
+const condition = authUser => !!authUser && !!authUser.profile && authUser.profile.__v !== 0;
+
+export default compose(
+	withProfileVerification,
+	withAuthentication,
+	withAuthorization(condition)
+)(ProfilePage);
+
+
+// export default (withAuthentication(ProfilePage));

@@ -83,12 +83,12 @@ const FormLabelController = () => {
 };
 
 
-const FormControlLabelPosition = ({userObj}) => {
-  const [value, setValue] = React.useState("none");
+const FormControlLabelPosition = ({profile}) => {
+  const [value, setValue] = React.useState(profile ? profile.mystats.bodytype : "none");
 
   function handleChange(event) {
 	setValue(event.target.value);
-	userObj.bodytype = event.target.value;
+	profile.mystats.bodytype = event.target.value;
   }
 
   return (

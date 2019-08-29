@@ -20,14 +20,15 @@ let height = (value) => {
 	return feet + "ft " + inch + "in"; 
 }
 
-const MatchHeightSlider = ({userObj}) => {
+const MatchHeightSlider = ({profile}) => {
   const classes = useStyles();
-  const [value, setValue] = React.useState([18, 300]);
+  const [value, setValue] = React.useState(profile ? 
+	[profile.wants.prefheight.min, profile.wants.prefheight.max]: [18, 300]);
 
   const handleChange = (event, newValue) => {
 	setValue(newValue);
-	userObj.prefheight.min = value[0];
-	userObj.prefheight.max = value[1];
+	profile.wants.prefheight.min = value[0];
+	profile.wants.prefheight.max = value[1];
   };
 
   return (
