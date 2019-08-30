@@ -23,7 +23,9 @@ const Navigation = ({ authUser }) => (
   <div>
   <AuthUserContext.Consumer>
       {authUser =>
-        authUser ? <NavigationAuth /> : <NavigationNonAuth />
+        authUser ? 
+		(authUser.profile && authUser.profile.__v) ? 
+		<NavigationFinal /> : <NavigationAuth /> : <NavigationNonAuth />
       }
     </AuthUserContext.Consumer>
   </div>
@@ -45,6 +47,29 @@ const NavigationAuth = () => (
       </li>
       <li>
         <Link to={ROUTES.PROFILE_CREATION}>CREATE YOUR PROFILE</Link>
+      </li>
+      <li>
+        <Link to={ROUTES.FIND_USERS}>START SWIPING</Link>
+      </li>
+      <li>
+        <SignOutButton/>
+      </li>
+    </ul>
+);
+
+const NavigationFinal = () => (
+    <ul style={{listStyleType: 'none'}}>
+    <li>
+      <Link to={ROUTES.LANDING}>Landing</Link>
+    </li>
+    <li>
+        <Link to={ROUTES.HOME}>Home</Link>
+      </li>
+      <li>
+        <Link to={ROUTES.ACCOUNT}>Account</Link>
+      </li>
+      <li>
+        <Link to={ROUTES.PROFILE}>PROFILE</Link>
       </li>
       <li>
         <Link to={ROUTES.FIND_USERS}>START SWIPING</Link>
