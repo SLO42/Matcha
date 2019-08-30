@@ -19,7 +19,14 @@ const useStyles = makeStyles({
   },
   fullList: {
     width: 'auto',
+    color: "#ffeb3b"
   },
+  primary: {
+    main: "#fff",
+  },
+  secondary: {
+    main: "#ffeb3b",
+  }
 });
 
 export default function TemporaryDrawer() {
@@ -93,7 +100,7 @@ export default function TemporaryDrawer() {
         <IconButton
             edge="start"
             className={classes.menuButton}
-            color="inherit"
+            color="secondary"
             aria-label="Open drawer"
             onClick={toggleDrawer('left', true)}
           >

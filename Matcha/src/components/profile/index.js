@@ -67,11 +67,12 @@ const theme = createMuiTheme({
       rightPanel: {
           position: 'right',
           justify: "right",
-          height: "100vh",
-          width: "30vw"
+          maxHeight: `50vh`,
+          maxWidth: `40vw`,
 	  },
 	  benis: {
-		elevation: 24,
+    elevation: 24,
+    maxHeight: `50vh`,
 		maxWidth: `40vw`,
 		boxShadow: '100 3px 5px 2px rgba(44, 56, 126, .3)',
 	}

@@ -19,10 +19,10 @@ import Grid from '@material-ui/core/Grid';
  const theme = createMuiTheme({
   palette: {
     primary: {
-      main: '#2c387e',
+      main: '#333',
     },
     secondary: {
-        main: '#33eaff',
+        main: '#ffeb3b',
     }
 },
 });
@@ -55,10 +55,10 @@ const styles = {
     padding: 10,
     margin: "auto",
     width: "20vw",
-    background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+    background: 'linear-gradient(45deg, #37474f 30%, #ffeb3b 90%)',
       border: 0,
       borderRadius: 3,
-      boxShadow: '0 3px 5px 2px rgba(44, 56, 126, .3)',
+      boxShadow: '0 3px 5px 5px rgba(255, 215, 0, .2)',
       color: 'white',
       rounded: "true",
       variant: "contained",
@@ -99,8 +99,8 @@ function AccountPage() {
     <AuthUserContext.Consumer>
     {authUser => (
       <div>
-        <h1>Account: {authUser.email}</h1>
-        <h2>Here you can manage your password and link other accounts.</h2>
+        <h1 style={{color: "#ffff00"}}>Account: {authUser.email}</h1>
+        <h2 style={{color: "#ffff00"}}>Here you can manage your password and link other accounts.</h2>
         
         <div style={styles.passwordchange} >
         {/* <UsernameChangeForm style={styles.topCard}/> */}

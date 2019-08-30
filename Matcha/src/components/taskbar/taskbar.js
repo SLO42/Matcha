@@ -101,7 +101,7 @@ const theme = createMuiTheme({
         main: '#333',
       },
       secondary: {
-          main: '#33eaff',
+          main: '#ffeb3b',
       },
       progress: {
       },
@@ -119,6 +119,7 @@ const useStyles = makeStyles(theme => ({
     display: 'none',
     [theme.breakpoints.up('sm')]: {
       display: 'block',
+      color: '#ffeb3b'
     },
   },
   search: {
@@ -144,9 +145,10 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    color: "#ffeb3b"
   },
   inputRoot: {
-    color: 'secondary',
+    color: '#ffeb3b',
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 7),
@@ -320,16 +322,16 @@ const PrimarySearchAppBar = () => {
               aria-controls={mobileMenuId}
               aria-haspopup="true"
               onClick={handleMobileMenuOpen}
-              color=""
+              color="#ffeb3b"
             >
               <MoreIcon />
             </IconButton>
           </div>
         </Toolbar>
         <div>
-		  {results !== "" ?<p> {results} </p> : <p>Waiting For search</p>}
 	  </div>
       </AppBar>
+      {results !== "" ?<h1> {results} </h1> : <h1 style={{color: "#ffff00"}}>Waiting For search</h1>}
     </div>
     </MuiThemeProvider>
   );

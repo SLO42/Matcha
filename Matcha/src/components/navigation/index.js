@@ -49,9 +49,6 @@ const NavigationAuth = () => (
         <Link to={ROUTES.PROFILE_CREATION}>CREATE YOUR PROFILE</Link>
       </li>
       <li>
-        <Link to={ROUTES.FIND_USERS}>START SWIPING</Link>
-      </li>
-      <li>
         <SignOutButton/>
       </li>
     </ul>
@@ -70,9 +67,6 @@ const NavigationFinal = () => (
       </li>
       <li>
         <Link to={ROUTES.PROFILE}>PROFILE</Link>
-      </li>
-      <li>
-        <Link to={ROUTES.FIND_USERS}>START SWIPING</Link>
       </li>
       <li>
         <SignOutButton/>

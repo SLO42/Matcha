@@ -12,10 +12,10 @@ import { compose } from 'recompose';
 const theme = createMuiTheme({
     palette: {
       primary: {
-        main: '#2c387e',
+        main: '#333',
       },
       secondary: {
-          main: '#33eaff',
+        main: '#ffeb3b',
       }
   },
   });
@@ -51,9 +51,9 @@ class ProfileCreation extends React.Component {
         return(
         <MuiThemeProvider theme={theme}>
         <div>
-            <p>
+            <h1 style={{color: "#ffff00"}}>
                 CREATE YOUR PROFILE
-            </p>
+            </h1>
 			<AuthUserContext.Consumer>
 				{authUser => (
 					<FormButtons authUser={authUser}/>

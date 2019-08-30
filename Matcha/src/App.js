@@ -17,14 +17,12 @@ import AccountPage from './components/account';
 import HomePage from './components/home';
 import ProfilePage from './components/profile';
 import ProfileCreation from './components/profileCreation';
-
-
-
+import Background from './background.png';
 import {
   BrowserRouter as Router,
   Route,
 } from 'react-router-dom';
-import UserCard from './components/userCard';
+import LandingPage from './components/landing';
 
 const theme = createMuiTheme({
   palette: {
@@ -32,7 +30,7 @@ const theme = createMuiTheme({
       main: '#333',
     },
     secondary: {
-        main: '#33eaff',
+        main: '#ffeb3b',
     },
     progress: {
     }
@@ -42,10 +40,9 @@ const theme = createMuiTheme({
 const styles = {
   container: {
     minHeight: "100vh",
-      textAlign: 'center',
-      minWidth: '100vw',
-      background:
-      "url(http://www.backgroundsimg.com/picdir/md/black-and-gold/backgroundsimg-black-background-design-gold-pattern-UQ5RJ.png) no-repeat center center fixed",
+    textAlign: 'center',
+    minWidth: '100vw',
+    background: `url(${Background}) no-repeat`,
     backgroundSize: '100vw 100vh',
     position: "flex",
     fontSize: 'calc(10px + 2vmin)',
@@ -147,13 +144,13 @@ class App extends Component {
           <div style={styles.taskbar}>
           <Taskbar/>
           </div>
+        <Route path={ROUTES.LANDING} component={LandingPage} />
         <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
 				<Route path={ROUTES.SIGN_IN} component={SignInPage} />
 				<Route path={ROUTES.HOME} component={HomePage} />
 				<Route path={ROUTES.PROFILE} component={ProfilePage} />
 				<Route path={ROUTES.PROFILE_CREATION} component={ProfileCreation}/>
 				<Route path={ROUTES.ACCOUNT} component={AccountPage} />
-				<Route path={ROUTES.FIND_USERS} component={UserCard} />
         </div>
 			</Router>
 		</MuiThemeProvider>

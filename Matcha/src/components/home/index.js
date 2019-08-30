@@ -34,10 +34,10 @@ import { GridList, GridListTile } from '@material-ui/core';
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: '#2c387e',
+      main: '#333',
     },
     secondary: {
-        main: '#33eaff',
+        main: '#ffeb3b',
     }
 },
 });
