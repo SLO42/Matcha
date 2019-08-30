@@ -16,6 +16,7 @@ import { ButtonBase } from '@material-ui/core';
 import Zoom from '@material-ui/core/Zoom';
 import { withRouter } from 'react-router-dom';
 import * as ROUTES from '../constants/routes';
+import MyCamera from '../camera';
 
 // change to use the current object and update it to whaterever you want, 
 //then check for changes and update only the changes.
@@ -140,6 +141,7 @@ class FormPageBase extends React.Component {
 															<Zoom in={stage > 5}> 
 																<div style={{margin: 'auto'}}>
 																	<Card >
+																		<MyCamera />
 																		<ButtonBase onClick={() => this.postUser()}>button</ButtonBase>
 																		<br />
 																	</Card>

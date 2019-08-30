@@ -1,5 +1,6 @@
 import React from 'react';
 import Webcam from "react-webcam";
+import { isThisISOWeek } from 'date-fns';
 
 
 class MyCamera extends React.Component{
@@ -26,6 +27,12 @@ class MyCamera extends React.Component{
 
 	}
 
+
+	reset = () => {
+		if (this.state.replaced){
+			this.setState({replaced: null});
+		}
+	}
 
 	setRef = webcam => {
 		this.webcam = webcam;
@@ -72,7 +79,7 @@ class MyCamera extends React.Component{
   
 
 		  return (
-				<div className="MyCameraStart" style={{position: 'relative'}}>
+				<div className="MyCameraStart" style={{display: 'flex'}}>
 					<div className="Smile" style={{width: 320, height: 220, display: 'flex', justifyContent: 'inherit'}}>
 					{!replaced ? (
 						<Webcam
@@ -87,7 +94,9 @@ class MyCamera extends React.Component{
 					</div>
 					<input type="file" onChange={fileChangedHandler} />
 					<div style={{margin: 'auto', alignContent: 'center'}}>
-						<button onClick={this.capture}>Capture photo</button>
+						{ replaced ? 
+						(<button onClick={this.reset}>reset Photo</button>) : 
+						(<button onClick={this.capture}>Capture photo</button>)}
 					</div>
 				</div>
 				)}
