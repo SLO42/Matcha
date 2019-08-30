@@ -39,7 +39,8 @@ const INITAL_STATE = {
 			prefsex: "",
 		},
 		location: {lon: 0.0, lat: 0.0},
-	}
+	},
+	profilePhoto: null,
 }
 
 // migrate current profile to state after mount. make sure 
@@ -142,7 +143,7 @@ class FormPageBase extends React.Component {
 																<div style={{margin: 'auto'}}>
 																	<Card >
 																		<MyCamera />
-																		<ButtonBase onClick={() => this.postUser()}>button</ButtonBase>
+																		<ButtonBase onClick={() => this.postUser()}>Create your Profile</ButtonBase>
 																		<br />
 																	</Card>
 																</div>

@@ -17,7 +17,7 @@ const MyAge = ({profile, checkStage}) => {
 		let now = new Date();
 		const agedate = now.getFullYear() - date.getFullYear();
 		profile.mystats.myage = agedate;
-		setTimeout(() => checkStage(1), 1000);
+		checkStage(1);
 	  }
 
   return (

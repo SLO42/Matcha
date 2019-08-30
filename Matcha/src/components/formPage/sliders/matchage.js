@@ -55,7 +55,7 @@ const MatchAgeSlider = ({profile, checkStage}) => {
 	let options = [18, 19, 20]
 
 	let i = 21;
-	while (i !== 100)
+	while (i !== 121)
 	{
 		options.push(i);
 		i++;
