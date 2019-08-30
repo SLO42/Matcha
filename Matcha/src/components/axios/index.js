@@ -6,6 +6,8 @@ import {doMongoDBCreateProfile,
 	doMongoDBGetUsers, doMongoDBCreateUser,
 } from './tosignup';
 
+import doGetUserFromUsername from './tosignin';
+
 export {doMongoDBGetProfileWithAuth,
 		doMongoDBGetGalleryWithAuth,
 		doMongoDBGetUserWithAuthEmail,
@@ -15,4 +17,5 @@ export {doMongoDBGetProfileWithAuth,
 		doMongoDBGetUserIdWithFireid,
 		doMongoDBGetProfileWithUserid,
 		doMongoDBGetProfileWithFireid,
+		doGetUserFromUsername,
 	};

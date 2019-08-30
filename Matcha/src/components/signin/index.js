@@ -7,6 +7,7 @@ import * as ROUTES from '../constants/routes';
 import Card from '@material-ui/core/Card';
 import { CardContent, Input } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
+import {doGetUserFromUsername} from '../axios';
 
 /** signin fixed for mobile*/
 const styles = {
@@ -110,20 +111,34 @@ class SignInFormBase extends Component {
 
   onSubmit = event => {
 	const { email, password } = this.state;
-
 	if (email.indexOf("@") === -1){
-		
+		const wait = async () => {
+			await doGetUserFromUsername(email).then(res => {
+				this.props.firebase
+				.doSignInWithEmailAndPassword(res[0].email, password)
+				.then(() => {
+					this.setState({ ...INITIAL_STATE });
+					this.props.history.push(ROUTES.HOME);
+				})
+				.catch(error => {
+					this.setState({ error });
+				});}
+			).
+			catch(err => {if (err) return err});
+		}
+		wait();
+	} else {
+		this.props.firebase
+		  .doSignInWithEmailAndPassword(email, password)
+		  .then(() => {
+			this.setState({ ...INITIAL_STATE });
+			this.props.history.push(ROUTES.HOME);
+		  })
+		  .catch(error => {
+			this.setState({ error });
+		  });
 	}
 
-    this.props.firebase
-      .doSignInWithEmailAndPassword(email, password)
-      .then(() => {
-        this.setState({ ...INITIAL_STATE });
-        this.props.history.push(ROUTES.HOME);
-      })
-      .catch(error => {
-        this.setState({ error });
-      });
 
     event.preventDefault();
   };
