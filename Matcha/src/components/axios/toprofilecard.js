@@ -39,18 +39,25 @@ async function doMongoDBGetGalleryWithAuth(authUser){
 	const apiTable = process.env.REACT_APP_AXIOS_SEARCH_GALLERY;
 	const apiModify = process.env.REACT_APP_AXIOS_SEARCH_MODIFY_ONE;
 	const apiUserToFind = `${apiTable}username=${authUser.uid}${apiModify}`;
-	let results = {};
-	await axios.get(apiUserToFind).
+	return await axios.get(apiUserToFind).
 	then(async res => {
-		results = res.data;
 		return(res.data);
 	}).catch(err => {
 		if (err) return err.status;
 	});
-	return results;
+}
+
+async function doUpdateGallery(authUser, gallery){
+	const table = process.env.REACT_APP_AXIOS_UPDATE_GALLERY;
+
+	const body = {'fireid': authUser.uid, gallery};
+	return axios.put(table, body).
+	then(res => {return res }).
+	catch(err => {if (err) return (err)});
 }
 
 export {doMongoDBGetProfileWithAuth,
 	doMongoDBGetGalleryWithAuth, 
 	doMongoDBGetUserWithAuthEmail,
+	doUpdateGallery,
 };

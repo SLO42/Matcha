@@ -52,6 +52,7 @@ class MyCamera extends React.Component{
 			thumbnail: picture,
 			timeStamp: now,
 		};
+		this.props.updatePhoto(picture);
 		await this.setState({photo: newpic, replaced: picture});
 		await this.setState(this.state);
 	  };
@@ -71,6 +72,7 @@ class MyCamera extends React.Component{
 				})
 				if (this.state.replaced) {
 					await this.setState({ replaced: URL.createObjectURL(this.state.replaced)})
+					this.props.updatePhoto(this.state.replaced);
 				}
 			} else {
 				this.setState({ replaced: null })

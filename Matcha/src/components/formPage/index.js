@@ -3,11 +3,9 @@ import { compose } from 'recompose';
 import Interests from './formbuttons/interests';
 import Card from '@material-ui/core/Card';
 import MyAge from './myage';
-import MatchHeightSlider from './sliders/matchheight.js';
-import MatchAgeSlider from './sliders/matchage.js';
+import MatchAgeSlider from './matchage';
 import GenderChoice from './formbuttons/yourgender';
 import SexualPreference from './formbuttons/matchgender';
-import {withAuthorization} from '../session';
 import {MuiPickersUtilsProvider} from '@material-ui/pickers';
 import DateFnsUtils from "@date-io/date-fns";
 import TextBio from './textfield';
@@ -17,6 +15,7 @@ import Zoom from '@material-ui/core/Zoom';
 import { withRouter } from 'react-router-dom';
 import * as ROUTES from '../constants/routes';
 import MyCamera from '../camera';
+import {doMongoCreateGallery} from '../axios';
 
 // change to use the current object and update it to whaterever you want, 
 //then check for changes and update only the changes.
@@ -39,7 +38,7 @@ const INITAL_STATE = {
 			prefsex: "",
 		},
 		location: {lon: 0.0, lat: 0.0},
-	},
+	},		
 	profilePhoto: null,
 }
 
@@ -53,16 +52,28 @@ class FormPageBase extends React.Component {
 		
 	}
 
+	updatePhoto = profilePhoto => {
+		this.setState({profilePhoto});
+	}
+
 	postUser = async () => {
 		const updateProfile = process.env.REACT_APP_AXIOS_UPDATE_PROFILE;
-		let {profile} = this.state;
+		let {profile, profilePhoto} = this.state;
 		profile.fireid = this.props.authUser.uid;
 		await axios.put(updateProfile, profile).
 		then(async res => {
 			console.log(res);
 			this.props.authUser.profile = await res.data;
+
+			if(profilePhoto){
+				const gallery = {0: profilePhoto};
+				await doMongoCreateGallery(this.props.authUser.uid, gallery);
+			}else {
+				const gallery = {0: "nah"};
+				await doMongoCreateGallery(this.props.authUser.uid, gallery);
+			}
 		}).
-		then(() => this.props.history.push(ROUTES.PROFILE))
+		then(() => this.props.history.push(ROUTES.LANDING))
 	}
 	
 	checkStage = value => {
@@ -142,7 +153,7 @@ class FormPageBase extends React.Component {
 															<Zoom in={stage > 5}> 
 																<div style={{margin: 'auto'}}>
 																	<Card >
-																		<MyCamera />
+																		<MyCamera updatePhoto={this.updatePhoto}/>
 																		<ButtonBase onClick={() => this.postUser()}>Create your Profile</ButtonBase>
 																		<br />
 																	</Card>

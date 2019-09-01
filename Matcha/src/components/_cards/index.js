@@ -1,3 +1,4 @@
 import ProfileCard from './profileCard';
+import ProfileCardEdit from './profileCardEdit';
 
-export default ProfileCard;
+export {ProfileCard, ProfileCardEdit};

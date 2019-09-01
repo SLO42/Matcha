@@ -5,7 +5,7 @@ export default class LandingPage extends Component {
     render() {
       return (
     <div>
-      <UserCard></UserCard>
+      {/* <UserCard></UserCard> */}
         </div>
       )};
 }

@@ -3,10 +3,11 @@ import { Link } from 'react-router-dom';
 /* import SignOutButton from '../signout';*/
 import Divider from '@material-ui/core/Divider';
 import * as ROUTES from '../constants/routes';
-import { AuthUserContext } from '../session';
+import { AuthUserContext, withAuthorization } from '../session';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/core/styles';
 import SignOutButton from '../signout';
+import { compose } from 'recompose';
 const theme = createMuiTheme({
   palette: {
     primary: {
@@ -88,4 +89,7 @@ const NavigationNonAuth = () => (
   </ul>
 );
 
-export default withStyles(styles)(Navigation);
+
+export default compose(
+	withStyles(styles),
+)(Navigation);

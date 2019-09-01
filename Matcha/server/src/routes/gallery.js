@@ -1,10 +1,9 @@
 import { Router } from 'express';
 
-const router = Router;
+const router = Router();
 
-// generic search on gallery for all objects
 router.get('/', async (req, res) => {
-	const userGalleries = await req.context.models.Gallery.find();
+	const userGalleries = await req.context.models.Gallery.find({});
 	return res.send(userGalleries);
 })
 
@@ -12,18 +11,25 @@ router.get('/', async (req, res) => {
 // wondering if we should instead of username use fireid. so universial search;
 router.post('/add', async (req, res) => {
 	const userGallery = await req.context.models.Gallery.create({
-		username: req.context.me,
+		fireid: req.body.fireid,
 		gallery: req.body.gallery,
 	})
 	return res.send(userGallery);
 })
 // for updating galleries that are already made. Should Be sent with Newimg and Imgnum
 router.put('/update', async (req, res) => {
-	const userGalleryUpdate = await req.context.models.Gallery.findAndModify({
-		query: {username: req.context.me}, // looks for me
-		update: { $set: { "gallery.$[elem]": req.body.newimg } }, //sets gallery.$[elem] to newimg
-		arrayFilters: [ { elem : req.body.imgnum } ] // sets $[elem] to imgnum 
-	})
+	let userGalleryUpdate = await req.context.models.Gallery.find().
+	where("fireid").all(req.body.fireid).
+	catch(err => {
+		if (err){
+			console.log("Error at finding fireID with context");
+			console.log(err);
+			console.log("Error at finding fireID with context");
+			return(err);
+		};
+	});
+	userGalleryUpdate.gallery = await req.body.gallery;
+	return res.send(await userGalleryUpdate.save());
 })
 
 router.delete('/remove', async (req, res) => {
@@ -33,3 +39,5 @@ router.delete('/remove', async (req, res) => {
 		where(`gallery.${imgnum}`).all();
 	return res.send(userGalleryRemove);
 })
+
+export default router;

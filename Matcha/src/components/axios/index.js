@@ -1,8 +1,8 @@
 import {doMongoDBGetProfileWithAuth, doMongoDBGetGalleryWithAuth,
-	doMongoDBGetUserWithAuthEmail,
+	doMongoDBGetUserWithAuthEmail, doUpdateGallery,
 } from './toprofilecard';
 import {doMongoDBGetUserIdWithFireid, doMongoDBGetProfileWithUserid, doMongoDBGetProfileWithFireid} from './tofirebase';
-import {doMongoDBCreateProfile,
+import {doMongoDBCreateProfile, doMongoCreateGallery,
 	doMongoDBGetUsers, doMongoDBCreateUser,
 } from './tosignup';
 
@@ -18,4 +18,6 @@ export {doMongoDBGetProfileWithAuth,
 		doMongoDBGetProfileWithUserid,
 		doMongoDBGetProfileWithFireid,
 		doGetUserFromUsername,
+		doMongoCreateGallery,
+		doUpdateGallery,
 	};

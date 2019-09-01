@@ -41,7 +41,16 @@ async function doMongoDBGetUsers(){
 	return result;
 }
 
+async function doMongoCreateGallery(fireid, gallery){
+	const apiTable = process.env.REACT_APP_AXIOS_CREATE_GALLERY;
+	const galleryObj = {fireid, gallery};
+	return await axios.post(apiTable, galleryObj).
+	then(res => {return res}).
+	catch(err => {if(err){console.log(err); return err;}});
+}
+
 export {doMongoDBCreateUser, 
 	doMongoDBCreateProfile,
 	doMongoDBGetUsers,
+	doMongoCreateGallery,
 };

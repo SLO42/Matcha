@@ -16,13 +16,15 @@ import Avatar from '@material-ui/core/Avatar';
 import TTY from './tty.jpg';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import { Paper, CardContent } from '@material-ui/core';
+import { Paper, CardContent, CardMedia } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
+import SettingsIcon from '@material-ui/icons/Settings';
 
-import ProfileCard from '../_cards';
+import {ProfileCard, ProfileCardEdit} from '../_cards';
 import { withAuthentication, AuthUserContext, withProfileVerification, withAuthorization,} from '../session';
 import { compose } from 'recompose';
+import { doMongoDBGetGalleryWithAuth } from '../axios';
 
 const theme = createMuiTheme({
     palette: {
@@ -98,15 +100,94 @@ export function SimpleRating() {
     );
   }
 
-export function ImageAvatars() {
-    const classes = useStyles();
-  
-    return (
-      <Grid container justify="left" alignItems="left" >
-        <Avatar alt="Profile-Image" src={TTY} className={classes.bigAvatar} />
-      </Grid>
-    );
-  }
+// export class Gallery extends React.Component{
+// 	constructor(props){
+// 		super(props);
+
+// 		this.state = {
+// 			gallery: null,
+// 			edit: null,
+// 		}
+// 	}
+
+// 	componentDidMount() {
+// 		this.setState({gallery: this.props.gallery, edit: this.props.edit});
+
+// 	}
+// 	// if (gallery.length === 1) return null;
+
+// 	render() {
+// 		const {gallery, edit} = this.state;
+// 		let len = 0;
+// 		if (gallery){
+// 			len = gallery.length;
+// 		}
+// 		let i = 1;
+// 		let images = [];
+// 		let edits = [gallery && gallery[0] ? gallery[0] : "empty" ,
+// 		gallery && gallery[1] ? gallery[1] : "empty",
+// 		gallery && gallery[2] ? gallery[2] : "empty",
+// 		gallery && gallery[3] ? gallery[3] : "empty",
+// 		gallery && gallery[4] ? gallery[4] : "empty"];
+
+// 		while (i < len)
+// 		{
+// 			images.push(gallery[i])
+
+// 			i++;
+// 		}
+// 		return (
+// 			edit ? <p>test</p> : <p>no</p>
+// 		)
+// 	}
+
+// 	// return ( images.map((obj) => {
+// 	// 	return (
+// 	// 		edit ? <p>test</p> :
+// 	// 		<Card minWidth={'15vw'} minHeight={'15vh'} >
+// 	// 			<CardMedia src={obj} alt={obj} />
+// 	// 		</Card> 
+// 	// 	)
+// 	// }))
+// }
+
+export class ImageAvatars extends React.Component {
+	constructor(props){
+		super(props);
+
+		this.state = { 
+			loading: true, 
+			picture: null, 
+			gallery: [],
+		}
+	}
+
+	async componentDidMount() {
+		this.setState({loading: true});
+		const gallery = await doMongoDBGetGalleryWithAuth(this.props.authUser).then(
+			res => { return res}).catch(
+			err => { if (err) return (err)});
+		await setTimeout(() => {
+			if (gallery.gallery[0] === "nah"){
+				this.setState({picture: TTY});
+			} else {
+				this.setState({gallery: gallery.gallery, picture: gallery.gallery[0]});
+			}
+			this.setState({loading: false});
+		}, 469)
+	}
+
+
+
+	render(){
+		const {classes} = this.props;
+
+		return ( this.state.loading ? <p>loading...</p> : (
+			<Grid container justify="left" alignItems="left" >
+				<Avatar alt="Profile-Image" src={this.state.picture} className={classes.bigAvatar} />
+			</Grid> )
+    	)}
+}
 
 export function Notifications() {
     const classes = useStyles();
@@ -137,19 +218,31 @@ export function Notifications() {
 
 export const ChigBungusExpress = ({authUser}) => {
 	const classes = useStyles();
+
+	const [value, setValue] = React.useState(false);
+
+	const changeState = () => setValue(!value)
+
 	return (
 		<Paper className={classes.benis}>
-			<CardHeader title={authUser.username}  />
-				<CardContent>
-					<div  style={styles.tty}>
-						<ImageAvatars/>
-					</div>
-					<ProfileCard authUser={authUser}/>
-					<div style={styles.panel}>
+			<CardHeader title={authUser.username}
+			 action={
+				 <IconButton aria-label="settings" onClick={changeState}>
+					<SettingsIcon />
+				 </IconButton>
+			 }
+			 />
+			 <CardContent>
+				<div  style={styles.tty}>
+					<ImageAvatars authUser={authUser} classes={classes}/>
+				</div>
+				{ value ? <ProfileCardEdit authUser={authUser}/> : 
+				<ProfileCard authUser={authUser}/>}
+				<div style={styles.panel}>
 					<RightPanel/>
-					</div>
-				</CardContent>
-			</Paper>
+				</div>
+			</CardContent> 
+		</Paper>
 	);
 }
 
@@ -159,8 +252,9 @@ class ProfilePage extends React.Component {
         return(
 		<MuiThemeProvider theme={theme}>
 			<AuthUserContext.Consumer>
-				{authUser => (
-					<ChigBungusExpress authUser={authUser} />
+				{authUser => ( authUser ? 
+							<ChigBungusExpress authUser={authUser} /> : 
+							<h1>Looks like you arent connected</h1>
 				)}
 			</AuthUserContext.Consumer>
       </MuiThemeProvider>

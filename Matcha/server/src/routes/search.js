@@ -461,7 +461,7 @@ router.get('/:format', async (req, res) => {
 	else if (ifGallery && qaunitityOne){
 			if (userToFind){
 				const searchGalleryForUserOne = await req.context.models.Gallery.findOne().
-					where('username').all(userToFind).
+					where('fireid').all(userToFind).
 					exec(function (err, result) {
 						if (err) {
 							errorHandle(req.params.format);

@@ -6,10 +6,12 @@ import { CardHeader, CardMedia, CardContent,
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import {doMongoDBGetProfileWithAuth, doMongoDBGetUserWithAuthEmail} from '../axios';
+import Chips from '../formPage/formbuttons/interests.js';
 
 const useStyles = makeStyles(theme => ({
 	card: {
-		maxWidth: 345,
+		display: 'flex',
+		maxWidth: 800,
 		backgroundColor: "transparent",
 	},
 	media: {
@@ -23,28 +25,25 @@ const ProfileCardStuff = ({profile}) => {
 	const clicked = () => window.alert(profile);
 	let value = "";
 
+	const checkStage = val => {
+			
+	}
+
 	return(
 		<Card className={classes.card}>
 			<CardHeader
 				title={profile.fame}
 				subheader={ profile ? profile.mystats.bio : value }
 			/>
-			<CardContent>
-				<Typography variant="body2" color="textSecondary" component="p">
-					interests: {profile.mystats.interest.map(val => <h2>{val}</h2>)}
-				</Typography>
+			<CardContent >
+				<Chips profile={profile} checkStage={checkStage}/>
 			</CardContent>
-			<CardActions disableSpacing>
-				<IconButton aria-label="Share">
-					<ShareIcon	/>
-				</IconButton>
-			</CardActions>
 		</Card>
 	);
 
 }
 
-class ProfileCard extends Component{
+class ProfileCardEdit extends Component{
 	constructor(props){
 		super(props);
 
@@ -101,4 +100,4 @@ class ProfileCard extends Component{
 	}
 }
 
-export default ProfileCard;
+export default ProfileCardEdit;

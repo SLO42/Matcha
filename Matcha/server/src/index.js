@@ -60,6 +60,7 @@ app.use('/users', routes.user);
 app.use('/messages', routes.message);
 app.use('/profiles', routes.profile);
 app.use('/search', routes.search);
+app.use('/gallery', routes.gallery)
 
 // Connects to Database container and starts to listen.
 const runServer = async () => {
