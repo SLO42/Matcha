@@ -14,10 +14,20 @@ router.get('/:messageId', async (req, res) => {
 	return res.send(message);
 })
 
+router.get('/myMessages', async (req, res) => {
+	const messageList = await req.context.models.Message.find(
+		{
+			$or: [ { creator: req.body.username }, { invited: req.body.username } ]
+		}
+	)
+})
+
+
 router.post('/', async (req, res) => {
 	const message = await req.context.models.Message.create({
 		text: req.body.text,
-		user: req.context.me.id,
+		to: req.body.to,
+		from: req.body.from,
 	});
 	return res.send(message);
 });

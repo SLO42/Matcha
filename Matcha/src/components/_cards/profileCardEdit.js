@@ -6,7 +6,11 @@ import { CardHeader, CardMedia, CardContent,
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import {doMongoDBGetProfileWithAuth, doMongoDBGetUserWithAuthEmail} from '../axios';
+import TextBio from '../formPage/textfield';
 import Chips from '../formPage/formbuttons/interests.js';
+import MatchGender from '../formPage/formbuttons/matchgender';
+import MyGender from '../formPage/formbuttons/yourgender';
+import ImageCard from './imagecard';
 
 const useStyles = makeStyles(theme => ({
 	card: {
@@ -20,7 +24,7 @@ const useStyles = makeStyles(theme => ({
 	},
 }))
 
-const ProfileCardStuff = ({profile}) => {
+const ProfileCardStuff = ({profile, authUser}) => {
 	const classes = useStyles();
 	const clicked = () => window.alert(profile);
 	let value = "";
@@ -37,6 +41,10 @@ const ProfileCardStuff = ({profile}) => {
 			/>
 			<CardContent >
 				<Chips profile={profile} checkStage={checkStage}/>
+				<TextBio profile={profile} checkStage={checkStage} />
+				<MyGender profile={profile} checkStage={checkStage} />
+				<MatchGender profile={profile} checkStage={checkStage} />
+				<ImageCard profile={profile} authUser={authUser}/>
 			</CardContent>
 		</Card>
 	);
@@ -93,7 +101,7 @@ class ProfileCardEdit extends Component{
 				{
 					loading ? 
 					<p>Loading...</p> : 
-					<ProfileCardStuff profile={profile} /> 
+					<ProfileCardStuff profile={profile} authUser={authUser}/> 
 				} 
 			</div>
 		)
