@@ -9,7 +9,7 @@ const TextFields = [
 ];
 
 
-const CreateFields = ({handleChange}) => {
+const CreateFields = ({handleChange, bio}) => {
 	return TextFields.map(obj => (
 		<div className={obj.name} >
 			<TextField
@@ -17,7 +17,8 @@ const CreateFields = ({handleChange}) => {
 				onChange={handleChange}
 				fullWidth
 				multiline
-				rowsMax={42}
+				value={bio}
+				rowsMax={4}
 				id={obj.name}
 				label={"Tell us a little bit about youself"}
 				name={obj.name}
@@ -30,7 +31,7 @@ const CreateFields = ({handleChange}) => {
 const TextBio = ({profile, checkStage}) => {
 	// const [firstname, setFirst] = React.useState("");
 	// const [lastname, setLast] = React.useState("");
-	const [bio, setBio] = React.useState("");
+	const [bio, setBio] = React.useState(profile ? profile.mystats.bio : "");
 
 
 	const handleChange = event => {
@@ -42,7 +43,7 @@ const TextBio = ({profile, checkStage}) => {
 		// }
 		if (event.target.name === 'bio'){
 			setBio(event.target.value);
-			setTimeout(() => profile.mystats.bio = bio, 2500);
+			setTimeout(() => profile.mystats.bio = bio, 100);
 			checkStage(2)
 		}
 		// const save = async () => {
@@ -65,7 +66,7 @@ const TextBio = ({profile, checkStage}) => {
 
 	return (
 		<div className="TextFeilds">
-			<CreateFields handleChange={handleChange}/>
+			<CreateFields handleChange={handleChange} bio={bio}/>
 		</div>
 	)
 }

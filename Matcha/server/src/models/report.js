@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const reportSchema = new mongoose.Schema({
 	reportie: String,
-	reported: [{uid: String, reason: String}]
+	reported: [{username: String, reason: String}]
 })
 
 reportSchema.statics.findByReportie = async function (reportie) {

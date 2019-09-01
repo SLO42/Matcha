@@ -39,6 +39,7 @@ router.get('/:format', async (req, res) => {
 	let accessGroup = null;
 	let findReported = 0;
 	let fireid = "";
+	let fame = null;
 
 	let i = 1;
 	let query = {};
@@ -50,6 +51,7 @@ router.get('/:format', async (req, res) => {
 		const value = values[1] ? values[1] : null;
 		
 		if (key === "mystats.mysex") gender = value;
+		else if (key === "fame") fame = value;
 		else if (key === "fireid") fireid = value;
 		else if (key === "mystats.interest") interstList.push(value);
 		else if (key === "access.level") accessLevel = parseInt(value)
