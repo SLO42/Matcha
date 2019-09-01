@@ -211,7 +211,7 @@ const ImageCard = ({ imageObject, authUser }) => {
 const HomeHome = () => (
 		<AuthUserContext.Consumer>		
 		{authUser => (
-			<Images authUser={authUser} />
+			<Messages authUser={authUser} />
 		)}
 			</AuthUserContext.Consumer> 
 )
@@ -489,7 +489,7 @@ const ImageList = ({ images, authUser, firebase }) => {
 
 
 
- class ImagesBase extends Component {
+/*  class ImagesBase extends Component {
 	constructor(props){
 		super(props);
 
@@ -558,9 +558,9 @@ const ImageList = ({ images, authUser, firebase }) => {
 		);
 	}
 
-}
+} */
 
-/* class MessagesBase extends Component {
+ class MessagesBase extends Component {
   constructor(props) {
     super(props);
 
@@ -700,9 +700,9 @@ const ImageList = ({ images, authUser, firebase }) => {
       </MuiThemeProvider>
     );
   }
-} */
+}
 
-/* const MessageList = ({
+ const MessageList = ({
   messages,
   onEditMessage,
   onRemoveMessage,
@@ -788,7 +788,7 @@ class MessageItem extends Component {
       </li>
     );
   }
-} */
+}
 class HomePage extends Component {
   constructor(props) {
     super(props);
@@ -820,10 +820,10 @@ class HomePage extends Component {
 }
 
 
-//const Messages = withFirebase(MessagesBase);
+const Messages = withFirebase(MessagesBase);
 //const Comments = withFirebase(CommentBase);
 const Home = withFirebase(HomeHome);
-const Images = withFirebase(ImagesBase);
+//const Images = withFirebase(ImagesBase);
 
 const condition = authUser => !!authUser;
 
