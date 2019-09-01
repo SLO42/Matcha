@@ -168,7 +168,7 @@ export class ImageAvatars extends React.Component {
 			res => { return res}).catch(
 			err => { if (err) return (err)});
 		await setTimeout(() => {
-			if (gallery.gallery[0] === "nah"){
+			if (!gallery || gallery.gallery[0] === "nah"){
 				this.setState({picture: TTY});
 			} else {
 				this.setState({gallery: gallery.gallery, picture: gallery.gallery[0]});

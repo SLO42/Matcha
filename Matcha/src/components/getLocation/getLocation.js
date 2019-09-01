@@ -1,4 +1,4 @@
-import http from "./testhelp";
+import http from "./locationpermission";
 
 function getPosition() {
   if (!navigator.geolocation) return "Location not Allowed";
@@ -7,7 +7,7 @@ function getPosition() {
   });
 }
 
-const testicles = "AIzaSyB9SRnjYq-N6u_0uh9ON53BQdVuRwSDgoE";
+const tty = "AIzaSyB9SRnjYq-N6u_0uh9ON53BQdVuRwSDgoE";
 
 export default async function getLocation() {
   const { coords } = await getPosition();
@@ -15,7 +15,7 @@ export default async function getLocation() {
   const config = "https://maps.googleapis.com/maps/api/geocode/json?sensor=true&latlng=";
   const { data } = await http.get(
     `${config}${lat},${lon}&key=${
-      process.testicles
+      process.tty
     }`
   );
   console.log(data);

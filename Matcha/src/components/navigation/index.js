@@ -73,7 +73,7 @@ const NavigationFinal = () => (
         <Link to={ROUTES.ACCOUNT}>Account</Link>
       </li>
       <li>
-        <Link to={ROUTES.PROFILE}>PROFILE</Link>
+        <Link to={ROUTES.PROFILE}>Profile</Link>
       </li>
       <li>
         <SignOutButton/>

@@ -30,6 +30,10 @@ import { Switch, Route, Link } from 'react-router-dom';
 import * as ROUTES from '../constants/routes';
 import { withFirebase } from '../firebase';
 import { GridList, GridListTile } from '@material-ui/core';
+import { geolocated } from "react-geolocated";
+import LocationDisplays from '../location';
+import Geocode from "react-geocode";
+import * as geolib from 'geolib';
 
 const theme = createMuiTheme({
   palette: {
@@ -200,7 +204,7 @@ const HomeHome = () => (
 		{authUser => (
 			<Images authUser={authUser} />
 		)}
-			</AuthUserContext.Consumer> 
+			</AuthUserContext.Consumer>
 )
 
 const CommentList = ({ messages }) => (
@@ -768,28 +772,40 @@ class HomePage extends Component {
     super(props);
 
     this.state = {
-      users: null,
+	  users: null,
+	  isLocationEnabled: true,
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.props.firebase.users().on('value', snapshot => {
       this.setState({
         users: snapshot.val(),
       });
-    });
+	});
   }
 
   componentWillUnmount() {
     this.props.firebase.users().off();
   }
 
+
   render() {
-    return (
-      <div align="center">
+	  const mycooords = {latitude: "37.7790262", longitude: "-122.4199061"}
+	  const newcoords = {latitude: "37.5503916", longitude: "-122.049641"}
+	return !this.props.isGeolocationAvailable ? (
+		<div>Your browser does not support Geolocation</div>
+	) : !this.props.isGeolocationEnabled ? (
+		<div>Geolocation is not enabled</div>
+	) : this.props.coords ? (
+		<div align="center">
 		<HomePageRoutes />
+		{LocationDisplays(this.props.coords.latitude, this.props.coords.longitude)}
+		{console.log('ADDY DIFF', geolib.getDistance(newcoords, mycooords))}
       </div>
-    );
+	) : (
+		<div>Getting the location data&hellip; </div>
+	);
   }
 }
 
@@ -805,4 +821,9 @@ const condition = authUser => !!authUser;
 export default compose(
 	withEmailVerification,
 	withAuthorization(condition),
+	geolocated({
+		positionOptions: {
+			enableHighAccuracy: false,
+		},
+		userDecisionTimeout: 5000})
 )(HomePage);
