@@ -23,6 +23,8 @@ import {
   Route,
 } from 'react-router-dom';
 import LandingPage from './components/landing';
+import BlockUserCard from './components/block/block';
+import ReportUserCard from './components/report/report';
 
 const theme = createMuiTheme({
   palette: {
@@ -151,6 +153,8 @@ class App extends Component {
 				<Route path={ROUTES.PROFILE} component={ProfilePage} />
 				<Route path={ROUTES.PROFILE_CREATION} component={ProfileCreation}/>
 				<Route path={ROUTES.ACCOUNT} component={AccountPage} />
+        <Route path={ROUTES.REPORT_USER} component={ReportUserCard} />
+        <Route path={ROUTES.BLOCK_USER} component={BlockUserCard} />
         </div>
 			</Router>
 		</MuiThemeProvider>

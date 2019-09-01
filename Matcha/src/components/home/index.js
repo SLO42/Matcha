@@ -147,31 +147,22 @@ const useStyles = makeStyles(theme => ({
 
 const ImageCard = ({ imageObject, authUser }) => {
 	const classes = useStyles();
-	let desc = imageObject.comments[0].text;
-	const otit = imageObject.title;
+	//let desc = imageObject.comments[0].text;
+	//const otit = imageObject.title;
 
 	return (
 		<MuiThemeProvider theme={theme}>
 		<Card className={classes.card} style={{height: '490px', }}>
       <CardHeader
-        action={
-			<IconButton aria-label="Settings" component={Link} to={{
-				pathname: `${ROUTES.HOME}/${imageObject.uid}`,
-				state: { imageObject, authUser },
-			}}>
-            <SettingsIcon />
-          </IconButton>
-		}
 		style={{whiteSpace: 'nowrap', fontSize: '1em'}}
-        title={otit ? otit.length > 28 ? otit.substr(0, 28) + "..." : otit : null}
+        title={"TEST"}
 		/>
       <CardMedia className={classes.media}
-		image={imageObject.src}
-		title={imageObject.toc}
+		image={''}
+		title={"TEST"}
 		/>
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="p" style={{wordWrap: 'none',}}>
-          {desc ? desc.length > 150 ? (desc.substr(0, 150) + "...") : (desc) : "You can edit this field in the picture settings!" }
         </Typography>
       </CardContent>
       <CardActions disableSpacing style={{display: 'inline-flex', position: 'absolute', bottom: 0, right: '33%'}}>
@@ -185,21 +176,17 @@ const ImageCard = ({ imageObject, authUser }) => {
 					// }}
 					color={ 'primary' }
 					>
-				<Badge badgeContent={imageObject.likes} >
+				<Badge>
         	<ThumbUp /> 
 					</Badge>
         </IconButton>
         <IconButton aria-label="Share">
           <ShareIcon />
         </IconButton>
-        <IconButton
-          component={Link} to={{
-			  pathname: `${ROUTES.HOME}/${imageObject.uid}`,
-			  state: { imageObject, authUser },
-		  }}>
+        <IconButton>
           <CommentIcon />
 		  <div style={{padding: `2px`}}>
-		  	{imageObject.comments.length - 1}
+			  <p>text</p>
 		  </div>
         </IconButton>
       </CardActions>
@@ -211,7 +198,7 @@ const ImageCard = ({ imageObject, authUser }) => {
 const HomeHome = () => (
 		<AuthUserContext.Consumer>		
 		{authUser => (
-			<Messages authUser={authUser} />
+			<Images authUser={authUser} />
 		)}
 			</AuthUserContext.Consumer> 
 )
@@ -391,19 +378,15 @@ const HomePageRoutes = () => {
 )};
 
 
-const ImageList = ({ images, authUser, firebase }) => {
+const ImageList = () => {
 	const classes = useStyles();
 
 	return(
 		<div align="center">
 			<GridList cols={3} spacing={0} cellHeight={500} classes={{ root: classes.root }}>
-			{images.map(image => 
-				image.src ? (
-				<GridListTile key={image.uid} style={{minWidth: `500px`}} >
-						<ImageCard classes={{ root: classes.images }} imageObject={image} authUser={authUser} />
+				<GridListTile style={{minWidth: `500px`}} >
+						<ImageCard /* classes={{ root: classes.images }} imageObject={image} authUser={authUser} */ />
 				</GridListTile>
-			) : (null)
-				)}
 			</GridList>
 		</div>
 	);
@@ -489,7 +472,7 @@ const ImageList = ({ images, authUser, firebase }) => {
 
 
 
-/*  class ImagesBase extends Component {
+  class ImagesBase extends Component {
 	constructor(props){
 		super(props);
 
@@ -502,7 +485,7 @@ const ImageList = ({ images, authUser, firebase }) => {
 		};
 	}
 
-	onChangeText = event => {
+	/* onChangeText = event => {
 		this.setState({ text: event.target.value });
 	};
 
@@ -515,13 +498,13 @@ const ImageList = ({ images, authUser, firebase }) => {
 		this.setState ({ text: '' });
 
 		event.preventDefault();
-	}
+	} */
 
 	componentDidMount() {
 		this.setState({ loading: true  });
 	}
 
-	deletePicture = imgUid => {
+	/* deletePicture = imgUid => {
 
 		let imSrc = imgUid.src;
 		let imToc = imgUid.toc;
@@ -531,7 +514,7 @@ const ImageList = ({ images, authUser, firebase }) => {
 		} else {
 			return ;
 		}
-	}
+	} */
 
 	componentWillUnmount() {
     console.log('UNMOUNTED COMBAT');
@@ -542,23 +525,14 @@ const ImageList = ({ images, authUser, firebase }) => {
 
 		return(
 			<MuiThemeProvider theme={theme}>
-			<AuthUserContext.Consumer>
-				{authUser => (
 					<div align="center">
-						{loading && <div><CircularProgress color="secondary"/></div>}
-						{images ? (
-							<ImageList images={images} authUser={authUser} firebase={this.props.firebase}/>
-						) : (
-							<div>There are no images ...</div>
-						)}
+							<ImageList /* images={images} authUser={authUser} firebase={this.props.firebase} *//>
 					</div>
-			)}
-			</AuthUserContext.Consumer>
 			</MuiThemeProvider>
 		);
 	}
 
-} */
+}
 
  class MessagesBase extends Component {
   constructor(props) {
@@ -823,7 +797,7 @@ class HomePage extends Component {
 const Messages = withFirebase(MessagesBase);
 //const Comments = withFirebase(CommentBase);
 const Home = withFirebase(HomeHome);
-//const Images = withFirebase(ImagesBase);
+const Images = withFirebase(ImagesBase);
 
 const condition = authUser => !!authUser;
 

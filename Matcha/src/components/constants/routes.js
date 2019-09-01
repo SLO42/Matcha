@@ -13,3 +13,5 @@ export const MESSAGE_PAGE = '/messages';
 export const REPORT = '/report';
 export const SETTINGS = '/settings';
 export const FIND_USERS = '/swiping';
+export const REPORT_USER = '/reported';
+export const BLOCK_USER = '/deported';

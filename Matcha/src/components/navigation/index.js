@@ -44,6 +44,12 @@ const NavigationAuth = () => (
         <Link to={ROUTES.ACCOUNT}>Account</Link>
       </li>
       <li>
+        <Link to={ROUTES. BLOCK_USER}>BLOCK USER</Link>
+      </li>
+      <li>
+        <Link to={ROUTES.REPORT_USER}>REPORT USER</Link>
+      </li>
+      <li>
         <Link to={ROUTES.PROFILE}>PROFILE</Link>
       </li>
       <li>
