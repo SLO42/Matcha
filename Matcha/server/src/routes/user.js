@@ -19,8 +19,9 @@ router.get('/checkusers', async (req, res) => {
 
 router.get('/getid/:fireid', async (req, res) => {
 	const user = await req.context.models.User.findOne({},  {fireid: 1}).
-	where('fireid').all(req.param.fireid);
-	return res.send(user._id);
+	where('fireid').all(req.param.fireid).catch(err => {if(err) return err});
+	if (user) return res.send(user._id);
+	return res.send("failed")
 })
 //Post request to add User info to database. 
 

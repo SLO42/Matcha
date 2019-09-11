@@ -29,22 +29,25 @@ const createEverything = async () => {
 	// for default user list
 
 	let userOptions = [
-		// { username: 'saolivei', email: 'saolivei@student.42.us.org',
-		// 	access: { level: 5, group: "admin" 	}
-		// },
-		// { username: `apickett`, email: 'apickett@student.42.us.org',
-		// 	access: { level: 5, group: "admin" 	}
-		// },
-		// { username: `ssettle`, email: 'ssettle@student.42.us.org',
-		// 	access: { level: 0, group: "user", },
-		// },
+		{ username: 'Fire', email: 'fire.com',
+			access: { level: 5, group: "admin" 	},
+			fireid: 9999999,
+		},
+		{ username: `test`, email: 'test.org',
+			access: { level: 5, group: "admin" 	},
+			fireid: 999999
+		},
+		{ username: `tests`, email: 'tests.org',
+			access: { level: 0, group: "user", },
+			fireid: 99999
+		},
 		{ fireid: 101, username: 'nouser', access: {level : -1, group: 'nonUser'}},
 	];
 	/*--> 
 	** Bewarned that going further has rusulted in slow or no connectivity 
 	** Please don't raise these numbers. they already make the result size 1.8mb
 	<--*/
-	let extra = 269;
+	let extra = 1;
 	while(extra){
 		const username = "AutoBot #" + extra--;
 		const email = Math.random().toString(36).substring(2, 15) +  "@" + Math.random().toString(36).substring(2, 7) + ".com";
@@ -106,9 +109,16 @@ const createEverything = async () => {
 
 };
 
+
+const createStatus = async () => {
+	const server = new models.Status({name: 'server', online: ['server', 'nouser'] });
+	await server.save();
+}
+
 const createStuff = async () => {
 	// this is where the "automatic" creation is.
 	await createEverything();
+	await createStatus();
 }
 // const message1 = new models.Message({
 // 	text: 'Created from Erase on Sync',
@@ -133,6 +143,7 @@ const install = async () => {
 		models.Profile.deleteMany({}),
 		models.Gallery.deleteMany({}),
 		models.Report.deleteMany({}),
+		models.Status.deleteMany({}),
 	]);
 	await createStuff();
 }

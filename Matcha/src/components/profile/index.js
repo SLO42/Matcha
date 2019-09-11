@@ -25,6 +25,7 @@ import {ProfileCard, ProfileCardEdit} from '../_cards';
 import { withAuthentication, AuthUserContext, withProfileVerification, withAuthorization,} from '../session';
 import { compose } from 'recompose';
 import { doMongoDBGetGalleryWithAuth } from '../axios';
+import { isThisSecond } from 'date-fns';
 
 const theme = createMuiTheme({
     palette: {
@@ -164,18 +165,16 @@ export class ImageAvatars extends React.Component {
 
 	async componentDidMount() {
 		this.setState({loading: true});
-		const gallery = await doMongoDBGetGalleryWithAuth(this.props.authUser).then(
-			res => { return res}).catch(
-			err => { if (err) return (err)});
-		await setTimeout(() => {
-			if (!gallery || gallery.gallery[0] === "nah"){
-				this.setState({picture: TTY});
-			} else {
-				this.setState({gallery: gallery.gallery, picture: gallery.gallery[0]});
-			}
-			this.setState({loading: false});
-		}, 469)
+		if (this.props.authUser && this.props.authUser.profile && this.props.authUser.profile.picture){
+			const profile = this.props.authUser.profile;
+			const picture = profile.picture;
+
+			if (picture === "nah" || picture === "empty") this.setState({picture: TTY});
+			else this.setState({picture});
+		} else this.setState({picture: TTY});
+		this.setState({loading: false});	
 	}
+	
 
 
 
@@ -222,6 +221,10 @@ export const ChigBungusExpress = ({authUser}) => {
 	const [value, setValue] = React.useState(false);
 
 	const changeState = () => setValue(!value)
+	const changeStates = () => {
+		setValue(!value)
+		setTimeout(setValue(!value), 100);
+	}
 
 	return (
 		<Paper className={classes.benis}>
@@ -236,7 +239,7 @@ export const ChigBungusExpress = ({authUser}) => {
 				<div  style={styles.tty}>
 					<ImageAvatars authUser={authUser} classes={classes}/>
 				</div>
-				{ value ? <ProfileCardEdit authUser={authUser}/> : 
+				{ value ? <ProfileCardEdit authUser={authUser} changeState={changeStates}/> : 
 				<ProfileCard authUser={authUser}/>}
 				<div style={styles.panel}>
 					<RightPanel/>

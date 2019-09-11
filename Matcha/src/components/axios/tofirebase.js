@@ -42,7 +42,7 @@ async function doMongoDBGetProfileWithFireid(fireid){
 	const table = `${process.env.REACT_APP_AXIOS_SEARCH_PROFILES}`;
 	const request = `fireid=${fireid}_one`;
 	let resi = {};
-	await axios.get(table+request).
+	await axios.get(table+request, {fireid}).
 	then(async res => {
 		resi = res.data;
 		return res.data
@@ -50,6 +50,17 @@ async function doMongoDBGetProfileWithFireid(fireid){
 	return resi;
 }
 
-export { doMongoDBGetUserIdWithFireid, doMongoDBGetProfileWithUserid, doMongoDBGetProfileWithFireid};
+async function goOffline(fireid){
+	const request = process.env.REACT_APP_AXIOS_GO_OFFLINE;
+	const body = {fireid: fireid};
+	return await axios.put(request, body).
+	then(res => {
+		return res;
+	}).
+	catch(err => {if (err) return err})
+	
+}
+
+export { doMongoDBGetUserIdWithFireid, doMongoDBGetProfileWithUserid, doMongoDBGetProfileWithFireid, goOffline};
 
 

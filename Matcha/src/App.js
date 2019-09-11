@@ -15,6 +15,7 @@ import {withAuthentication, withAuthorization, }  from './components/session';
 import SignInPage from './components/signin';
 import AccountPage from './components/account';
 import HomePage from './components/home';
+import Status from './components/status';
 import ProfilePage from './components/profile';
 import ProfileCreation from './components/profileCreation';
 import Background from './background.png';
@@ -145,6 +146,7 @@ class App extends Component {
           }
           <div style={styles.taskbar}>
           <Taskbar/>
+		  <Status/>
           </div>
         <Route path={ROUTES.LANDING} component={LandingPage} />
         <Route path={ROUTES.SIGN_UP} component={SignUpPage} />

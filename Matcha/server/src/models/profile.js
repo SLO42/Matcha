@@ -19,6 +19,7 @@ const profileSchema = new mongoose.Schema({
 		},
 		prefsex: String,
 	},
+	picture: String,
 	fame: Number,
 	location: {lon: Number, lat: Number},
 	blocked: [String],

@@ -57,6 +57,12 @@ router.put('/update', async (req, res) => {
 		profile.reportedcount = req.body.reportedcount;
 	if (req.body.fame)
 		profile.fame = req.body.fame;
+	if (req.body.picture)
+		profile.picture = req.body.picture;
+	if (req.body.location){
+		profile.location.lon = req.body.location.lon;
+		profile.location.lat = req.body.location.lat;
+	}
 	await profile.save();
 	return res.send(profile);
 

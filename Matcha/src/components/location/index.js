@@ -28,12 +28,25 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-export default function LocationDisplays(lat, long) {
+
+export const LocationDisplay = ({profile}) => {
+	
+	const [lat, setLat] = React.useState(profile.location ? profile.location.lat : 0);
+	const [long, setLon] = React.useState(profile.location ? profile.location.lon : 0);
+
+
+	const updatelat = event => {
+		setLat(event.target.value);
+	}
+	const updatelon = event => {
+		setLon(event.target.value);
+	}
+	
 return (
-    <form autoComplete="off">
+	<form autoComplete="off">
         <Paper style={{width: "40vw"}}>
         <TextField
-        disabled
+		onChange={updatelat}
         id="outlined-disabled"
         label="Latitude"
         defaultValue={lat}
@@ -41,14 +54,39 @@ return (
         variant="outlined"
       />
        <TextField
-        disabled
+        onChange={updatelon}
         id="outlined-disabled"
         label="Longitude"
         defaultValue={long}
         margin="normal"
         variant="outlined"
-      />
+		/>
         </Paper>
     </form>
   );
+}
+
+export default function LocationDisplays(lat, long) {
+return (
+	<form autoComplete="off">
+		<Paper style={{width: "40vw"}}>
+		<TextField
+		disabled
+		id="outlined-disabled"
+		label="Latitude"
+		defaultValue={lat}
+		margin="normal"
+		variant="outlined"
+		/>
+		<TextField
+		disabled
+		id="outlined-disabled"
+		label="Longitude"
+		defaultValue={long}
+		margin="normal"
+		variant="outlined"
+		/>
+		</Paper>
+	</form>
+	);
 }

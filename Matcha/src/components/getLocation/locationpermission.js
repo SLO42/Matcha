@@ -3,18 +3,16 @@ const locationOptions = {
     timeout: 5000,
     maximumAge: 0
   };
+
+
+
   
   export default async function checkLocationPermission() {
     const { geolocation } = navigator;
     if (!geolocation) return "denied";
   
     try {
-      const result = await getPosition(locationOptions);
-      console.log(result);
-      const lat = (result.coords.latitude);
-      const long = (result.coords.longitude);
-      console.log(lat);
-      console.log(long);
+	  const result = await getPosition(locationOptions);
       return "granted";
     } catch (ex) {
       return "denied";
@@ -25,4 +23,17 @@ const locationOptions = {
     return new Promise(function (resolve, reject) {
       navigator.geolocation.getCurrentPosition(resolve, reject, options);
     });
+  }
+
+
+  export async function getLocationPermission() {
+    const { geolocation } = navigator;
+    if (!geolocation) return "denied";
+  
+    try {
+      const result = await getPosition(locationOptions);
+      return(result);
+    } catch (ex) {
+      return "denied";
+    }
   }

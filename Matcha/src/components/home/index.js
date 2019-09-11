@@ -19,7 +19,7 @@ import CommentIcon from '@material-ui/icons/Comment';
 import SettingsIcon from '@material-ui/icons/Settings';
 import CardHeader from '@material-ui/core/CardHeader';
 import Badge from '@material-ui/core/Badge';
-import { Button, Paper, InputBase, CircularProgress } from '@material-ui/core';
+import { Button, Paper, InputBase, CircularProgress, ButtonBase } from '@material-ui/core';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import {
 	withAuthorization,
@@ -34,6 +34,9 @@ import { geolocated } from "react-geolocated";
 import LocationDisplays from '../location';
 import Geocode from "react-geocode";
 import * as geolib from 'geolib';
+import { doMongoDBGetUserWithAuthEmail } from '../axios';
+import axios from 'axios';
+import TTY from '../profile/tty.jpg';
 
 const theme = createMuiTheme({
   palette: {
@@ -46,7 +49,7 @@ const theme = createMuiTheme({
 },
 });
 
-const styles = {
+const styles = { 
 	paper: {
 		rounded: true,
 		width: "30vw",
@@ -103,8 +106,8 @@ const styles = {
 
 const useStyles = makeStyles(theme => ({
 	card: {
-	  minWidth: "25vw",
-	  maxWidth: "25vw",
+	  minWidth: "320px",
+	  maxWidth: "420px",
 		height: 460,
 		rounded: true,
 	},
@@ -149,55 +152,6 @@ const useStyles = makeStyles(theme => ({
   }));
 
 
-const ImageCard = ({ imageObject, authUser }) => {
-	const classes = useStyles();
-	//let desc = imageObject.comments[0].text;
-	//const otit = imageObject.title;
-
-	return (
-		<MuiThemeProvider theme={theme}>
-		<Card className={classes.card} style={{height: '490px', }}>
-      <CardHeader
-		style={{whiteSpace: 'nowrap', fontSize: '1em'}}
-        title={"TEST"}
-		/>
-      <CardMedia className={classes.media}
-		image={''}
-		title={"TEST"}
-		/>
-      <CardContent>
-        <Typography variant="body2" color="textSecondary" component="p" style={{wordWrap: 'none',}}>
-        </Typography>
-      </CardContent>
-      <CardActions disableSpacing style={{display: 'inline-flex', position: 'absolute', bottom: 0, right: '33%'}}>
-
-		<IconButton aria-label="Add to favorites" 
-			// onClick={() => {
-				
-				// if (window.confirm('Are you sure you want to delete the picture? you can not have it back.')){
-					// 	return delPicture(imageObject, authUser);
-					// }
-					// }}
-					color={ 'primary' }
-					>
-				<Badge>
-        	<ThumbUp /> 
-					</Badge>
-        </IconButton>
-        <IconButton aria-label="Share">
-          <ShareIcon />
-        </IconButton>
-        <IconButton>
-          <CommentIcon />
-		  <div style={{padding: `2px`}}>
-			  <p>text</p>
-		  </div>
-        </IconButton>
-      </CardActions>
-    </Card>
-	</MuiThemeProvider>
-	);
-}
 
 const HomeHome = () => (
 		<AuthUserContext.Consumer>		
@@ -221,155 +175,7 @@ const CommentItem = ({ message }) => (
 	</li>
 )
 
-/* class CommentBase extends Component{
-	constructor(props){
-		super(props);
 
-		this.state = {
-			text: '',
-			loading: false,
-			messages: [],
-		};
-	}
-
-	onChangeText = event => {
-		this.setState({ text: event.target.value });
-	};
-
-	onCreateComment = () => {
-		this.props.firebase.doWriteComment(this.props.imageObject.iid, this.state.text, this.props.authUser.uid);
-		this.setState({ text: "" });
-	}
-
-	componentDidMount() {
-		this.setState({ loading: true });
-
-		this.props.firebase.comments(this.props.imageObject.iid)
-			.on('value', snapshot => {
-				const commentObject = snapshot.val();
-
-				if (commentObject) {
-					console.log(commentObject.length)
-
-					this.setState({ 
-						messages: commentObject,
-						loading: false,
-					});
-				} else {
-					this.setState({ messages: null, loading: false });
-				}
-			});
-	}
-
-	componentWillUnmount() {
-		this.props.firebase.comments(this.props.imageObject.iid).off();
-	}
-
-	render () {
-		const { text, messages, loading } = this.state;
-
-		return (
-			<MuiThemeProvider theme={theme}>
-			<CardContent>
-				<div>
-					{loading && <div><CircularProgress color="secondary"/></div>}
-
-					{messages ? (
-						<Card>
-							<CommentList messages={messages} />
-						</Card>
-						) : (
-							<div> There are no messages ... </div>
-							)}
-							<TextField id="CommentBox" labal="Leave a comment <3" multiline fullWidth
-								onChange={this.onChangeText} value={text} />
-								 <Button style={styles.button} onClick={this.onCreateComment}> Submit </Button >
-				</div>
-			</CardContent>
-			</MuiThemeProvider>
-		)
-	}
-
-} */
-
-/* const MainCard = ({ authUser, imageObject, doUpdateDesc, doUpdateUid, doUpdateLike }) => {
-	const classes = useStyles();
-
-	const [values, setValues] = React.useState({
-		name: '',
-		title: '',
-		multiline: '',
-	});
-	
-		
-	const handleChange = name => event => {
-		setValues({ ...values, [name]: event.target.value });
-	  };
-
-	const iconAction = () => (
-		<IconButton aria-label="Settings" onClick={ async () => {
-			if (window.confirm("would you like to save something?")){
-				if(window.confirm("What would you like to update? Y = Desc n Title | N = more options ")){
-					await doUpdateDesc(values.multiline);
-					await doUpdateUid(values.title);
-				} else {
-					if (window.confirm("Update title?")){
-						await doUpdateUid(values.title);
-					} else {
-						if (window.confirm("Update Desc?")){
-							await doUpdateDesc(values.multiline);
-						} else {
-							return ;
-						}
-					}
-				}
-			} else {
-				return ;
-			}
-
-		}
-			}>
-			<SaveIcon />
-		</IconButton>
-	)
-
-	return(
-		<div align="center" position="center">
-			<Grid container>
-				<Card sclassName={classes.pageMain} style={{align: "center", position: "center", width: '40vw',  color: "secondary"}}>
-					<CardHeader action={iconAction()} title={
-						<TextField id="Title" label="Title {Limit : 28 Characters}" fullWidth onChange={handleChange('title')} value={values.title} />
-					}/>
-					<CardMedia className={classes.pageMedia} image={imageObject ? imageObject.src : null} title={imageObject ? imageObject.uid : null} />
-					<IconButton aria-label="Add to favorites" 
-						onClick={() => {doUpdateLike(imageObject);}}
-								color={ 'primary' }
-								>
-							<Badge badgeContent={imageObject.likes} >
-						<ThumbUp/> 
-								</Badge>
-					</IconButton>
-					<CardContent>
-						<TextField
-							id="Description Box" label="Description" multiline fullWidth rowsMax="4"
-							value={values.multiline} onChange={handleChange('multiline')}
-							className={classes.textField} margin="normal"
-							variant="filled"
-						/>
-
-						<Grid container>
-
-							<Card className={classes.commentMain} style={{minWidth: '98%', alignSelf: 'center'}} >
-								<Comments  imageObject={imageObject} authUser={authUser}/>
-							</Card>
-						</Grid>
-							{`${imageObject.comments[0].text}`}
-					</CardContent>
-				</Card>
-			</Grid>
-		</div>
-	);
-	} */
 
 const HomePageRoutes = () => {
 
@@ -382,97 +188,6 @@ const HomePageRoutes = () => {
 )};
 
 
-const ImageList = () => {
-	const classes = useStyles();
-
-	return(
-		<div align="center">
-			<GridList cols={3} spacing={0} cellHeight={500} classes={{ root: classes.root }}>
-				<GridListTile style={{minWidth: `500px`}} >
-						<ImageCard /* classes={{ root: classes.images }} imageObject={image} authUser={authUser} */ />
-				</GridListTile>
-			</GridList>
-		</div>
-	);
-}
-
-/* class SinglePageBase extends Component {
-	constructor(props) {
-		super(props);
-
-		this.state = {
-			title: '',
-			desc: '',
-			loading: false,
-			imageObject: null,
-			doUpdateDesc: txt => {
-				let { imageObject } = this.state;
-				imageObject.comments[0].text = txt;
-				this.props.firebase.updateDesc(this.state.imageObject.iid, txt);
-
-				this.setState({ imageObject });
-			},
-			doUpdateUid: txt => {
-				let { imageObject } = this.state;
-				this.props.firebase.updateTitle(this.state.imageObject.iid, txt);
-				imageObject.uid = txt;
-
-				this.setState({ imageObject });
-			},
-			writeComment: txt => { 
-				this.props.firebase.doWriteComment(this.state.imageObject.iid, txt, this.state.authUser.uid);
-			},
-			doUpdateLike: imageObject => {
-				this.props.firebase.doOnLike(imageObject)
-				imageObject.likes = imageObject.likes + 1;
-					return (
-						<MainCard />
-					)
-				
-			},
-			...props.location.state,
-		};
-
-	}
-
-
-	componentDidMount() {
-		if (this.state.imageObject) {
-			return;
-		}
-		this.setState({ loading: true });
-
-		this.props.firebase
-			.image(this.props.match.params.id)
-			.on('value', snapshot => {
-				this.setState({
-					imageObject: snapshot.val(),
-					loading: false,
-				});
-			});
-	}
-
-	componentWillUnmount() {
-		this.props.firebase.image(this.props.match.params.id).off();
-	}
-
-	render() {
-
-		const { imageObject, doUpdateDesc, doUpdateUid, doUpdateLike } = this.state;
-
-		return (
-			<div>
-				{!this.state.loading &&  <MainCard
-					authUser={this.state.authUser}
-					imageObject={imageObject} 
-					doUpdateDesc={doUpdateDesc} 
-					doUpdateUid={doUpdateUid}
-					doUpdateLike={doUpdateLike}
-					/>}
-			</div>
-		)}
-	
-} */
 
 
 
@@ -482,43 +197,177 @@ const ImageList = () => {
 
 		this.state = {
 			text: '',
-			loading: false,
+			loading: true,
 			messages: [],
 			images: [],
-			delPicture: ( imageObject ) => (this.props.firebase.doRemoveLiked(imageObject, this.props.authUser)),
+			swiped: [],
+			blocked: [],
+			profiles: [],
+			am: 3,
 		};
 	}
 
-	/* onChangeText = event => {
-		this.setState({ text: event.target.value });
-	};
+	ImageCard = pobj => {
+		const prof = pobj.pobj;
+		const classes = useStyles();
+		//let desc = imageObject.comments[0].text;
+		//const otit = imageObject.title;
+		const common = prof.mystats.interest.filter(element => this.props.authUser.profile.mystats.interest.includes(element));
+		const text = common.toString();
+		return (
+			<MuiThemeProvider theme={theme}>
+			<Card className={classes.card} style={{height: '490px', }}>
+		  <CardHeader
+			style={{whiteSpace: 'nowrap', fontSize: '1em'}}
+			title={prof ? prof.username : "TEST"}
+			/>
+		  <CardMedia className={classes.media}
+			image={prof ? prof.picture ? prof.picture : TTY : TTY }
+			title={prof ? prof.username : "TEST"}
+			/>
+		  <CardContent>
+			<Typography variant="body2" color="textSecondary" component="p" style={{wordWrap: 'none',}}>
+				{prof ? prof.mystats.bio : "Look at me and my not bio"}
+				<br />
+				<br />
+				{text !== "" ? '~' + text + '~' : "~No Matching Interest~"}
+			</Typography>
+		  </CardContent>
+		  <CardActions disableSpacing style={{display: 'inline-flex', position: 'absolute', bottom: -25, right: '33%'}}>
+	
+			<IconButton aria-label="Add to favorites" 
+				// onClick={() => {
+					
+					// if (window.confirm('Are you sure you want to delete the picture? you can not have it back.')){
+						// 	return delPicture(imageObject, authUser);
+						// }
+						// }}
+						color={ 'primary' }
+						>
+					<Badge>
+				<ThumbUp /> 
+						</Badge>
+			</IconButton>
+			<IconButton aria-label="Share">
+			  <ShareIcon />
+			</IconButton>
+			<IconButton>
+			  <CommentIcon />
+			  <div style={{padding: `2px`}}>
+				  <p>text</p>
+			  </div>
+			</IconButton>
+		  </CardActions>
+		</Card>
+		</MuiThemeProvider>
+		);
+	}
 
-	onCreateMessage = (event, authUser) => {
-		this.props.firebase.messages().push({
-			text: this.state.text,
-			userId: authUser.uid,
-		});
+	apiSearch = async (config) => {
+		let results = "";
+		const createSearch = (config) => {
+			const profile = this.props.authUser.profile;
+			const mystats = profile.mystats;
+			const wants = profile.wants;
 
-		this.setState ({ text: '' });
+			let ret;
+			if (wants){
+				if (wants.prefsex === "Bisexual"){
+					ret = "";
+				}
+				else if (wants.prefsex === "Female"){
+					ret = "gender=Female";
+				}
+				else if (wants.prefsex === "Male"){
+					ret = "gender=Male";
+				}
+				if (config){
+					console.log("later");
+				}
+				return ret;
+			}
+		}
+	
+		await axios.get(`http://localhost:3001/search/p_${createSearch(null)}_all`).
+		then(async res => {
+			this.setState({profiles: res.data, loading: false});
+			await console.log(results);
+			
+			// res.data.sort((a, b) => {
+			// 	if(a.username < b.username) return -1;
+			// 	if(a.username > b.username) return 1;
+			// 	return 0; 
+			// })
+			
 
-		event.preventDefault();
-	} */
+			await res.data.map(async (profileObject) => {
+				results += ` | ${profileObject.username}`;
+				return (
+					<div>
+						{() => console.log("FUCK")}
+					<Paper>
+						<p>
+							
+							${profileObject.username}
+							</p>
+					</Paper>
+					</div>
+				)
+			})
+			results += ' |';
+			await console.log(results);
+			return res;
+		}).
+		catch(err => {if (err) console.log(err)});
+		// await window.alert(results);
+		// return `http://localhost:3001/search/p_${query}_all`;
+	} 
+
+
+	ImageList = () => {
+		const classes = useStyles();
+		let did = 0;
+		const flip = () => {
+			this.setState({loading: true});
+			this.setState({am: am + 3}) ;
+			this.setState({loading: false});
+		}
+		const back = () => {
+			this.setState({loading: true});
+			this.setState({am: am - 3}) ;
+			this.setState({loading: false});
+		}
+		const {am} = this.state;
+		return(
+			<div align="center">
+				<GridList cols={am} spacing={0} cellHeight={460} classes={{ root: classes.root }}>
+						{this.state.profiles.map((pobj, index) => (
+							(index < am && index >= am - 3) ? (
+								<GridListTile style={{minWidth: `500px`}}  key={index}>
+									<div>
+										<this.ImageCard pobj={pobj} /* classes={{ root: classes.images }} imageObject={image} authUser={authUser} */ />
+									</div>
+								</GridListTile>)
+							: index === (am + 1) || (am === this.state.profiles.length && did++ < 1) || am > this.state.profiles.length && did++ < 1 ? <div>
+								{am > 0 && <ButtonBase onClick={() => back()}>Back</ButtonBase> } { am + 1 < this.state.profiles.length && <ButtonBase onClick={() => flip()}>Next</ButtonBase>}
+							</div>
+							: null
+						))}
+				</GridList>
+			</div>
+		);
+	}
 
 	componentDidMount() {
 		this.setState({ loading: true  });
+		doMongoDBGetUserWithAuthEmail(this.props.authUser).then(res => {
+			let me = res;
+			this.setState({swiped: me.swiped, blocked: this.props.authUser.profile.blocked});
+			console.log(me);
+		}).then(() => { this.apiSearch() })
+		.catch(err => {if (err) return err});
 	}
 
-	/* deletePicture = imgUid => {
-
-		let imSrc = imgUid.src;
-		let imToc = imgUid.toc;
-		const del = window.confirm('Are you sure you want to delete the picture? you can not have it back.');
-		if (del) {
-			return this.props.firebase.doRemoveLiked({ imSrc, imToc }, this.props.authUser);
-		} else {
-			return ;
-		}
-	} */
 
 	componentWillUnmount() {
     console.log('UNMOUNTED COMBAT');
@@ -530,7 +379,11 @@ const ImageList = () => {
 		return(
 			<MuiThemeProvider theme={theme}>
 					<div align="center">
-							<ImageList /* images={images} authUser={authUser} firebase={this.props.firebase} *//>
+						{loading ? 
+						<p>Loading</p>
+						:
+						<this.ImageList /* images={images} authUser={authUser} firebase={this.props.firebase} *//>
+					}
 					</div>
 			</MuiThemeProvider>
 		);
@@ -551,73 +404,73 @@ const ImageList = () => {
   }
 
   componentDidMount() {
-    this.onListenForMessages();
+    // this.onListenForMessages();
   }
 
-  onListenForMessages = () => {
-    this.setState({ loading: true });
+//   onListenForMessages = () => {
+//     this.setState({ loading: true });
 
-    this.props.firebase
-      .messages()
-      .orderByChild('createdAt')
-      .limitToLast(this.state.limit)
-      .on('value', snapshot => {
-        const messageObject = snapshot.val();
+//     this.props.firebase
+//       .messages()
+//       .orderByChild('createdAt')
+//       .limitToLast(this.state.limit)
+//       .on('value', snapshot => {
+//         const messageObject = snapshot.val();
 
-        if (messageObject) {
-          const messageList = Object.keys(messageObject).map(key => ({
-            ...messageObject[key],
-            uid: key,
-          }));
+//         if (messageObject) {
+//           const messageList = Object.keys(messageObject).map(key => ({
+//             ...messageObject[key],
+//             uid: key,
+//           }));
 
-          this.setState({
-            messages: messageList,
-            loading: false,
-          });
-        } else {
-          this.setState({ messages: null, loading: false });
-        }
-      });
-  };
+//           this.setState({
+//             messages: messageList,
+//             loading: false,
+//           });
+//         } else {
+//           this.setState({ messages: null, loading: false });
+//         }
+//       });
+//   };
 
   componentWillUnmount() {
-    this.props.firebase.messages().off();
+    // this.props.firebase.messages().off();
   }
 
   onChangeText = event => {
-    this.setState({ text: event.target.value });
+    // this.setState({ text: event.target.value });
   };
 
-  onCreateMessage = (event, authUser) => {
-    this.props.firebase.messages().push({
-      text: this.state.text,
-      userId: authUser.uid,
-      createdAt: this.props.firebase.serverValue.TIMESTAMP,
-    });
+//   onCreateMessage = (event, authUser) => {
+//     this.props.firebase.messages().push({
+//       text: this.state.text,
+//       userId: authUser.uid,
+//       createdAt: this.props.firebase.serverValue.TIMESTAMP,
+//     });
 
-    this.setState({ text: '' });
+    // this.setState({ text: '' });
 
-    event.preventDefault();
-  };
+    // event.preventDefault();
+//   };
 
-  onEditMessage = (message, text) => {
-    this.props.firebase.message(message.uid).set({
-      ...message,
-      text,
-      editedAt: this.props.firebase.serverValue.TIMESTAMP,
-    });
-  };
+//   onEditMessage = (message, text) => {
+//     this.props.firebase.message(message.uid).set({
+//       ...message,
+//       text,
+//       editedAt: this.props.firebase.serverValue.TIMESTAMP,
+//     });
+//   };
 
-  onRemoveMessage = uid => {
-    this.props.firebase.message(uid).remove();
-  };
+//   onRemoveMessage = uid => {
+//     this.props.firebase.message(uid).remove();
+//   };
 
-  onNextPage = () => {
-    this.setState(
-      state => ({ limit: state.limit + 5 }),
-      this.onListenForMessages,
-    );
-  };
+//   onNextPage = () => {
+//     this.setState(
+//       state => ({ limit: state.limit + 5 }),
+//       this.onListenForMessages,
+//     );
+//   };
 
   render() {
     const { users } = this.props;

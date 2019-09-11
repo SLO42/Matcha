@@ -40,6 +40,7 @@ router.get('/:format', async (req, res) => {
 	let findReported = 0;
 	let fireid = "";
 	let fame = null;
+	let prefsex = null;
 
 	let i = 1;
 	let query = {};
@@ -51,6 +52,8 @@ router.get('/:format', async (req, res) => {
 		const value = values[1] ? values[1] : null;
 		
 		if (key === "mystats.mysex") gender = value;
+		else if (key === "gender") gender = value;
+		else if (key === "match") prefsex = value;
 		else if (key === "fame") fame = value;
 		else if (key === "fireid") fireid = value;
 		else if (key === "mystats.interest") interstList.push(value);
@@ -80,6 +83,9 @@ router.get('/:format', async (req, res) => {
 	**	This here is going to be the Profile_All Sections
 	**	This covers all searches that start with profile and end with all
 	*/
+
+
+
 	if (fireid !== ""){
 		const searchProfileForUserOne = await req.context.models.Profile.findOne().
 			where('fireid').all(fireid).

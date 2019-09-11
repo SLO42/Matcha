@@ -4,6 +4,7 @@ import message from './message';
 import profile from './profile';
 import search from './search';
 import gallery from './gallery';
+import status from './status';
 
 export default {
 	gallery,
@@ -12,4 +13,5 @@ export default {
 	message,
 	profile,
 	search,
+	status,
 };

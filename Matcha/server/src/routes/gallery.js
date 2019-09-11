@@ -18,7 +18,7 @@ router.post('/add', async (req, res) => {
 })
 // for updating galleries that are already made. Should Be sent with Newimg and Imgnum
 router.put('/update', async (req, res) => {
-	let userGalleryUpdate = await req.context.models.Gallery.find().
+	let userGalleryUpdate = await req.context.models.Gallery.findOne().
 	where("fireid").all(req.body.fireid).
 	catch(err => {
 		if (err){
@@ -29,7 +29,8 @@ router.put('/update', async (req, res) => {
 		};
 	});
 	userGalleryUpdate.gallery = await req.body.gallery;
-	return res.send(await userGalleryUpdate.save());
+	await userGalleryUpdate.save();
+	return res.send("success");
 })
 
 router.delete('/remove', async (req, res) => {

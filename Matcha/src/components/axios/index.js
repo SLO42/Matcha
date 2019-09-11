@@ -1,12 +1,15 @@
 import {doMongoDBGetProfileWithAuth, doMongoDBGetGalleryWithAuth,
 	doMongoDBGetUserWithAuthEmail, doUpdateGallery,
 } from './toprofilecard';
-import {doMongoDBGetUserIdWithFireid, doMongoDBGetProfileWithUserid, doMongoDBGetProfileWithFireid} from './tofirebase';
+import {doMongoDBGetUserIdWithFireid, doMongoDBGetProfileWithUserid, doMongoDBGetProfileWithFireid,
+	goOffline,
+} from './tofirebase';
 import {doMongoDBCreateProfile, doMongoCreateGallery,
 	doMongoDBGetUsers, doMongoDBCreateUser,
 } from './tosignup';
 
 import doGetUserFromUsername from './tosignin';
+import {getOnline, updataOnline} from './to';
 
 export {doMongoDBGetProfileWithAuth,
 		doMongoDBGetGalleryWithAuth,
@@ -20,4 +23,7 @@ export {doMongoDBGetProfileWithAuth,
 		doGetUserFromUsername,
 		doMongoCreateGallery,
 		doUpdateGallery,
+		goOffline,
+		getOnline,
+		updataOnline,
 	};
