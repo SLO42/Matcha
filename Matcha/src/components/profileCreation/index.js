@@ -6,7 +6,7 @@ import Rating from '@material-ui/lab/Rating';
 import Box from '@material-ui/core/Box';
 import FormButtons from '../formPage';
 import { withFirebase } from '../firebase';
-import { AuthUserContext, withAuthorization, withEmailVerification} from '../session';
+import { AuthUserContext, withAuthorization} from '../session';
 import { compose } from 'recompose';
 
 const theme = createMuiTheme({
@@ -71,7 +71,6 @@ export default compose(
 	withStyles(styles),
 	withFirebase,
 	withAuthorization(condition),
-	withEmailVerification,
 )(ProfileCreation);
 
 

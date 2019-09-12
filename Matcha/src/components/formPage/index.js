@@ -16,7 +16,6 @@ import { withRouter } from 'react-router-dom';
 import * as ROUTES from '../constants/routes';
 import MyCamera from '../camera';
 import {doMongoCreateGallery} from '../axios';
-import {getLocationPermission} from '../getLocation/locationpermission';
 
 // change to use the current object and update it to whaterever you want, 
 //then check for changes and update only the changes.
@@ -39,8 +38,8 @@ const INITAL_STATE = {
 			prefsex: "",
 		},
 		location: {lon: 0.0, lat: 0.0},
-		picture: null,
 	},		
+	profilePhoto: null,
 }
 
 // migrate current profile to state after mount. make sure 
@@ -53,20 +52,26 @@ class FormPageBase extends React.Component {
 		
 	}
 
-	updatePhoto = picture => {
-		this.state.profile.picture = picture;
-		this.setState();
+	updatePhoto = profilePhoto => {
+		this.setState({profilePhoto});
 	}
 
 	postUser = async () => {
 		const updateProfile = process.env.REACT_APP_AXIOS_UPDATE_PROFILE;
-		let {profile} = this.state;
+		let {profile, profilePhoto} = this.state;
 		profile.fireid = this.props.authUser.uid;
-		doMongoCreateGallery(profile.fireid, {0: 'empty'});
 		await axios.put(updateProfile, profile).
 		then(async res => {
 			console.log(res);
 			this.props.authUser.profile = await res.data;
+
+			if(profilePhoto){
+				const gallery = {0: profilePhoto};
+				await doMongoCreateGallery(this.props.authUser.uid, gallery);
+			}else {
+				const gallery = {0: "nah"};
+				await doMongoCreateGallery(this.props.authUser.uid, gallery);
+			}
 		}).
 		then(() => this.props.history.push(ROUTES.LANDING))
 	}
@@ -105,11 +110,7 @@ class FormPageBase extends React.Component {
 			let authProf = this.props.authUser.profile;
 			if (authProf.__v > 0) this.props.history.push(ROUTES.PROFILE);
 		}
-		getLocationPermission().then(res => {
-				this.state.profile.location.lat = res.coords.latitude;
-				this.state.profile.location.lon = res.coords.longitude;
-				this.setState({});
-		})
+
 		this.setState({ loading: false });
 	}
 

@@ -24,7 +24,6 @@ const ProfileCardStuff = ({profile}) => {
 	let value = "";
 
 	return(
-		profile.mystats ? 
 		<Card className={classes.card}>
 			<CardHeader
 				title={profile.fame}
@@ -40,7 +39,7 @@ const ProfileCardStuff = ({profile}) => {
 					<ShareIcon	/>
 				</IconButton>
 			</CardActions>
-		</Card> : <h1>loading</h1>
+		</Card>
 	);
 
 }
@@ -80,10 +79,6 @@ class ProfileCard extends Component{
 
 	async componentDidMount() {
 		this.setState({loading: false});
-		// const {profile} = this.state;
-		// if (!profile.mystats){
-			
-		// }
 
 	};
 	

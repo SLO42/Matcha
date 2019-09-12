@@ -4,8 +4,7 @@ import 'firebase/database';
 import Profile from '../session/profile';
 import {doMongoDBGetUserIdWithFireid,
 	doMongoDBCreateUser,
-	doMongoDBGetProfileWithFireid,
-	goOffline,
+	doMongoDBGetProfileWithFireid
 } from '../axios';
 
 /* import * as admin from 'firebase-admin';
@@ -59,10 +58,7 @@ this.auth.signInWithPopup(this.facebookProvider);
 doSignInWithTwitter = () =>
 this.auth.signInWithPopup(this.twitterProvider); */
 
-doSignOut = () => 
-	goOffline(this.auth.currentUser.uid).then(
-		this.auth.signOut()
-	)
+doSignOut = () => this.auth.signOut();
 
 doPasswordReset = email => this.auth.sendPasswordResetEmail(email);
 
@@ -87,12 +83,11 @@ this.auth.onAuthStateChanged(authUser => {
       .once('value')
       .then(snapshot => {
 		const dbUser = snapshot.val();
-		if (!(authUser.mongoId) || !(authUser.profile || !authUser.profile.mystats)) {
+		if (!(authUser.mongoId) || !(authUser.profile)) {
 			if (!(authUser.mongoId) || (authUser.mongoId === String)){
 				doMongoDBGetUserIdWithFireid(authUser.uid).
 				then(res => {
-					if (!(authUser.profile) || (authUser.profile === String) || !authUser.profile.mystats){
-						console.log("1");
+					if (!(authUser.profile) || (authUser.profile === String)){
 						doMongoDBGetProfileWithFireid(authUser.uid).
 						then(result => {
 							authUser = {
@@ -108,7 +103,6 @@ this.auth.onAuthStateChanged(authUser => {
 							next(authUser);
 						})
 					} else {
-						console.log("2");
 						authUser = {
 							mongoId: res,
 							profile: authUser.profile,
@@ -122,8 +116,7 @@ this.auth.onAuthStateChanged(authUser => {
 						next(authUser);
 					}}
 			)} else {
-				console.log("3");
-				doMongoDBGetProfileWithFireid(authUser.uid).
+				doMongoDBGetProfileWithFireid(authUser.mongoId).
 				then(profile => {
 					authUser = {
 						profile,
@@ -139,7 +132,6 @@ this.auth.onAuthStateChanged(authUser => {
 				})
 			};
 		} else {
-			console.log("4");
 			authUser = {
 				profile: authUser.profile,
 				mongoId: authUser.mongoId,

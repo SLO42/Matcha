@@ -20,7 +20,7 @@ class MyCamera extends React.Component{
 		}
 
 	componentDidMount() {
-		this.setState({ loading: true,  });
+		this.setState({ loading: true });
 		}
 
 	componentWillUnmount() {
@@ -65,6 +65,21 @@ class MyCamera extends React.Component{
 		  };
 		const { replaced } = this.state;
 
+		const fileChangedHandler = async event => {
+			if (event.target.files !== null){
+				await this.setState({
+					replaced: event.target.files[0]
+				})
+				if (this.state.replaced) {
+					await this.setState({ replaced: URL.createObjectURL(this.state.replaced)})
+					this.props.updatePhoto(this.state.replaced);
+				}
+			} else {
+				this.setState({ replaced: null })
+			}
+		  }
+  
+
 		  return (
 				<div className="MyCameraStart" style={{display: 'flex'}}>
 					<div className="Smile" style={{width: 320, height: 220, display: 'flex', justifyContent: 'inherit'}}>
@@ -79,6 +94,7 @@ class MyCamera extends React.Component{
 						/>
 						) : (<img src={replaced} alt={replaced} style={{width: 320, height: 220, display: 'flex', justifyContent: 'inherit'}} ></img>)}
 					</div>
+					<input type="file" onChange={fileChangedHandler} />
 					<div style={{margin: 'auto', alignContent: 'center'}}>
 						{ replaced ? 
 						(<button onClick={this.reset}>reset Photo</button>) : 

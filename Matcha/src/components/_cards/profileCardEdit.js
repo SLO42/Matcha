@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Card from '@material-ui/core/Card';
 import { CardHeader, CardMedia, CardContent,
-		Typography, CardActions, IconButton, makeStyles, ButtonBase,
+		Typography, CardActions, IconButton, makeStyles,
 } from '@material-ui/core';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
@@ -11,8 +11,6 @@ import Chips from '../formPage/formbuttons/interests.js';
 import MatchGender from '../formPage/formbuttons/matchgender';
 import MyGender from '../formPage/formbuttons/yourgender';
 import ImageCard from './imagecard';
-import {LocationDisplay} from '../location';
-import axios from 'axios';
 
 const useStyles = makeStyles(theme => ({
 	card: {
@@ -26,7 +24,7 @@ const useStyles = makeStyles(theme => ({
 	},
 }))
 
-const ProfileCardStuff = ({profile, authUser, changeState}) => {
+const ProfileCardStuff = ({profile, authUser}) => {
 	const classes = useStyles();
 	const clicked = () => window.alert(profile);
 	let value = "";
@@ -35,33 +33,20 @@ const ProfileCardStuff = ({profile, authUser, changeState}) => {
 			
 	}
 
-	const Save = ({profile}) => {
-		const updateProfile = process.env.REACT_APP_AXIOS_UPDATE_PROFILE;
-			const a = () => axios.put(updateProfile, profile);
-		return(
-			<ButtonBase onClick={a}>yeah yeah</ButtonBase>
-		)
-	}
-
 	return(
-		<div>
-			<Card className={classes.card}>
-				<CardHeader
-					title={profile.fame}
-					subheader={ profile ? profile.mystats.bio : value }
-					/>
-				<CardContent >
-				</CardContent>
-			</Card>
-					<Chips profile={profile} checkStage={checkStage}/>
-					<TextBio profile={profile} checkStage={checkStage} />
-					<MyGender profile={profile} checkStage={checkStage} />
-					<MatchGender profile={profile} checkStage={checkStage} />
-					<ImageCard profile={profile} authUser={authUser} changeState={changeState}/>
-					<LocationDisplay profile={profile} />
-					<Save profile={profile} />
-					
-		</div>
+		<Card className={classes.card}>
+			<CardHeader
+				title={profile.fame}
+				subheader={ profile ? profile.mystats.bio : value }
+			/>
+			<CardContent >
+				<Chips profile={profile} checkStage={checkStage}/>
+				<TextBio profile={profile} checkStage={checkStage} />
+				<MyGender profile={profile} checkStage={checkStage} />
+				<MatchGender profile={profile} checkStage={checkStage} />
+				<ImageCard profile={profile} authUser={authUser}/>
+			</CardContent>
+		</Card>
 	);
 
 }
@@ -116,7 +101,7 @@ class ProfileCardEdit extends Component{
 				{
 					loading ? 
 					<p>Loading...</p> : 
-					<ProfileCardStuff profile={profile} authUser={authUser}changeState={this.props.changeState}/> 
+					<ProfileCardStuff profile={profile} authUser={authUser}/> 
 				} 
 			</div>
 		)
