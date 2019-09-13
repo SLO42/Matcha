@@ -368,7 +368,6 @@ const HomePageRoutes = () => {
 		.catch(err => {if (err) return err});
 	}
 
-
 	componentWillUnmount() {
     console.log('UNMOUNTED COMBAT');
   }
@@ -642,10 +641,14 @@ class HomePage extends Component {
     this.props.firebase.users().off();
   }
 
-
+  
   render() {
 	  const mycooords = {latitude: "37.7790262", longitude: "-122.4199061"}
 	  const newcoords = {latitude: "37.5503916", longitude: "-122.049641"}
+	  const TXRoadhouse = {latitude: "37.594970", longitude: "122.063890"}
+	  const popeyes = {latitude: "37.590380", longitude: "-122.070230"}
+	  const myHouse = {latitude: "33.210330", longitude: "-96.739310"}
+	  const distance = geolib.getDistance(newcoords, mycooords);
 	return !this.props.isGeolocationAvailable ? (
 		<div>Your browser does not support Geolocation</div>
 	) : !this.props.isGeolocationEnabled ? (
@@ -654,7 +657,8 @@ class HomePage extends Component {
 		<div align="center">
 		<HomePageRoutes />
 		{LocationDisplays(this.props.coords.latitude, this.props.coords.longitude)}
-		{console.log('ADDY DIFF', geolib.getDistance(newcoords, mycooords))}
+		{console.log('FIND_NEAREST', geolib.findNearest(newcoords, [myHouse, TXRoadhouse, popeyes, mycooords]))}
+		{console.log('IS ' +  geolib.convertDistance(distance, 'mi'), 'away')}
       </div>
 	) : (
 		<div>Getting the location data&hellip; </div>
@@ -664,13 +668,11 @@ class HomePage extends Component {
 
 
 const Messages = withFirebase(MessagesBase);
-//const Comments = withFirebase(CommentBase);
 const Home = withFirebase(HomeHome);
 const Images = withFirebase(ImagesBase);
 
 const condition = authUser => !!authUser;
 
-//const SinglePage = withFirebase(SinglePageBase);
 export default compose(
 	withEmailVerification,
 	withAuthorization(condition),

@@ -65,52 +65,55 @@ app.use( async (req, res, next) => {
 	
 	let updated = false;
 	let server = await req.context.models.Status.findOne().where('name').all('server');
-	if ((req.body && req.body['username'])){
-		// server.online.push(req.context.me.username);
-		let todo = true;
-		const toFind = req.body['username'];
-	
-		server.online.map((user) => {
+	if (server){
 
-			if (toFind === user){
+		if ((req.body && req.body['username'])){
+			// server.online.push(req.context.me.username);
+			let todo = true;
+			const toFind = req.body['username'];
+			
+			server.online.map((user) => {
+				
+				if (toFind === user){
 				todo = false;
 			}
-		});
-		if(todo){
-			server.online.push(toFind);
-			numOfUpdates++;
-			updated = true;
+			});
+			if(todo){
+				server.online.push(toFind);
+				numOfUpdates++;
+				updated = true;
+			}
 		}
-	}
-	else if (req.context.me){
-		// server.online.push(req.context.me.username);
-		let todo = true;
-		const toFind = req.context.me.username;
-	
-		server.online.map((user) => {
+		else if (req.context.me){
+			// server.online.push(req.context.me.username);
+			let todo = true;
+			const toFind = req.context.me.username;
+			
+			server.online.map((user) => {
 
-			if (toFind === user){
-				todo = false;
+				if (toFind === user){
+					todo = false;
+				}
+			});
+			if(todo){
+				server.online.push(toFind);
+				numOfUpdates++;
+				updated = true;
 			}
-		});
-		if(todo){
-			server.online.push(toFind);
-			numOfUpdates++;
+		}
+		if(numOfUpdates > 29 || numOfUpdates === -1){
+			numOfUpdates = 0;
+			server.online = ["server", "nouser"];
 			updated = true;
 		}
-	}
-	if(numOfUpdates > 29 || numOfUpdates === -1){
-		numOfUpdates = 0;
-		server.online = ["server", "nouser"];
-		updated = true;
-	}
-	if (updated){
-		server.online = Array.from(new Set(server.online));
-		await server.save().catch(
-			err => {
-				if (err) void(err);
+		if (updated){
+			server.online = Array.from(new Set(server.online));
+			await server.save().catch(
+				err => {
+					if (err) void(err);
+				}
+				);
 			}
-		);
 	}
 	// console.log(req.context.me);
 		next();

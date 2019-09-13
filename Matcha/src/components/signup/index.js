@@ -3,7 +3,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { withFirebase } from '../firebase';
 import * as ROUTES from '../constants/routes';
-import { Input } from '@material-ui/core';
+import { Input, ButtonBase } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
@@ -55,7 +55,7 @@ const styles = theme => ({
   },
   button: {
     type: "submit",
-    variant: "contained",
+    variant: "outlined",
     size: "medium",
     background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
     border: '0',
@@ -99,6 +99,14 @@ const ERROR_MSG_ACCOUNT_EXISTS = `
   to sign in with one of them. Afterward, associate your accounts
   on your personal account page.
 `;
+const ERROR_CODE_COMPLEX_PASS = 'matcha: Need a more difficult password';
+
+const ERROR_PASS_NOT_COMPLEX = `
+  Make a new pass word with the following stats:
+  1 | Capital letter ex:('A', 'B', 'C', ... 'Z') 
+  1 | Special Character that is not '.', '$', '#', '[', ']', '/'
+  6 | Character Minimum 
+`;
 
 class SignUpFormBase extends React.Component {
   constructor(props) {
@@ -113,12 +121,57 @@ class SignUpFormBase extends React.Component {
   onSubmit = event => {
 	const {username, email, firstname, lastname, 
 		passwordOne, users } = this.state;
+
 	let profObj = {firstname, lastname, username, userid: "", fireid: ""};
-	if (users.search(`"username":"${username}"`) === 1){
-		console.log((users.search(`"username":"${username}"`)));
-		return (window.alert("please try again"));
-	}
-    this.props.firebase
+
+		const finder = (username) => {
+			let rtv = 0;
+			users.map(obj => {
+				if (obj.username === username){
+					rtv = 1;
+				}
+			})
+			return rtv;
+		}
+		const checker = (password) => {
+			let rtv = 0;
+			const checkCap = /(!?([A-Z]+))/gm;
+			const checkNotSpec = /((?=[.$#\[\]\/]).)/gm;
+			const checkSpec = /((?=[!-/]|[:-@]|[\^-`]|[{-~]).)/gm;
+			if (!checkCap.test(password)){
+				let error = {code: ERROR_CODE_COMPLEX_PASS,
+					message: ERROR_CODE_COMPLEX_PASS + " | Need Capital letter"};
+				this.setState({error});
+				rtv = 1;
+			}else if (checkNotSpec.test(password)){
+				let error = {code: ERROR_CODE_COMPLEX_PASS,
+					message: ERROR_CODE_COMPLEX_PASS + " | Remove illegal Char"};
+				this.setState({error});
+				rtv = 1;
+			} else if (!checkSpec.test(password)){
+				let error = {code: ERROR_CODE_COMPLEX_PASS,
+					message: ERROR_CODE_COMPLEX_PASS + " | Add Special Char"};
+				this.setState({error});
+				rtv = 1;
+			} else if (password.length < 6){
+				let error = {code: ERROR_CODE_COMPLEX_PASS,
+					message: ERROR_CODE_COMPLEX_PASS + " | Longer Password is required"};
+				this.setState({error});
+				rtv = 1;
+			} 
+			return rtv;
+		}
+
+	if (finder(username) === 1){
+		let error = {code: "Username_in_use",
+		 message: "Try again with a different Username " + username + 
+			" is already taken"};
+		 this.setState({error});
+		 return error;
+	} else if(checker(passwordOne)) {
+		return 'error';
+
+	} else this.props.firebase
       .doCreateUserWithEmailAndPassword(email, passwordOne)
       .then(authUser => {
 		this.props.firebase.doDatabaseCreateUser(username, email, authUser.user.uid);
@@ -144,21 +197,23 @@ class SignUpFormBase extends React.Component {
 
         this.setState({ error });
       });
-
     event.preventDefault();
   };
 
   async componentDidMount() {
 	doMongoDBGetUsers().
 	then(res => {
-		console.log(res);
-		this.setState({users: JSON.stringify(res)});
+		
+		this.setState({users: Array.from(res)});
 		return res;
 	});
   }
 
   onChange = event => {
-    this.setState({ [event.target.name]: event.target.value });
+	this.setState({ [event.target.name]: event.target.value });
+	// if (event.target.name === 'username'){
+	// 	const {users, username} = this.state;
+	// }
   };
 
   onChangeCheckbox = event => {
@@ -275,13 +330,19 @@ class SignUpFormBase extends React.Component {
 				<br />
               <br></br>
               <Button 
-              style={styles.button}
-              disabled={isInvalid} type="submit">
+			  style={styles.button}
+			  onClick={this.onSubmit}
+              disabled={isInvalid}>
                 Sign Up
               </Button>
       
             </form>
-              {error && <p>{error.message}</p> && window.alert(error)}
+
+			<p style={{margin: 'auto'}}> Make a new Password with the following stats: </p> <br />
+			<p style={{margin: 'auto'}}>    1 | Capital letter ex:('A', 'B', 'C', ... 'Z') </p> <br />
+			<p style={{margin: 'auto'}}>	1 | Special Character that is not ('.', '$', '#', '[', ']', '/') </p> <br />
+			<p style={{margin: 'auto'}}>	6 | Character Minimum  </p> <br />
+              {error && <p>{error.message}</p>}
             </CardContent>
             </Card>
             </div>
