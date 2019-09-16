@@ -37,9 +37,9 @@ const INITAL_STATE = {
 			},
 			prefsex: "",
 		},
+		picture: null,
 		location: {lon: 0.0, lat: 0.0},
 	},		
-	profilePhoto: null,
 }
 
 // migrate current profile to state after mount. make sure 
@@ -52,26 +52,20 @@ class FormPageBase extends React.Component {
 		
 	}
 
-	updatePhoto = profilePhoto => {
-		this.setState({profilePhoto});
+	updatePhoto = picture => {
+		this.state.profile.picture = picture;
+		this.setState({});
 	}
 
 	postUser = async () => {
 		const updateProfile = process.env.REACT_APP_AXIOS_UPDATE_PROFILE;
-		let {profile, profilePhoto} = this.state;
+		let {profile, picture} = this.state;
 		profile.fireid = this.props.authUser.uid;
 		await axios.put(updateProfile, profile).
 		then(async res => {
-			console.log(res);
 			this.props.authUser.profile = await res.data;
-
-			if(profilePhoto){
-				const gallery = {0: profilePhoto};
-				await doMongoCreateGallery(this.props.authUser.uid, gallery);
-			}else {
-				const gallery = {0: "nah"};
-				await doMongoCreateGallery(this.props.authUser.uid, gallery);
-			}
+			const gallery = {0: "nah"};
+			await doMongoCreateGallery(this.props.authUser.uid, gallery);
 		}).
 		then(() => this.props.history.push(ROUTES.LANDING))
 	}

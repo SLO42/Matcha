@@ -43,7 +43,7 @@ const TextBio = ({profile, checkStage}) => {
 		// }
 		if (event.target.name === 'bio'){
 			setBio(event.target.value);
-			setTimeout(() => profile.mystats.bio = bio, 100);
+			profile.mystats.bio = event.target.value;
 			checkStage(2)
 		}
 		// const save = async () => {

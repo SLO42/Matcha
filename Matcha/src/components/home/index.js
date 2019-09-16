@@ -290,33 +290,17 @@ const HomePageRoutes = () => {
 	
 		await axios.get(`http://localhost:3001/search/p_${createSearch(null)}_all`).
 		then(async res => {
-			this.setState({profiles: res.data, loading: false});
-			await console.log(results);
+			let filtered = res.data.filter(obj => obj.__v);
+
+			this.setState({profiles: filtered, loading: false});
+			await console.log(filtered);
 			
 			// res.data.sort((a, b) => {
 			// 	if(a.username < b.username) return -1;
 			// 	if(a.username > b.username) return 1;
 			// 	return 0; 
-			// })
-			
-
-			await res.data.map(async (profileObject) => {
-				results += ` | ${profileObject.username}`;
-				return (
-					<div>
-						{() => console.log("FUCK")}
-					<Paper>
-						<p>
-							
-							${profileObject.username}
-							</p>
-					</Paper>
-					</div>
-				)
-			})
-			results += ' |';
-			await console.log(results);
-			return res;
+			// }l
+			return filtered;
 		}).
 		catch(err => {if (err) console.log(err)});
 		// await window.alert(results);

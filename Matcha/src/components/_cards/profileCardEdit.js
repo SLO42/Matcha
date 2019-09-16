@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Card from '@material-ui/core/Card';
 import { CardHeader, CardMedia, CardContent,
-		Typography, CardActions, IconButton, makeStyles,
+		Typography, CardActions, IconButton, makeStyles, ButtonBase,
 } from '@material-ui/core';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
@@ -11,6 +11,7 @@ import Chips from '../formPage/formbuttons/interests.js';
 import MatchGender from '../formPage/formbuttons/matchgender';
 import MyGender from '../formPage/formbuttons/yourgender';
 import ImageCard from './imagecard';
+import Axios from 'axios';
 
 const useStyles = makeStyles(theme => ({
 	card: {
@@ -33,6 +34,23 @@ const ProfileCardStuff = ({profile, authUser}) => {
 			
 	}
 
+	const Save = ({profile}) => {
+		const updateProfile = process.env.REACT_APP_AXIOS_UPDATE_PROFILE;
+		const confirm = () => {
+			if (window.confirm("You are about to update your profile, please Confirm")){
+				Axios.put(updateProfile, profile).then(res =>{
+					//wow nice update...
+				}).catch(err => {if (err) return err;});
+			}
+		}
+
+		return (
+			<ButtonBase onClick={confirm}>
+					Save Your Profile
+				</ButtonBase>
+		)
+	}
+
 	return(
 		<Card className={classes.card}>
 			<CardHeader
@@ -45,6 +63,7 @@ const ProfileCardStuff = ({profile, authUser}) => {
 				<MyGender profile={profile} checkStage={checkStage} />
 				<MatchGender profile={profile} checkStage={checkStage} />
 				<ImageCard profile={profile} authUser={authUser}/>
+				<Save profile={profile} />
 			</CardContent>
 		</Card>
 	);

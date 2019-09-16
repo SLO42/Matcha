@@ -25,6 +25,8 @@ import {ProfileCard, ProfileCardEdit} from '../_cards';
 import { withAuthentication, AuthUserContext, withProfileVerification, withAuthorization,} from '../session';
 import { compose } from 'recompose';
 import { doMongoDBGetGalleryWithAuth } from '../axios';
+import MyCamera from '../camera';
+import Axios from 'axios';
 
 const theme = createMuiTheme({
     palette: {
@@ -159,32 +161,47 @@ export class ImageAvatars extends React.Component {
 			loading: true, 
 			picture: null, 
 			gallery: [],
+			change: false,
 		}
 	}
 
 	async componentDidMount() {
 		this.setState({loading: true});
-		const gallery = await doMongoDBGetGalleryWithAuth(this.props.authUser).then(
-			res => { return res}).catch(
-			err => { if (err) return (err)});
-		await setTimeout(() => {
-			if (!gallery || gallery.gallery[0] === "nah"){
-				this.setState({picture: TTY});
-			} else {
-				this.setState({gallery: gallery.gallery, picture: gallery.gallery[0]});
-			}
-			this.setState({loading: false});
-		}, 469)
+		if (this.props.authUser && this.props.authUser.profile && this.props.authUser.profile.picture){
+			this.setState({picture: this.props.authUser.profile.picture});
+		} else this.setState({picture: TTY});
+		this.setState({loading: false});
 	}
 
+	newProfilePic = () => {
+		if (window.confirm("Would you like to Change your profile Picture?")){
+			this.setState({change: true, loading: true});
+		}
+	}
 
+	updatePhoto = (picture) => {
+		if (picture) {
+			this.setState({picture});
+			const updateProfile = process.env.REACT_APP_AXIOS_UPDATE_PROFILE;
+			const profile = {picture, fireid: this.props.authUser.uid};
+			if (window.confirm("Would you like to save this photo?")){
+				Axios.put(updateProfile, profile).then(res => {
+					this.props.authUser.profile.picture = picture;
+					this.setState({loading: false, change: false});
+				}).catch(err => {if (err) return err});
+			}
+		}
+
+	}
 
 	render(){
 		const {classes} = this.props;
 
-		return ( this.state.loading ? <p>loading...</p> : (
+		return ( this.state.loading ? this.state.change ? (
+			<MyCamera updatePhoto={this.updatePhoto}/>
+		) : <p>loading...</p> : (
 			<Grid container justify="left" alignItems="left" >
-				<Avatar alt="Profile-Image" src={this.state.picture} className={classes.bigAvatar} />
+				<Avatar alt="Profile-Image" src={this.state.picture} className={classes.bigAvatar}  onClick={this.newProfilePic}/>
 			</Grid> )
     	)}
 }

@@ -12,7 +12,8 @@ import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import { red } from "@material-ui/core/colors";
 import FavoriteIcon from "@material-ui/icons/Favorite";
-import ShareIcon from "@material-ui/icons/Clear";
+import ClearIcon from "@material-ui/icons/Clear";
+import AddIcon from "@material-ui/icons/Add";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Feedback from "@material-ui/icons/Feedback";
 import Button from '@material-ui/core/Button';
@@ -73,33 +74,39 @@ export function SimpleMenu() {
   );
 }
 
-export function SwipeCard({item}) {
-  const classes = useStyles();
-  const [expanded, setExpanded] = React.useState(false);
+// export function SwipeCard({item}) {
+//   const classes = useStyles();
+//   const [expanded, setExpanded] = React.useState(false);
 
-  function handleExpandClick() {
-    setExpanded(!expanded);
-  }
+//   function handleExpandClick() {
+//     setExpanded(!expanded);
+//   }
 
-  return (
-    <Card className={classes.card}>
-      <CardHeader
-        title={item}
-      />
-      <CardMedia
-        className={classes.media}
-        image={item === "empty" ? null : item}
-        title="Paella dish"
-      />
-	  <img src={item}/>
-      <CardActions disableSpacing>
-        <IconButton aria-label="remove image">
-          <ShareIcon />
-        </IconButton>
-      </CardActions>
-    </Card>
-  );
-}
+//   const addPhoto = {}
+
+//   return (
+//     <Card className={classes.card}>
+//       <CardHeader
+//         title={item}
+//       />
+//       <CardMedia
+//         className={classes.media}
+//         image={item === "nah" || item === "empty" ? null : item}
+//         title="item"
+//       />
+	  
+// 	  <img src={item === "nah" || item === "empty" ? null : item}/>
+//       <CardActions disableSpacing>
+//         <IconButton aria-label="Modify">
+// 		{item === "nah" || item === "empty" ? 
+// 		<AddIcon onClick={() => {window.alert("hey")}}/> 
+// 		: 
+// 		<ClearIcon onClick={() => {window.alert("hey")}}/>}
+//         </IconButton>
+//       </CardActions>
+//     </Card>
+//   );
+// }
 
 
 export default class ImageCard extends React.Component {
@@ -113,6 +120,40 @@ export default class ImageCard extends React.Component {
 		}
 	}
 
+	SwipeCard({item}) {
+		const classes = useStyles();
+		const [expanded, setExpanded] = React.useState(false);
+	  
+		function handleExpandClick() {
+		  setExpanded(!expanded);
+		}
+	  
+		const addPhoto = {}
+	  
+		return (
+		  <Card className={classes.card}>
+			<CardHeader
+			  title={item}
+			/>
+			<CardMedia
+			  className={classes.media}
+			  image={item === "nah" || item === "empty" ? null : item}
+			  title="item"
+			/>
+			
+			<img src={item === "nah" || item === "empty" ? null : item}/>
+			<CardActions disableSpacing>
+			  <IconButton aria-label="Modify">
+			  {item === "nah" || item === "empty" ? 
+			  <AddIcon onClick={() => {window.alert("hey")}}/> 
+			  : 
+			  <ClearIcon onClick={() => {window.alert("hey")}}/>}
+			  </IconButton>
+			</CardActions>
+		  </Card>
+		);
+	  }
+
 	componentDidMount() {
 		this.setState({loading: true});
 
@@ -120,56 +161,22 @@ export default class ImageCard extends React.Component {
 
 		doMongoDBGetGalleryWithAuth(authUser).then(
 			async res => {
-				console.log(await res)
 				this.setState({list: await res.gallery});
 				let things = [];
 				let i = -1;
 				while (++i < 5)
 				{
-					console.log(!!res.gallery[i] && res.gallery[i] !== "nah");
-					if (!!res.gallery[i] && res.gallery[i] !== "nah"){
-
-						// const xhr = new XMLHttpRequest;
-						// xhr.responseType = 'blob';
-
-						// xhr.onload = function() {
-						// 	const recoveredBlob = xhr.response;
-
-						// 	const reader = new FileReader;
-
-						// 	reader.onload = function() {
-						// 		const blobAsDataUrl = reader.result;
-						// 		window.location = blobAsDataUrl;
-						// 	};
-
-						// 	reader.readAsDataURL(recoveredBlob);
-						// };
-
-						// xhr.open('GET', res.gallery[i]);
-						// xhr.send();
-						console.log("1")
-						const blob = new Blob();
-						blob.getBlob(await res.gallery[i]);
-						blob.text().then(text => {
-							console.log(text);
-						})
-
-						console.log(await blob)
-
-
-						const stream = blob.stream();
-
-
-						console.log(stream)
-
-						let img = await ( new Response(res.gallery[i])).text();
-						console.log(await img);
-						things.push(await img);
+					if (res.gallery[i] && (res.gallery[i] !== "nah") && (res.gallery[i] !== "empty")){
+						console.log(res.gallery[i])
+						things.push(res.gallery[i]);
 					} else {
-						if (!!res.gallery[i] && res.gallery[i] === "nah"){
+						if (i >= 1 && (!res.gallery[i - 1] || res.gallery[i - 1] === "nah" || res.gallery[i - 1] === "empty")){
 							things.push("empty");
-						} else if (!!res.gallery[i - 1]){
+							break;
+						}
+						if (!res.gallery[i] || res.gallery[i] === "nah" || res.gallery[i] === "empty"){
 							things.push("empty");
+							break;
 						}
 					}
 					if (i > 5){
@@ -191,7 +198,7 @@ export default class ImageCard extends React.Component {
     render() {
         return( this.state.loading ? <p>loading...</p> : 
 			this.state.stuff.map(item => 
-				<SwipeCard item={item} />) 
+				<this.SwipeCard item={item} />) 
         );
     }
 }

@@ -32,21 +32,24 @@ router.post('/add', async (req, res) => {
 
 router.put('/update', async (req, res) => {
 	const profile = await req.context.models.Profile.findOne({'fireid': req.body.fireid});
-
-	if (req.body.wants.prefage)
-		profile.wants.prefage = req.body.wants.prefage;
-	if (req.body.wants.prefsex)
-		profile.wants.prefsex = req.body.wants.prefsex;
-	if (req.body.mystats.bio)
-		profile.mystats.bio = req.body.mystats.bio;
-	if (req.body.mystats.interest)
-		profile.mystats.interest = req.body.mystats.interest;
-	if (req.body.mystats.mysex)
-		profile.mystats.mysex = req.body.mystats.mysex;
-	if (req.body.mystats.myage)
-		profile.mystats.myage = req.body.mystats.myage;
-	if (req.body.mystats.bodytype)
-		profile.mystats.bodytype = req.body.mystats.bodytype;
+	if (req.body && req.body.wants){
+		if (req.body.wants.prefage)
+			profile.wants.prefage = req.body.wants.prefage;
+		if (req.body.wants.prefsex)
+			profile.wants.prefsex = req.body.wants.prefsex;
+	}
+	if (req.body && req.body.mystats){
+		if (req.body.mystats.bio)
+			profile.mystats.bio = req.body.mystats.bio;
+		if (req.body.mystats.interest)
+			profile.mystats.interest = req.body.mystats.interest;
+		if (req.body.mystats.mysex)
+			profile.mystats.mysex = req.body.mystats.mysex;
+		if (req.body.mystats.myage)
+			profile.mystats.myage = req.body.mystats.myage;
+		if (req.body.mystats.bodytype)
+			profile.mystats.bodytype = req.body.mystats.bodytype;
+	}
 	if (req.body.firstname)
 		profile.firstname = req.body.firstname;
 	if (req.body.lastname)
