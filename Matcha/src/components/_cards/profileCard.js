@@ -6,6 +6,7 @@ import { CardHeader, CardMedia, CardContent,
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import {doMongoDBGetProfileWithAuth, doMongoDBGetUserWithAuthEmail} from '../axios';
+import CoordsCard from './coords';
 
 const useStyles = makeStyles(theme => ({
 	card: {
@@ -33,6 +34,7 @@ const ProfileCardStuff = ({profile}) => {
 				<Typography variant="body2" color="textSecondary" component="p">
 					interests: {profile.mystats.interest.map(val => <h2>{val}</h2>)}
 				</Typography>
+				<CoordsCard profile={profile} edit={0}/>
 			</CardContent>
 			<CardActions disableSpacing>
 				<IconButton aria-label="Share">

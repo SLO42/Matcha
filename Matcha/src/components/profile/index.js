@@ -76,8 +76,8 @@ const theme = createMuiTheme({
 	  },
 	  benis: {
     elevation: 24,
-    maxHeight: `50vh`,
-		maxWidth: `40vw`,
+    // maxHeight: `50vh`,
+		// maxWidth: `40vw`,
 		boxShadow: '100 3px 5px 2px rgba(44, 56, 126, .3)',
 	}
   });

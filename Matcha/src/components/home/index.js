@@ -37,6 +37,7 @@ import * as geolib from 'geolib';
 import { doMongoDBGetUserWithAuthEmail } from '../axios';
 import axios from 'axios';
 import TTY from '../profile/tty.jpg';
+import { getLocationPermission } from '../getLocation/locationpermission';
 
 const theme = createMuiTheme({
   palette: {
@@ -291,9 +292,9 @@ const HomePageRoutes = () => {
 		await axios.get(`http://localhost:3001/search/p_${createSearch(null)}_all`).
 		then(async res => {
 			let filtered = res.data.filter(obj => obj.__v);
+			filtered = filtered.filter(obj => obj.username !== this.props.authUser.profile.username);
 
 			this.setState({profiles: filtered, loading: false});
-			await console.log(filtered);
 			
 			// res.data.sort((a, b) => {
 			// 	if(a.username < b.username) return -1;
@@ -322,6 +323,19 @@ const HomePageRoutes = () => {
 			this.setState({loading: false});
 		}
 		const {am} = this.state;
+		if (!this.state.profiles.length){
+			const prof = this.props.authUser.profile;
+			return (
+				<div align="center" margin="auto">
+					<h3>No Users Found With your Search options</h3>
+					<br />
+					<h4>Searched with:</h4>
+					<br />
+					<h2> {prof.wants.prefsex} </h2> <br />
+					<h2> soon to be extra if extra </h2> <br />
+				</div>
+			)
+		}
 		return(
 			<div align="center">
 				<GridList cols={am} spacing={0} cellHeight={460} classes={{ root: classes.root }}>
@@ -606,47 +620,23 @@ class MessageItem extends Component {
 class HomePage extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-	  users: null,
-	  isLocationEnabled: true,
-    };
   }
 
   async componentDidMount() {
-    this.props.firebase.users().on('value', snapshot => {
-      this.setState({
-        users: snapshot.val(),
-      });
-	});
+  
   }
 
   componentWillUnmount() {
-    this.props.firebase.users().off();
+
   }
 
   
   render() {
-	  const mycooords = {latitude: "37.7790262", longitude: "-122.4199061"}
-	  const newcoords = {latitude: "37.5503916", longitude: "-122.049641"}
-	  const TXRoadhouse = {latitude: "37.594970", longitude: "122.063890"}
-	  const popeyes = {latitude: "37.590380", longitude: "-122.070230"}
-	  const myHouse = {latitude: "33.210330", longitude: "-96.739310"}
-	  const distance = geolib.getDistance(newcoords, mycooords);
-	return !this.props.isGeolocationAvailable ? (
-		<div>Your browser does not support Geolocation</div>
-	) : !this.props.isGeolocationEnabled ? (
-		<div>Geolocation is not enabled</div>
-	) : this.props.coords ? (
+	return (
 		<div align="center">
 		<HomePageRoutes />
-		{LocationDisplays(this.props.coords.latitude, this.props.coords.longitude)}
-		{console.log('FIND_NEAREST', geolib.findNearest(newcoords, [myHouse, TXRoadhouse, popeyes, mycooords]))}
-		{console.log('IS ' +  geolib.convertDistance(distance, 'mi'), 'away')}
       </div>
-	) : (
-		<div>Getting the location data&hellip; </div>
-	);
+	)
   }
 }
 

@@ -16,6 +16,7 @@ import { withRouter } from 'react-router-dom';
 import * as ROUTES from '../constants/routes';
 import MyCamera from '../camera';
 import {doMongoCreateGallery} from '../axios';
+import { getLocationPermission } from '../getLocation/locationpermission';
 
 // change to use the current object and update it to whaterever you want, 
 //then check for changes and update only the changes.
@@ -103,8 +104,24 @@ class FormPageBase extends React.Component {
 		if (this.props.authUser.profile){
 			let authProf = this.props.authUser.profile;
 			if (authProf.__v > 0) this.props.history.push(ROUTES.PROFILE);
+			if (authProf.location){
+				this.state.profile.location.lon = authProf.location.lon;
+				this.state.profile.location.lat = authProf.location.lon;
+				this.setState({});
+			}else {
+				getLocationPermission().then(res => {
+					if (res){
+						if (res.coords){
+							const loco = res.coords;
+							console.log(res);
+							this.state.profile.location.lon = loco.longitude;
+							this.state.profile.location.lat = loco.latitude;
+							this.setState({});
+						}
+					}
+				})
+			}
 		}
-
 		this.setState({ loading: false });
 	}
 

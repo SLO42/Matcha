@@ -12,6 +12,7 @@ import MatchGender from '../formPage/formbuttons/matchgender';
 import MyGender from '../formPage/formbuttons/yourgender';
 import ImageCard from './imagecard';
 import Axios from 'axios';
+import CoordsCard from './coords';
 
 const useStyles = makeStyles(theme => ({
 	card: {
@@ -58,6 +59,7 @@ const ProfileCardStuff = ({profile, authUser}) => {
 				subheader={ profile ? profile.mystats.bio : value }
 			/>
 			<CardContent >
+				<CoordsCard profile={profile} edit={1}/>
 				<Chips profile={profile} checkStage={checkStage}/>
 				<TextBio profile={profile} checkStage={checkStage} />
 				<MyGender profile={profile} checkStage={checkStage} />
