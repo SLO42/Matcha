@@ -38,6 +38,7 @@ import { doMongoDBGetUserWithAuthEmail } from '../axios';
 import axios from 'axios';
 import TTY from '../profile/tty.jpg';
 import { getLocationPermission } from '../getLocation/locationpermission';
+import CoordsCard from '../_cards/coords';
 
 const theme = createMuiTheme({
   palette: {
@@ -212,60 +213,80 @@ const HomePageRoutes = () => {
 		const prof = pobj.pobj;
 		const classes = useStyles();
 		//let desc = imageObject.comments[0].text;
-		//const otit = imageObject.title;
-		const common = prof.mystats.interest.filter(element => this.props.authUser.profile.mystats.interest.includes(element));
-		const text = common.toString();
-		return (
-			<MuiThemeProvider theme={theme}>
-			<Card className={classes.card} style={{height: '490px', }}>
-		  <CardHeader
-			style={{whiteSpace: 'nowrap', fontSize: '1em'}}
-			title={prof ? prof.username : "TEST"}
-			/>
-		  <CardMedia className={classes.media}
-			image={prof ? prof.picture ? prof.picture : TTY : TTY }
-			title={prof ? prof.username : "TEST"}
-			/>
-		  <CardContent>
-			<Typography variant="body2" color="textSecondary" component="p" style={{wordWrap: 'none',}}>
-				{prof ? prof.mystats.bio : "Look at me and my not bio"}
-				<br />
-				<br />
-				{text !== "" ? '~' + text + '~' : "~No Matching Interest~"}
-			</Typography>
-		  </CardContent>
-		  <CardActions disableSpacing style={{display: 'inline-flex', position: 'absolute', bottom: -25, right: '33%'}}>
-	
-			<IconButton aria-label="Add to favorites" 
-				// onClick={() => {
-					
-					// if (window.confirm('Are you sure you want to delete the picture? you can not have it back.')){
-						// 	return delPicture(imageObject, authUser);
-						// }
-						// }}
-						color={ 'primary' }
-						>
-					<Badge>
-				<ThumbUp /> 
-						</Badge>
-			</IconButton>
-			<IconButton aria-label="Share">
-			  <ShareIcon />
-			</IconButton>
-			<IconButton>
-			  <CommentIcon />
-			  <div style={{padding: `2px`}}>
-				  <p>text</p>
-			  </div>
-			</IconButton>
-		  </CardActions>
-		</Card>
-		</MuiThemeProvider>
-		);
+		//const otit = imageObject.tits
+		// const mycords ={
+		// 	latitude: this.props.authUser.profile.location.lat,
+		// 	longitude: this.props.authUser.profile.location.lon,
+		// };
+		// const targetcords = {
+		// 	latitude: prof.location.lat,
+		// 	longitude: prof.location.lon,
+		// };
+
+		if (prof && prof.mystats){
+			console.log("wat");
+			console.log(prof);
+			console.log("wat");
+		
+			const common = prof.mystats.interest.filter(element => this.props.authUser.profile.mystats.interest.includes(element));
+			const text = common.toString();
+			return (
+				<MuiThemeProvider theme={theme}>
+				<Card className={classes.card} style={{height: '490px', }}>
+			<CardHeader
+				style={{whiteSpace: 'nowrap', fontSize: '1em'}}
+				title={prof ? prof.username : "TEST"}
+				/>
+			<CardMedia className={classes.media}
+				image={prof ? prof.picture ? prof.picture : TTY : TTY }
+				title={prof ? prof.username : "TEST"}
+				/>
+			<CardContent>
+				<Typography variant="body2" color="textSecondary" component="p" style={{wordWrap: 'none',}}>
+					{prof ? prof.mystats.bio : "Look at me and my not bio"}
+					<br />
+					<br />
+					{text !== "" ? '~' + text + '~' : "~No Matching Interest~"}
+					<br />
+					{prof && prof.location && this.props.mycords ? <CoordsCard profile={prof} /> : <p>They don't exist</p>}
+				</Typography>
+			</CardContent>
+			<CardActions disableSpacing style={{display: 'inline-flex', position: 'absolute', bottom: -25, right: '33%'}}>
+		
+				<IconButton aria-label="Add to favorites" 
+					// onClick={() => {
+						
+						// if (window.confirm('Are you sure you want to delete the picture? you can not have it back.')){
+							// 	return delPicture(imageObject, authUser);
+							// }
+							// }}
+							color={ 'primary' }
+							>
+						<Badge>
+					<ThumbUp /> 
+							</Badge>
+				</IconButton>
+				<IconButton aria-label="Share">
+				<ShareIcon />
+				</IconButton>
+				<IconButton>
+				<CommentIcon />
+				<div style={{padding: `2px`}}>
+					<p>text</p>
+				</div>
+				</IconButton>
+			</CardActions>
+			</Card>
+			</MuiThemeProvider>
+			);
+		}
 	}
 
 	apiSearch = async (config) => {
 		let results = "";
+		if (!this.props.authUser){
+			return ;
+		}
 		const createSearch = (config) => {
 			const profile = this.props.authUser.profile;
 			const mystats = profile.mystats;
@@ -323,7 +344,7 @@ const HomePageRoutes = () => {
 			this.setState({loading: false});
 		}
 		const {am} = this.state;
-		if (!this.state.profiles.length){
+		if (!this.state.profiles.length || !this.props.authUser.profile || !this.props.authUser.profile.wants){
 			const prof = this.props.authUser.profile;
 			return (
 				<div align="center" margin="auto">
@@ -331,7 +352,7 @@ const HomePageRoutes = () => {
 					<br />
 					<h4>Searched with:</h4>
 					<br />
-					<h2> {prof.wants.prefsex} </h2> <br />
+					<h2> {prof && prof.wants ? prof.wants.prefsex : null} </h2> <br />
 					<h2> soon to be extra if extra </h2> <br />
 				</div>
 			)
@@ -343,7 +364,7 @@ const HomePageRoutes = () => {
 							(index < am && index >= am - 3) ? (
 								<GridListTile style={{minWidth: `500px`}}  key={index}>
 									<div>
-										<this.ImageCard pobj={pobj} /* classes={{ root: classes.images }} imageObject={image} authUser={authUser} */ />
+										<this.ImageCard pobj={pobj} mycords={this.props.authUser.profile.location} /* classes={{ root: classes.images }} imageObject={image} authUser={authUser} */ />
 									</div>
 								</GridListTile>)
 							: index === (am + 1) || (am === this.state.profiles.length && did++ < 1) || am > this.state.profiles.length && did++ < 1 ? <div>
@@ -364,6 +385,7 @@ const HomePageRoutes = () => {
 			console.log(me);
 		}).then(() => { this.apiSearch() })
 		.catch(err => {if (err) return err});
+
 	}
 
 	componentWillUnmount() {
@@ -379,7 +401,7 @@ const HomePageRoutes = () => {
 						{loading ? 
 						<p>Loading</p>
 						:
-						<this.ImageList /* images={images} authUser={authUser} firebase={this.props.firebase} *//>
+						<this.ImageList  authUser={this.props.authUser}  />
 					}
 					</div>
 			</MuiThemeProvider>

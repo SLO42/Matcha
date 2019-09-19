@@ -16,10 +16,12 @@ import ClearIcon from "@material-ui/icons/Clear";
 import AddIcon from "@material-ui/icons/Add";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Feedback from "@material-ui/icons/Feedback";
-import Button from '@material-ui/core/Button';
+import ButtonBase from '@material-ui/core/ButtonBase';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import { doMongoDBGetGalleryWithAuth } from "../axios";
+import { doMongoDBGetGalleryWithAuth, doUpdateGallery } from "../axios";
+import MyCamera from '../camera';
+import { Button } from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -117,35 +119,91 @@ export default class ImageCard extends React.Component {
 			loading: true,
 			list: {},
 			stuff: [],
+			saved: false,
 		}
 	}
 
-	SwipeCard({item}) {
+
+	addToStuff = (picture) => {
+		if (this.state.stuff.length < 5){
+			let i = 0;
+			let gallery = {};
+			let stuff = [];
+			while (i < this.state.stuff.length){
+				if (this.state.stuff[i] === "nah" || this.state.stuff[i] === "empty"){
+					gallery[i] = picture;
+					stuff[i] = picture;
+				}
+				else {
+					gallery[i] = this.state.stuff[i];
+					stuff[i] = this.state.stuff[i];
+				}
+				i++;
+				if (i > 5) break;
+				console.log(gallery);
+			}
+			this.setState({list: gallery, stuff});
+			doUpdateGallery(this.props.authUser, gallery).then(
+				rse => {
+					this.setState({loading: true});
+					setTimeout(this.setState({loading: false}), 3000);
+				}
+			)
+		}
+	}
+
+	SwipeCard = ({item, addToStuff}) => {
 		const classes = useStyles();
 		const [expanded, setExpanded] = React.useState(false);
+		const [saved, setSaved] = React.useState(false);
+		const [sett, setSett] = React.useState(false);
+		const [img, setImg] = React.useState(item);
 	  
 		function handleExpandClick() {
 		  setExpanded(!expanded);
 		}
-	  
-		const addPhoto = {}
+		function handleSaveClick() {
+		  setSaved(!saved);
+		}
+		function handleSettClick() {
+		  setSett(!sett);
+		  handleSaveClick();
+		  addToStuff(img);
+		//   const gallery = {}
+		}
+
+		const updatePhoto = (picture) => {
+			setImg(picture);
+			handleSaveClick();
+
+		}
 	  
 		return (
 		  <Card className={classes.card}>
 			<CardHeader
-			  title={item}
 			/>
+			{item === "nah" || item === "empty" ? 
+				expanded ? (
+				<div>
+				<MyCamera
+					updatePhoto={updatePhoto}
+					saved={sett}
+				/>
+				{ !saved ? null : <ButtonBase component={Button} variant="contained" onClick={handleSettClick}>Save</ButtonBase>}
+				</div>
+				) : null : (
 			<CardMedia
 			  className={classes.media}
 			  image={item === "nah" || item === "empty" ? null : item}
 			  title="item"
-			/>
+			/>)
+		}
 			
-			<img src={item === "nah" || item === "empty" ? null : item}/>
+			{/* <img src={item === "nah" || item === "empty" ? null : item}/> */}
 			<CardActions disableSpacing>
 			  <IconButton aria-label="Modify">
 			  {item === "nah" || item === "empty" ? 
-			  <AddIcon onClick={() => {window.alert("hey")}}/> 
+			  <AddIcon onClick={handleExpandClick}/> 
 			  : 
 			  <ClearIcon onClick={() => {window.alert("hey")}}/>}
 			  </IconButton>
@@ -191,14 +249,13 @@ export default class ImageCard extends React.Component {
 						return (err);
 					} 
 			});
-		
 	}
 
 
     render() {
         return( this.state.loading ? <p>loading...</p> : 
 			this.state.stuff.map(item => 
-				<this.SwipeCard item={item} />) 
+				<this.SwipeCard item={item} addToStuff={this.addToStuff}/>) 
         );
     }
 }

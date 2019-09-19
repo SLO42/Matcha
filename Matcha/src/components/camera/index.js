@@ -31,6 +31,7 @@ class MyCamera extends React.Component{
 	reset = () => {
 		if (this.state.replaced){
 			this.setState({replaced: null});
+			this.props.updatePhoto(null);
 		}
 	}
 
@@ -80,7 +81,7 @@ class MyCamera extends React.Component{
 					</div>
 					<div style={{margin: 'auto', alignContent: 'center'}}>
 						{ replaced ? 
-						(<button onClick={this.reset}>reset Photo</button>) : 
+						!this.props.saved ? (<button onClick={this.reset}>reset Photo</button>) : null : 
 						(<button onClick={this.capture}>Capture photo</button>)}
 					</div>
 				</div>

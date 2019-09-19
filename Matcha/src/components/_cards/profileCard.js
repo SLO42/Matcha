@@ -24,25 +24,34 @@ const ProfileCardStuff = ({profile}) => {
 	const clicked = () => window.alert(profile);
 	let value = "";
 
-	return(
-		<Card className={classes.card}>
-			<CardHeader
-				title={profile.fame}
-				subheader={ profile ? profile.mystats.bio : value }
-			/>
-			<CardContent>
-				<Typography variant="body2" color="textSecondary" component="p">
-					interests: {profile.mystats.interest.map(val => <h2>{val}</h2>)}
-				</Typography>
-				<CoordsCard profile={profile} edit={0}/>
-			</CardContent>
-			<CardActions disableSpacing>
-				<IconButton aria-label="Share">
-					<ShareIcon	/>
-				</IconButton>
-			</CardActions>
-		</Card>
-	);
+	if (profile){
+		return(
+			<Card className={classes.card}>
+				<CardHeader
+					title={profile.fame}
+					subheader={ profile ? profile.mystats.bio : value }
+				/>
+				<CardContent>
+					<Typography variant="body2" color="textSecondary" component="p">
+						interests: {profile.mystats.interest.map(val => <h2>{val}</h2>)}
+					</Typography>
+					<CoordsCard profile={profile} edit={0}/>
+				</CardContent>
+				<CardActions disableSpacing>
+					<IconButton aria-label="Share">
+						<ShareIcon	/>
+					</IconButton>
+				</CardActions>
+			</Card>
+		);
+	} else {
+		return (
+		<div>
+			<p>
+				reload page? idk things broke
+			</p>
+		</div>)
+	}
 
 }
 

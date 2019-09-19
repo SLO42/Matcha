@@ -4,7 +4,8 @@ import 'firebase/database';
 import Profile from '../session/profile';
 import {doMongoDBGetUserIdWithFireid,
 	doMongoDBCreateUser,
-	doMongoDBGetProfileWithFireid
+	doMongoDBGetProfileWithFireid,
+	doMongoDBCreateProfile,
 } from '../axios';
 
 /* import * as admin from 'firebase-admin';
@@ -90,6 +91,7 @@ this.auth.onAuthStateChanged(authUser => {
 					if (!(authUser.profile) || (authUser.profile === String)){
 						doMongoDBGetProfileWithFireid(authUser.uid).
 						then(result => {
+							console.log(result)
 							authUser = {
 								profile: result,
 								mongoId: res,
@@ -142,8 +144,40 @@ this.auth.onAuthStateChanged(authUser => {
 				providerData: authUser.providerData,
 				...dbUser,
 			};
-        	next(authUser);
+			next(authUser);
 		}
+		// if (typeof authUser.profile !== "Object"){
+		// 	// console.log("yup");
+		// 	// create user from firebase User if no user was found 
+		// 	// Only happens when mongoDB is not migrated as its local and 
+		// 	// firebase is "serverless" in the "cloud";
+		// 	console.log(authUser.profile);
+		// 	console.log(typeof authUser.profile);
+		// 	doMongoDBCreateUser(authUser.username, authUser.email, authUser.uid).then(
+		// 		res => {
+		// 			const profObj = {
+		// 				firstname: "TBD",
+		// 				lastname: "TBD",
+		// 				username: authUser.username,
+		// 				fireid: authUser.uid,
+		// 			};
+		// 			doMongoDBCreateProfile(profObj).then(res => authUser.profile = res).
+		// 			catch(err => {
+		// 				// means the profile was already created and we went here anyways 
+		// 				if (err){
+		// 					return err;
+		// 				}
+		// 			})
+		// 		}
+		// 	).catch(err =>{
+		// 		//means the user already existed and we created another anyways
+		// 		if (err){
+		// 			return err;
+		// 		}
+		// 	});
+		// }
+		next(authUser);
+
       });
   } else {
     fallback();

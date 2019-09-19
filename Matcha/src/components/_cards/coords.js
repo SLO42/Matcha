@@ -17,8 +17,10 @@ class CoordsCard extends React.Component {
 		this.setState({loading: true});
 		if (this.props.profile){
 			const prof = this.props.profile;
-			const location = prof.location;
-			this.setState({lat: location.lat, lon: location.lon});
+			if (prof.location){
+				const location = prof.location;
+				this.setState({lat: location.lat, lon: location.lon});
+			}
 		}
 		if (this.props.lat) this.setState({lat: this.props.lat})
 		if (this.props.lon) this.setState({lon: this.props.lon})
