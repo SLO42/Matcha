@@ -10,8 +10,8 @@ const TextFields = [
 
 
 const CreateFields = ({handleChange, bio}) => {
-	return TextFields.map(obj => (
-		<div className={obj.name} >
+	return TextFields.map((obj, index) => (
+		<div className={obj.name} key={index} >
 			<TextField
 				margin="normal"
 				onChange={handleChange}

@@ -222,12 +222,14 @@ export default class ImageCard extends React.Component {
 			
 			{/* <img src={item === "nah" || item === "empty" ? null : item}/> */}
 			<CardActions disableSpacing>
-			  <IconButton aria-label="Modify">
 			  {item === "nah" || item === "empty" ? 
-			  <AddIcon onClick={handleExpandClick}/> 
-			  : 
-			  <ClearIcon onClick={remove}/>}
+			  <IconButton aria-label="Modify"  onClick={handleExpandClick}>
+			 	 <AddIcon/> 
 			  </IconButton>
+			  : 
+			  <IconButton aria-label="Modify" onClick={remove}>
+			 	 <ClearIcon />
+			  </IconButton>}
 			</CardActions>
 		  </Card>
 		);
@@ -274,8 +276,8 @@ export default class ImageCard extends React.Component {
 
     render() {
         return( this.state.loading ? <p>loading...</p> : 
-			this.state.stuff.map(item => 
-				<this.SwipeCard item={item} addToStuff={this.addToStuff} removeNfix={this.removeNfix}/>) 
+			this.state.stuff.map((item, index) => 
+				<this.SwipeCard item={item} key={index} addToStuff={this.addToStuff} removeNfix={this.removeNfix}/>) 
         );
     }
 }

@@ -59,12 +59,12 @@ const ProfileCardStuff = ({profile, authUser}) => {
 					subheader={ profile ? profile.mystats.bio : value }
 				/>
 				<CardContent >
-					<CoordsCard profile={profile} edit={1}/>
-					<Chips profile={profile} checkStage={checkStage}/>
-					<TextBio profile={profile} checkStage={checkStage} />
-					<MyGender profile={profile} checkStage={checkStage} />
-					<MatchGender profile={profile} checkStage={checkStage} />
-					<ImageCard profile={profile} authUser={authUser}/>
+					<CoordsCard key={1} profile={profile} edit={1}/>
+					<Chips key={2} profile={profile} checkStage={checkStage}/>
+					<TextBio key={3} profile={profile} checkStage={checkStage} />
+					<MyGender key={4} profile={profile} checkStage={checkStage} />
+					<MatchGender key={5} profile={profile} checkStage={checkStage} />
+					<ImageCard key={6} profile={profile} authUser={authUser}/>
 					<Save profile={profile} />
 				</CardContent>
 			</Card>

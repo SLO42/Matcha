@@ -134,6 +134,7 @@ export {CustomizedMenus};
 
 	const reportAndBoucne = () => {
 		firebase.doReportUser(location.user, window.prompt("Reason?"));
+		firebase.doBlockUser(location.user);
 		history.push(ROUTES.PROFILE);
 	}
 

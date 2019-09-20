@@ -327,6 +327,14 @@ const HomePageRoutes = () => {
 			let filtered = res.data.filter(obj => obj.__v);
 			filtered = filtered.filter(obj => obj.username !== this.props.authUser.profile.username);
 
+			const test = process.env.REACT_APP_USE_BLOCK;
+			if (test){
+				this.props.authUser.profile.blocked.map(name => {
+					filtered = filtered.filter(obj => obj.username !== name);
+				})
+
+			}
+
 			this.setState({profiles: filtered, loading: false});
 			
 			// res.data.sort((a, b) => {
@@ -394,14 +402,13 @@ const HomePageRoutes = () => {
 		doMongoDBGetUserWithAuthEmail(this.props.authUser).then(res => {
 			let me = res;
 			this.setState({swiped: me.swiped, blocked: this.props.authUser.profile.blocked});
-			console.log(me);
 		}).then(() => { this.apiSearch() })
 		.catch(err => {if (err) return err});
 
 	}
 
 	componentWillUnmount() {
-    console.log('UNMOUNTED COMBAT');
+    
   }
 
 	render() {
