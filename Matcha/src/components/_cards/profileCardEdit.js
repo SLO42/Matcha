@@ -51,24 +51,29 @@ const ProfileCardStuff = ({profile, authUser}) => {
 				</ButtonBase>
 		)
 	}
-
-	return(
-		<Card className={classes.card}>
-			<CardHeader
-				title={profile.fame}
-				subheader={ profile ? profile.mystats.bio : value }
-			/>
-			<CardContent >
-				<CoordsCard profile={profile} edit={1}/>
-				<Chips profile={profile} checkStage={checkStage}/>
-				<TextBio profile={profile} checkStage={checkStage} />
-				<MyGender profile={profile} checkStage={checkStage} />
-				<MatchGender profile={profile} checkStage={checkStage} />
-				<ImageCard profile={profile} authUser={authUser}/>
-				<Save profile={profile} />
-			</CardContent>
-		</Card>
-	);
+	if (profile){
+		return(
+			<Card className={classes.card}>
+				<CardHeader
+					title={profile.fame}
+					subheader={ profile ? profile.mystats.bio : value }
+				/>
+				<CardContent >
+					<CoordsCard profile={profile} edit={1}/>
+					<Chips profile={profile} checkStage={checkStage}/>
+					<TextBio profile={profile} checkStage={checkStage} />
+					<MyGender profile={profile} checkStage={checkStage} />
+					<MatchGender profile={profile} checkStage={checkStage} />
+					<ImageCard profile={profile} authUser={authUser}/>
+					<Save profile={profile} />
+				</CardContent>
+			</Card>
+		);
+	} else {
+		return (
+			<p>i think something needs a reload</p>
+		)
+	}
 
 }
 

@@ -19,14 +19,14 @@ import CommentIcon from '@material-ui/icons/Comment';
 import SettingsIcon from '@material-ui/icons/Settings';
 import CardHeader from '@material-ui/core/CardHeader';
 import Badge from '@material-ui/core/Badge';
-import { Button, Paper, InputBase, CircularProgress, ButtonBase } from '@material-ui/core';
+import { Button, Paper, InputBase, CircularProgress, ButtonBase, CardActionArea } from '@material-ui/core';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import {
 	withAuthorization,
 	withEmailVerification,
 	AuthUserContext,
  } from '../session';
-import { Switch, Route, Link } from 'react-router-dom';
+import { Switch, Route, Link, withRouter } from 'react-router-dom';
 import * as ROUTES from '../constants/routes';
 import { withFirebase } from '../firebase';
 import { GridList, GridListTile } from '@material-ui/core';
@@ -209,6 +209,13 @@ const HomePageRoutes = () => {
 		};
 	}
 
+
+	sendToProfile = ({profile}) => {
+		if (profile){
+			this.props.firebase.push(ROUTES.HOME)
+		}
+	}
+
 	ImageCard = pobj => {
 		const prof = pobj.pobj;
 		const classes = useStyles();
@@ -224,23 +231,27 @@ const HomePageRoutes = () => {
 		// };
 
 		if (prof && prof.mystats){
-			console.log("wat");
-			console.log(prof);
-			console.log("wat");
 		
 			const common = prof.mystats.interest.filter(element => this.props.authUser.profile.mystats.interest.includes(element));
 			const text = common.toString();
 			return (
 				<MuiThemeProvider theme={theme}>
 				<Card className={classes.card} style={{height: '490px', }}>
-			<CardHeader
-				style={{whiteSpace: 'nowrap', fontSize: '1em'}}
-				title={prof ? prof.username : "TEST"}
-				/>
-			<CardMedia className={classes.media}
-				image={prof ? prof.picture ? prof.picture : TTY : TTY }
-				title={prof ? prof.username : "TEST"}
-				/>
+					<CardActionArea
+						component={Link}
+						to={{
+							pathname: `${ROUTES.PROFILE}/${prof ? prof.username : null}`,
+							state: {profile: prof, visit: true}}}
+						>
+						<CardHeader
+							style={{whiteSpace: 'nowrap', fontSize: '1em'}}
+							title={prof ? prof.username : "TEST"}
+						/>
+						<CardMedia className={classes.media}
+							image={prof ? prof.picture ? prof.picture : TTY : TTY }
+							title={prof ? prof.username : "TEST"}
+						/>
+				</CardActionArea>
 			<CardContent>
 				<Typography variant="body2" color="textSecondary" component="p" style={{wordWrap: 'none',}}>
 					{prof ? prof.mystats.bio : "Look at me and my not bio"}
@@ -265,7 +276,8 @@ const HomePageRoutes = () => {
 						<Badge>
 					<ThumbUp /> 
 							</Badge>
-				</IconButton>
+				  </IconButton>
+				{/*
 				<IconButton aria-label="Share">
 				<ShareIcon />
 				</IconButton>
@@ -274,7 +286,7 @@ const HomePageRoutes = () => {
 				<div style={{padding: `2px`}}>
 					<p>text</p>
 				</div>
-				</IconButton>
+				</IconButton> */}
 			</CardActions>
 			</Card>
 			</MuiThemeProvider>
@@ -665,7 +677,10 @@ class HomePage extends Component {
 
 const Messages = withFirebase(MessagesBase);
 const Home = withFirebase(HomeHome);
-const Images = withFirebase(ImagesBase);
+const Images = compose(
+	withRouter,
+	withFirebase,
+)(ImagesBase);
 
 const condition = authUser => !!authUser;
 

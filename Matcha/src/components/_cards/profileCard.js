@@ -33,7 +33,7 @@ const ProfileCardStuff = ({profile}) => {
 				/>
 				<CardContent>
 					<Typography variant="body2" color="textSecondary" component="p">
-						interests: {profile.mystats.interest.map(val => <h2>{val}</h2>)}
+						Interests: {profile.mystats.interest.join(", ")}
 					</Typography>
 					<CoordsCard profile={profile} edit={0}/>
 				</CardContent>
@@ -66,27 +66,6 @@ class ProfileCard extends Component{
 		};
 	}
 
-	// getUser = () => {
-	// 	let userObj = {};
-	// 	const wat = doMongoDBGetUserWithAuthEmail(this.props.authUser).
-	// 	then(async (res) => {
-	// 		userObj = res;
-	// 		// console.log(userObj);
-	// 		this.setState({userObj})
-	// 		return res;	
-	// 	})
-	// }
-
-	// getProfile = () => {
-	// 	let profileObj = {};
-	// 	// console.log(this.state.userObj.username)
-	// 	const wat = doMongoDBGetProfileWithAuth(this.state.userObj.username).
-	// 	then(async (res) => {
-	// 		profileObj = res;
-	// 		this.setState({profileObj});
-	// 		return res;
-	// 	})
-	// }
 
 	async componentDidMount() {
 		this.setState({loading: false});
@@ -111,5 +90,77 @@ class ProfileCard extends Component{
 		)
 	}
 }
+
+const VisitProfileCardStuff = ({profile}) => {
+	const classes = useStyles();
+	const clicked = () => window.alert(profile);
+	let value = "";
+
+	if (profile){
+		return(
+			<Card className={classes.card}>
+				<CardHeader
+					title={profile.fame}
+					subheader={ profile ? profile.mystats.bio : value }
+				/>
+				<CardContent>
+					<Typography variant="body2" color="textSecondary" component="p">
+						Interests: {profile.mystats.interest.join(" ")}
+					</Typography>
+					<CoordsCard profile={profile} edit={0}/>
+				</CardContent>
+				<CardActions disableSpacing>
+					<IconButton aria-label="Share">
+						<ShareIcon	/>
+					</IconButton>
+				</CardActions>
+			</Card>
+		);
+	} else {
+		return (
+		<div>
+			<p>
+				reload page? idk things broke
+			</p>
+		</div>)
+	}
+
+}
+
+export class VisitProfileCard extends Component{
+	constructor(props){
+		super(props);
+
+		this.state = {
+			loading: true,
+			profile: null,
+		};
+	}
+
+
+	async componentDidMount() {
+		if (this.props.profile){
+			this.setState({profile: this.props.profile, loading: false});
+		}
+	};
+	
+	render() {
+		const {
+			loading,
+			profile,
+		} = this.state;
+
+		return (
+			<div>
+				{
+					loading ? 
+					<p>Loading...</p> : 
+					<VisitProfileCardStuff profile={profile} /> 
+				} 
+			</div>
+		)
+	}
+}
+
 
 export default ProfileCard;

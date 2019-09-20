@@ -7,6 +7,8 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import { withFirebase } from '../firebase';
+import * as ROUTES from '../constants/routes';
 
 const useStyles = makeStyles({
   card: {
@@ -17,8 +19,21 @@ const useStyles = makeStyles({
   },
 });
 
-export default function BlockUserCard(userId) {
+const BlockUserCard = ({location, history, firebase}) => {
   const classes = useStyles();
+
+  if (!location.user){
+	history.goBack();
+}
+
+	const blocknBounce = () => {
+		firebase.doBlockUser(location.user);
+		history.push(ROUTES.LANDING)
+	}
+	
+	const bounce = () => {
+		history.goBack();
+	}
 
   return (
     <Card className={classes.card}>
@@ -30,7 +45,7 @@ export default function BlockUserCard(userId) {
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="h2">
-            Are you sure you want to block user?
+            Are you sure you want to block {location.user ? location.user : "user"}?
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
             You will no longer be able to send/recieve messages from this user and anything associated with the user will not be visible to you.
@@ -38,13 +53,15 @@ export default function BlockUserCard(userId) {
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <Button size="small" color="primary">
+        <Button size="small" color="primary" onClick={blocknBounce}>
           Yes, block this bitch
         </Button>
-        <Button size="small" color="primary">
+        <Button size="small" color="primary" onClick={bounce}>
           Nah lemme save the nudes first
         </Button>
       </CardActions>
     </Card>
   );
 }
+
+export default withFirebase(BlockUserCard);

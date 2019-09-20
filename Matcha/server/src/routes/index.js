@@ -5,6 +5,7 @@ import profile from './profile';
 import search from './search';
 import gallery from './gallery';
 import status from './status';
+import report from './report';
 
 export default {
 	gallery,
@@ -14,4 +15,5 @@ export default {
 	profile,
 	search,
 	status,
+	report,
 };

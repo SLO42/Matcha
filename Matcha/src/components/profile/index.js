@@ -20,13 +20,15 @@ import { Paper, CardContent, CardMedia } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import SettingsIcon from '@material-ui/icons/Settings';
-
-import {ProfileCard, ProfileCardEdit} from '../_cards';
+import ReportIcon from '@material-ui/icons/Report';
+import { Switch, Route, Link } from 'react-router-dom';
+import {ProfileCard, ProfileCardEdit, VisitProfileCard} from '../_cards';
 import { withAuthentication, AuthUserContext, withProfileVerification, withAuthorization,} from '../session';
 import { compose } from 'recompose';
 import { doMongoDBGetGalleryWithAuth } from '../axios';
 import MyCamera from '../camera';
 import Axios from 'axios';
+import {CustomizedMenus} from '../report/report.js';
 
 const theme = createMuiTheme({
     palette: {
@@ -160,7 +162,7 @@ export class ImageAvatars extends React.Component {
 		this.state = { 
 			loading: true, 
 			picture: null, 
-			gallery: [],
+			gallery: {},
 			change: false,
 		}
 	}
@@ -169,8 +171,20 @@ export class ImageAvatars extends React.Component {
 		this.setState({loading: true});
 		if (this.props.authUser && this.props.authUser.profile && this.props.authUser.profile.picture){
 			this.setState({picture: this.props.authUser.profile.picture});
-		} else this.setState({picture: TTY});
-		this.setState({loading: false});
+			doMongoDBGetGalleryWithAuth(this.props.authUser).then(
+				res => {
+					this.setState({gallery: res.gallery});
+					this.setState({loading: false});
+				}).catch(err => {
+					// should only happen if gallery doesnt exist for user...
+					if (err){
+						return (err);
+					}
+				})
+			} else {
+				this.setState({picture: TTY});
+				this.setState({loading: false});
+			}
 	}
 
 	newProfilePic = () => {
@@ -194,14 +208,34 @@ export class ImageAvatars extends React.Component {
 
 	}
 
-	render(){
-		const {classes} = this.props;
+	mappedGallery = () => {
+		const {gallery} = this.state;
+		let i = 0;
+		let mapped = [];
 
+		while (i < 4){
+			if (gallery[i] === "nah" || gallery[i] ==="empty" || gallery[i] === undefined){
+				break;
+			}else{
+				mapped[i] = gallery[i];
+			}
+			i++;
+			if (i > 5) break;
+		}
+		return (mapped);
+	}
+
+	render(){
+		const {classes, visit} = this.props;
+		let mapp = this.mappedGallery();
 		return ( this.state.loading ? this.state.change ? (
 			<MyCamera updatePhoto={this.updatePhoto}/>
 		) : <p>loading...</p> : (
 			<Grid container justify="left" alignItems="left" >
-				<Avatar alt="Profile-Image" src={this.state.picture} className={classes.bigAvatar}  onClick={this.newProfilePic}/>
+					<Avatar alt="Profile-Image" src={this.state.picture} className={classes.bigAvatar}  onClick={this.newProfilePic}/>
+					{mapp.map(img => {
+						return <Avatar alt="Gallery-Image" className={classes.bigAvatar} src={img} />
+					})}
 			</Grid> )
     	)}
 }
@@ -263,15 +297,146 @@ export const ChigBungusExpress = ({authUser}) => {
 	);
 }
 
-class ProfilePage extends React.Component {
 
+export class VistImageAvatars extends React.Component {
+	constructor(props){
+		super(props);
+
+		this.state = { 
+			loading: true, 
+			picture: null, 
+			gallery: {},
+		}
+	}
+
+	async componentDidMount() {
+		this.setState({loading: true});
+		if (this.props.profile.picture && this.props.profile.picture !== "nah" && this.props.profile.picture !== "empty"){
+			this.setState({picture: this.props.profile.picture, gallery: this.props.gallery});
+			this.setState({loading: false})
+		} else {
+				this.setState({picture: TTY});
+				this.setState({loading: false});
+			}
+	}
+
+	mappedGallery = () => {
+		const {gallery} = this.state;
+		let i = 0;
+		let mapped = [];
+
+		while (i < 4){
+			if (gallery[i] === "nah" || gallery[i] ==="empty" || gallery[i] === undefined){
+				break;
+			}else{
+				mapped[i] = gallery[i];
+			}
+			i++;
+			if (i > 5) break;
+		}
+		return (mapped);
+	}
+
+	render(){
+		const {classes} = this.props;
+		let mapp = this.mappedGallery();
+		return ( this.state.loading ? <p>loading...</p> : (
+			<Grid container justify="left" alignItems="left" >
+					<Avatar alt="Profile-Image" src={this.state.picture} className={classes.bigAvatar}/>
+					{mapp.map(img => {
+						return <Avatar alt="Gallery-Image" className={classes.bigAvatar} src={img} />
+					})}
+			</Grid> )
+    	)}
+}
+
+const ProfilePage = () => {
+	return(
+		<div>
+			<Switch>
+				<Route exact path={ROUTES.PROFILE} component={ProfileProfile} />
+				<Route exact path={ROUTES.MATCHPROFILE} component={ProfileVisit} />
+			</Switch>
+		</div>
+	)
+}
+
+class ProfileVisit extends React.Component {
+	constructor(props){
+		super(props);
+
+		this.state = {
+			loading: true,
+			profile: null,
+			gallery: null,
+		};
+	}
+
+
+	VisitExpress = ({profile, gallery}) => {
+		const classes = useStyles();
+		
+		return (
+			<Paper className={classes.benis}>
+				<CardHeader title={profile.username}
+					subheader={`*${profile.mystats.mysex}* - ${profile.firstname} ${profile.lastname}`}
+					action={
+						<CustomizedMenus user={profile.username} />
+					}
+				 />
+				 <CardContent>
+					<div  style={styles.tty}>
+						<VistImageAvatars profile={profile} classes={classes} gallery={gallery}/>
+					</div>
+					<VisitProfileCard profile={profile}/>
+					<div style={styles.panel}>
+						<RightPanel/>
+					</div>
+				</CardContent> 
+			</Paper>
+		);
+	}
+
+
+
+
+	componentDidMount() {
+		this.setState({
+			loading:true, profile:this.props.location.state.profile
+		});
+		if (this.props.location.state.profile){
+			if (this.props.location.state.visit) {
+				//do tell backend that you have visited the user. marking the profile. 
+				this.props.location.state.visit = false;
+			} 
+			doMongoDBGetGalleryWithAuth({uid: this.props.location.state.profile.fireid}).then(
+				res => {
+					this.setState({gallery: res.gallery, loading: false});
+				}
+			).catch(err => {
+				//will err if the props are passed via location.
+				if (err) return err;
+			})
+		}
+
+	};
+
+	render() {
+		const {loading, profile, gallery} = this.state;
+		return(
+				loading ? <h2>...Loading</h2> : <this.VisitExpress gallery={gallery} profile={profile}/>
+		)
+	}
+}
+
+class ProfileProfile extends React.Component {
     render() {
         return(
 		<MuiThemeProvider theme={theme}>
 			<AuthUserContext.Consumer>
-				{authUser => ( authUser ? 
-							<ChigBungusExpress authUser={authUser} /> : 
-							<h1>Looks like you arent connected</h1>
+				{authUser => ( authUser ?
+					<ChigBungusExpress authUser={authUser} /> : 
+					<h1>Looks like you arent connected</h1>
 				)}
 			</AuthUserContext.Consumer>
       </MuiThemeProvider>

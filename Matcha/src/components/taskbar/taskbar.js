@@ -160,13 +160,13 @@ const useStyles = makeStyles(theme => ({
   },
   sectionDesktop: {
     display: 'none',
-    [theme.breakpoints.up('md')]: {
+    [theme.breakpoints.up('sm')]: {
       display: 'flex',
     },
   },
   sectionMobile: {
     display: 'flex',
-    [theme.breakpoints.up('md')]: {
+    [theme.breakpoints.up('sm')]: {
       display: 'none',
     },
   },
@@ -176,43 +176,29 @@ const useStyles = makeStyles(theme => ({
 
 const PrimarySearchAppBar = () => {
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
-  const isMenuOpen = Boolean(anchorEl);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const isMenuOpen = Boolean(false);
+  const isMobileMenuOpen = Boolean(false);
 
   function handleProfileMenuOpen(event) {
-    setAnchorEl(event.currentTarget);
   }
 
-  function handleMobileMenuClose() {
-    setMobileMoreAnchorEl(null);
-  }
 
-  function handleMenuClose() {
-    setAnchorEl(null);
-    handleMobileMenuClose();
-  }
-
-  function handleMobileMenuOpen(event) {
-    setMobileMoreAnchorEl(event.currentTarget);
+  const handleMobileMenuOpen = event => {
   }
 
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
+    <IconButton
       anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       id={menuId}
       keepMounted
       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       open={isMenuOpen}
-      onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-    </Menu>
+      {/* <MenuItem onClick={}>Profile</MenuItem>
+      <MenuItem onClick={}>My account</MenuItem> */}
+    </IconButton>
   );
 
   const [value, setValue] = React.useState("");
@@ -230,14 +216,12 @@ const PrimarySearchAppBar = () => {
   const mobileMenuId = 'primary-search-account-menu-mobile';
   const renderMobileMenu = (
     <Menu
-      anchorEl={mobileMoreAnchorEl}
       anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       id={mobileMenuId}
       keepMounted
       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-      items={[<Navigation/>]}
+	  open={isMobileMenuOpen}
+    //   items={[<Navigation/>]}
     >
       <MenuItem>
         <IconButton aria-label="Show 4 new mails" color="">

@@ -6,6 +6,7 @@ export const ACCOUNT = '/account';
 export const ADMIN = '/admin';
 export const PASSWORD_FORGET = '/pw-forget';
 export const PROFILE = '/profile';
+export const MATCHPROFILE = '/profile/:id';
 export const ERROR = '/error';
 export const PROFILE_CREATION = '/profile-creation';
 export const PROFILE_EDIT = '/profile-edit';

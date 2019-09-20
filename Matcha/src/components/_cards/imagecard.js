@@ -22,6 +22,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { doMongoDBGetGalleryWithAuth, doUpdateGallery } from "../axios";
 import MyCamera from '../camera';
 import { Button } from "@material-ui/core";
+import Axios from "axios";
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -123,6 +124,23 @@ export default class ImageCard extends React.Component {
 		}
 	}
 
+	removeNfix = (picture) => {
+		const {list, stuff} = this.state;
+		const result = stuff.filter(img => img !== picture);
+		let i = 0;
+		let gallery = {};
+		while ( i < 5){
+			if (result[i] && (result[i] === "empty" || result[i] === "nah")){
+				break;
+			} else {
+				gallery[i] = result[i]
+			}
+			i++;
+			if (i > 5) break;
+		}
+		doUpdateGallery(this.props.authUser, gallery);
+		
+	}
 
 	addToStuff = (picture) => {
 		if (this.state.stuff.length < 5){
@@ -140,7 +158,6 @@ export default class ImageCard extends React.Component {
 				}
 				i++;
 				if (i > 5) break;
-				console.log(gallery);
 			}
 			this.setState({list: gallery, stuff});
 			doUpdateGallery(this.props.authUser, gallery).then(
@@ -152,7 +169,7 @@ export default class ImageCard extends React.Component {
 		}
 	}
 
-	SwipeCard = ({item, addToStuff}) => {
+	SwipeCard = ({item, addToStuff, removeNfix}) => {
 		const classes = useStyles();
 		const [expanded, setExpanded] = React.useState(false);
 		const [saved, setSaved] = React.useState(false);
@@ -176,6 +193,10 @@ export default class ImageCard extends React.Component {
 			setImg(picture);
 			handleSaveClick();
 
+		}
+
+		const remove = () => {
+			removeNfix(item);
 		}
 	  
 		return (
@@ -205,7 +226,7 @@ export default class ImageCard extends React.Component {
 			  {item === "nah" || item === "empty" ? 
 			  <AddIcon onClick={handleExpandClick}/> 
 			  : 
-			  <ClearIcon onClick={() => {window.alert("hey")}}/>}
+			  <ClearIcon onClick={remove}/>}
 			  </IconButton>
 			</CardActions>
 		  </Card>
@@ -225,7 +246,6 @@ export default class ImageCard extends React.Component {
 				while (++i < 5)
 				{
 					if (res.gallery[i] && (res.gallery[i] !== "nah") && (res.gallery[i] !== "empty")){
-						console.log(res.gallery[i])
 						things.push(res.gallery[i]);
 					} else {
 						if (i >= 1 && (!res.gallery[i - 1] || res.gallery[i - 1] === "nah" || res.gallery[i - 1] === "empty")){
@@ -255,7 +275,7 @@ export default class ImageCard extends React.Component {
     render() {
         return( this.state.loading ? <p>loading...</p> : 
 			this.state.stuff.map(item => 
-				<this.SwipeCard item={item} addToStuff={this.addToStuff}/>) 
+				<this.SwipeCard item={item} addToStuff={this.addToStuff} removeNfix={this.removeNfix}/>) 
         );
     }
 }

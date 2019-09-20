@@ -7,6 +7,7 @@ import {doMongoDBGetUserIdWithFireid,
 	doMongoDBGetProfileWithFireid,
 	doMongoDBCreateProfile,
 } from '../axios';
+import Axios from 'axios';
 
 /* import * as admin from 'firebase-admin';
 
@@ -50,6 +51,34 @@ doCreateUserWithEmailAndPassword = (email, password) =>
 doSignInWithEmailAndPassword = (email, password) =>
 this.auth.signInWithEmailAndPassword(email, password);
 
+
+doBlockUser = (user) => {
+
+	doMongoDBGetProfileWithFireid(this.auth.currentUser.uid).then(
+		res => {
+			let list = res.blocked;
+			if (!list.includes(user)){
+				list.push(user);
+				const update = {fireid: this.auth.currentUser.uid, blocked: list};
+				const table = process.env.REACT_APP_AXIOS_UPDATE_PROFILE;
+				Axios.put(table, update).then(
+					res => { }).catch(err => {if (err) return err})
+			}
+		}
+	)
+}
+
+doReportUser = (user, reason) => {
+
+	const table = process.env.REACT_APP_AXIOS_ADD_REPORT;
+	const add = {
+		fireid: this.auth.currentUser.uid,
+		user,
+		reason,
+	}
+	Axios.put(table, add).then(res => {console.log(res)}).catch(err => {if (err) return err});
+	
+}
 /* doSignInWithGoogle = () =>
 this.auth.signInWithPopup(this.googleProvider);
 
@@ -91,7 +120,6 @@ this.auth.onAuthStateChanged(authUser => {
 					if (!(authUser.profile) || (authUser.profile === String)){
 						doMongoDBGetProfileWithFireid(authUser.uid).
 						then(result => {
-							console.log(result)
 							authUser = {
 								profile: result,
 								mongoId: res,

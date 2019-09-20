@@ -1,5 +1,5 @@
-import ProfileCard from './profileCard';
+import ProfileCard, {VisitProfileCard} from './profileCard';
 import ProfileCardEdit from './profileCardEdit';
 import ImageCard from './imagecard';
 
-export {ProfileCard, ProfileCardEdit, ImageCard};
+export {ProfileCard, ProfileCardEdit, ImageCard, VisitProfileCard};
