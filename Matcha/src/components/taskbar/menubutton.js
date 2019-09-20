@@ -38,7 +38,7 @@ class MenuButton extends React.Component {
     const open = Boolean(anchorEl);
     const Wrapper = this.props.iconType;
     const listItems = this.props.items.map((link) =>
-      <MenuItem onClick={this.handleClose} >{link}</MenuItem>
+      <MenuItem key={"handle"} onClick={this.handleClose} >{link}</MenuItem>
     );
 
     return (

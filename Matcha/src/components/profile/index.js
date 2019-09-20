@@ -231,10 +231,10 @@ export class ImageAvatars extends React.Component {
 		return ( this.state.loading ? this.state.change ? (
 			<MyCamera updatePhoto={this.updatePhoto}/>
 		) : <p>loading...</p> : (
-			<Grid container justify="left" alignItems="left" >
-					<Avatar alt="Profile-Image" src={this.state.picture} className={classes.bigAvatar}  onClick={this.newProfilePic}/>
-					{mapp.map(img => {
-						return <Avatar alt="Gallery-Image" className={classes.bigAvatar} src={img} />
+			<Grid container justify="space-between" alignItems="flex-end" >
+					<Avatar key={"pp"} alt="Profile-Image" src={this.state.picture} className={classes.bigAvatar}  onClick={this.newProfilePic}/>
+					{mapp.map((img, index) => {
+						return <Avatar key={index} alt="Gallery-Image" className={classes.bigAvatar} src={img} />
 					})}
 			</Grid> )
     	)}
@@ -258,7 +258,7 @@ export function Notifications() {
     const classes = useStyles();
   
     return (
-      <Grid container justify="right" alignItems="right">
+      <Grid container justify="space-between" alignItems="flex-end">
         <Paper className={classes.rightPanel}>
             <Notifications/>
             <SimpleRating/>
@@ -341,7 +341,7 @@ export class VistImageAvatars extends React.Component {
 		const {classes} = this.props;
 		let mapp = this.mappedGallery();
 		return ( this.state.loading ? <p>loading...</p> : (
-			<Grid container justify="left" alignItems="left" >
+			<Grid container justify="space-between" alignItems="flex-start" >
 					<Avatar alt="Profile-Image" src={this.state.picture} className={classes.bigAvatar}/>
 					{mapp.map(img => {
 						return <Avatar alt="Gallery-Image" className={classes.bigAvatar} src={img} />

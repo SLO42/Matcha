@@ -69,7 +69,6 @@ class LocationDisplaysMain extends React.Component {
 			id="outlined-disabled"
 			label="Latitude"
 			onChange={onChangelat}
-			defaultValue={this.state.lat}
 			value={lat}
 			margin="normal"
 			variant="outlined"
@@ -78,7 +77,6 @@ class LocationDisplaysMain extends React.Component {
 			id="outlined-disabled"
 			onChange={onChangelon}
 			label="Longitude"
-			defaultValue={this.state.long}
 			value={long}
 			margin="normal"
 			variant="outlined"
@@ -92,7 +90,6 @@ class LocationDisplaysMain extends React.Component {
 				disabled
 				id="outlined-disabled"
 				label="Latitude"
-				defaultValue={this.state.lat}
 				value={lat}
 				margin="normal"
 				variant="outlined"
@@ -101,7 +98,6 @@ class LocationDisplaysMain extends React.Component {
 			disabled
 				id="outlined-disabled"
 				label="Longitude"
-				defaultValue={this.state.long}
 				value={long}
 				margin="normal"
 				variant="outlined"

@@ -259,7 +259,7 @@ const HomePageRoutes = () => {
 					<br />
 					{text !== "" ? '~' + text + '~' : "~No Matching Interest~"}
 					<br />
-					{prof && prof.location && this.props.mycords ? <CoordsCard profile={prof} /> : <p>They don't exist</p>}
+					{prof && prof.location && this.props.mycords ? <CoordsCard profile={prof} /> : `They don't exist`}
 				</Typography>
 			</CardContent>
 			<CardActions disableSpacing style={{display: 'inline-flex', position: 'absolute', bottom: -25, right: '33%'}}>

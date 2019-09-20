@@ -126,7 +126,7 @@ function AccountPage() {
         <PasswordChangeForm/>
         </CardContent>
         </Card>
-        <Grid item md={12} direction="row"> 
+        <Grid container direction="row"> 
         <LoginManagement style={styles.buttons} authUser={authUser} />
           </Grid>
 
@@ -253,7 +253,7 @@ const SocialLoginToggle = ({
       style={styles.button}
       variant="contained"
       color="primary"
-      type="Button"
+      type="button"
       onClick={() => onLink(signInMethod.provider)}
     >
       Link {signInMethod.id}

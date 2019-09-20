@@ -15,10 +15,13 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import TemporaryDrawer from './menu';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import { Paper } from '@material-ui/core';
+import { Paper, ButtonBase } from '@material-ui/core';
 import axios from 'axios';
 import MenuButton from './menubutton';
 import Navigation from '../navigation';
+import { withRouter} from 'react-router-dom';
+import * as ROUTES from '../constants/routes';
+import CardActionArea from '@material-ui/core/CardActionArea';
 
 let results = "";
 
@@ -145,7 +148,6 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    color: "#ffeb3b"
   },
   inputRoot: {
     color: '#ffeb3b',
@@ -174,7 +176,7 @@ const useStyles = makeStyles(theme => ({
 
 
 
-const PrimarySearchAppBar = () => {
+const PrimarySearchAppBar = ({history}) => {
   const classes = useStyles();
 
   const isMenuOpen = Boolean(false);
@@ -258,9 +260,11 @@ const PrimarySearchAppBar = () => {
       <AppBar position="static">
         <Toolbar>
             <TemporaryDrawer/>
-          <Typography className={classes.title} variant="h6" noWrap>
-            Material-UI
-          </Typography>
+			<ButtonBase onClick={() => {history.push(ROUTES.HOME)}}>
+				<Typography className={classes.title} variant="h6" noWrap>
+					Material-UI
+				</Typography>
+			</ButtonBase>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
@@ -306,7 +310,6 @@ const PrimarySearchAppBar = () => {
               aria-controls={mobileMenuId}
               aria-haspopup="true"
               onClick={handleMobileMenuOpen}
-              color="#ffeb3b"
             >
               <MoreIcon />
             </IconButton>
@@ -322,4 +325,4 @@ const PrimarySearchAppBar = () => {
 }
 
 
-export default PrimarySearchAppBar;
+export default withRouter(PrimarySearchAppBar);

@@ -17,7 +17,7 @@ import BlockIcon from '@material-ui/icons/Block';
 import ReportProblemIcon from '@material-ui/icons/ReportProblem';
 import SendIcon from '@material-ui/icons/Send';
 import { IconButton } from '@material-ui/core';
-import { Switch, Route, Link, withRouter} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 import * as ROUTES from '../constants/routes';
 import { withFirebase } from '../firebase';
 

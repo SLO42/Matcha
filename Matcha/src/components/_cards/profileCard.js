@@ -102,7 +102,10 @@ const VisitProfileCardStuff = ({profile}) => {
 				<CardHeader
 					title={profile.fame}
 					subheader={ profile ? profile.mystats.bio : value }
-				/>
+					/>
+					<p>
+						Wants: {profile.wants.prefsex}
+					</p>
 				<CardContent>
 					<Typography variant="body2" color="textSecondary" component="p">
 						Interests: {profile.mystats.interest.join(" ")}
