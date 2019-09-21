@@ -139,9 +139,15 @@ class SignInFormBase extends Component {
 		  });
 	}
 
-
+	
     event.preventDefault();
   };
+
+	_handleKeyDown = (e) => {
+		if (e.key === 'Enter') {
+		this.onSubmit(e);
+	}
+}
 
   onChange = event => {
     this.setState({ [event.target.name]: event.target.value });
@@ -169,7 +175,8 @@ class SignInFormBase extends Component {
           value={password}
           onChange={this.onChange}
           type="password"
-          placeholder="Password"
+		  placeholder="Password"
+		  onKeyDown={this._handleKeyDown}
         />
         <Button style={styles.button} disabled={isInvalid} onClick={this.onSubmit}>
           Sign In

@@ -6,7 +6,7 @@ import Rating from '@material-ui/lab/Rating';
 import Box from '@material-ui/core/Box';
 import FormButtons from '../formPage';
 import { withFirebase } from '../firebase';
-import { AuthUserContext, withAuthorization} from '../session';
+import { AuthUserContext, withAuthorization, withEmailVerification} from '../session';
 import { compose } from 'recompose';
 
 const theme = createMuiTheme({
@@ -56,7 +56,7 @@ class ProfileCreation extends React.Component {
             </h1>
 			<AuthUserContext.Consumer>
 				{authUser => (
-					<FormButtons authUser={authUser}/>
+					<FormButtons authUser={authUser} firebase={this.props.firebase}/>
 				)}
 			</AuthUserContext.Consumer>
         </div>
@@ -70,6 +70,7 @@ const condition = authUser => !!authUser;
 export default compose(
 	withStyles(styles),
 	withFirebase,
+	withEmailVerification,
 	withAuthorization(condition),
 )(ProfileCreation);
 

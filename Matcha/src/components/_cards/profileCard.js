@@ -7,6 +7,8 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import {doMongoDBGetProfileWithAuth, doMongoDBGetUserWithAuthEmail} from '../axios';
 import CoordsCard from './coords';
+import { compose } from 'recompose';
+import { withFirebase } from '../firebase';
 
 const useStyles = makeStyles(theme => ({
 	card: {
@@ -62,12 +64,17 @@ class ProfileCard extends Component{
 		this.state = {
 			authUser: this.props.authUser,
 			loading: true,
-			profile: this.props.authUser.profile,
+			profile: null,
 		};
 	}
 
 
 	async componentDidMount() {
+		this.setState({loading: true});
+		if(this.props.authUser.profile){
+			this.setState({profile: this.props.authUser.profile});
+		}
+
 		this.setState({loading: false});
 
 	};
@@ -130,7 +137,7 @@ const VisitProfileCardStuff = ({profile}) => {
 
 }
 
-export class VisitProfileCard extends Component{
+class VisitProfileCardBase extends Component{
 	constructor(props){
 		super(props);
 
@@ -158,12 +165,17 @@ export class VisitProfileCard extends Component{
 				{
 					loading ? 
 					<p>Loading...</p> : 
-					<VisitProfileCardStuff profile={profile} /> 
+					<VisitProfileCardStuff profile={profile} firebase={this.props.firebase}/> 
 				} 
 			</div>
 		)
 	}
 }
 
+const VisitProfileCard = compose(
+	withFirebase,
+)(VisitProfileCardBase);
+
+export {VisitProfileCard}
 
 export default ProfileCard;

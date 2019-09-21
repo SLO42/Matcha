@@ -215,7 +215,11 @@ class SignUpFormBase extends React.Component {
 	// 	const {users, username} = this.state;
 	// }
   };
-
+  _handleKeyDown = (e) => {
+	if (e.key === 'Enter') {
+	this.onSubmit(e);
+	}
+  }
   onChangeCheckbox = event => {
     this.setState({ [event.target.name]: event.target.checked });
   };
@@ -326,6 +330,7 @@ class SignUpFormBase extends React.Component {
 					placeholder={"Confirm password"}
 					name={"passwordTwo"}
 					autoComplete={"password"}
+					onKeyDown={this._handleKeyDown}
 				/>
 				<br />
               <br></br>

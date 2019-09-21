@@ -45,7 +45,7 @@ async function doMongoDBGetProfileWithFireid(fireid){
 	await axios.get(table+request).
 	then(async res => {
 		resi = res.data;
-		return res.data
+		return res;
 	}).catch (err => {return err});
 	return resi;
 }

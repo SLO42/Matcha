@@ -39,7 +39,7 @@ const firebaseConfig = {
       this.googleProvider = new firebase.auth.GoogleAuthProvider();
       this.facebookProvider = new firebase.auth.FacebookAuthProvider();
 	  this.twitterProvider = new firebase.auth.TwitterAuthProvider();
-	  this.profile = new Profile();
+	  this.profile = null;
     };
   
 doDatabaseCreateUser = (username, email, uid) => 
@@ -79,6 +79,19 @@ doReportUser = (user, reason) => {
 	Axios.put(table, add).then(res => {console.log(res)}).catch(err => {if (err) return err});
 	
 }
+
+doUpdateProfile = async ({fireid}) => {
+	await doMongoDBGetProfileWithFireid(fireid).then(
+		res => {
+			console.log(res);
+			this.setProfile(res);
+		}
+	)
+}
+
+setProfile = ({profile}) => {
+	this.profile = profile;
+}
 /* doSignInWithGoogle = () =>
 this.auth.signInWithPopup(this.googleProvider);
 
@@ -113,7 +126,19 @@ this.auth.onAuthStateChanged(authUser => {
       .once('value')
       .then(snapshot => {
 		const dbUser = snapshot.val();
-		if (!(authUser.mongoId) || !(authUser.profile)) {
+		if(this.profile){
+			authUser = {
+				profile: this.profile,
+				mongoId: authUser.mongoId,
+				uid: authUser.uid,
+				username: authUser.username,
+				email: authUser.email,
+				emailVerified: authUser.emailVerified,
+				providerData: authUser.providerData,
+				...dbUser,
+			};
+			next(authUser);
+		}else if (!(authUser.mongoId) || !(authUser.profile)) {
 			if (!(authUser.mongoId) || (authUser.mongoId === String)){
 				doMongoDBGetUserIdWithFireid(authUser.uid).
 				then(res => {

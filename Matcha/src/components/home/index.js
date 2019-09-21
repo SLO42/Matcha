@@ -189,8 +189,28 @@ const HomePageRoutes = () => {
 			</div>
 )};
 
-
-
+//https://www.geodatasource.com/developers/javascript 
+function distance(lat1, lon1, lat2, lon2, unit) {
+	if ((lat1 == lat2) && (lon1 == lon2)) {
+		return 0;
+	}
+	else {
+		var radlat1 = Math.PI * lat1/180;
+		var radlat2 = Math.PI * lat2/180;
+		var theta = lon1-lon2;
+		var radtheta = Math.PI * theta/180;
+		var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+		if (dist > 1) {
+			dist = 1;
+		}
+		dist = Math.acos(dist);
+		dist = dist * 180/Math.PI;
+		dist = dist * 60 * 1.1515;
+		if (unit=="K") { dist = dist * 1.609344 }
+		if (unit=="N") { dist = dist * 0.8684 }
+		return Math.floor(dist);
+	}
+}
 
 
   class ImagesBase extends Component {
@@ -216,8 +236,9 @@ const HomePageRoutes = () => {
 		}
 	}
 
-	ImageCard = pobj => {
+	ImageCard = (pobj) => {
 		const prof = pobj.pobj;
+		const mycords = pobj.mycords;
 		const classes = useStyles();
 		//let desc = imageObject.comments[0].text;
 		//const otit = imageObject.tits
@@ -231,7 +252,7 @@ const HomePageRoutes = () => {
 		// };
 
 		if (prof && prof.mystats){
-		
+			const dist = distance(mycords.lat, mycords.lon, prof.location.lat, prof.location.lon, "M");
 			const common = prof.mystats.interest.filter(element => this.props.authUser.profile.mystats.interest.includes(element));
 			const text = common.toString();
 			return (
@@ -259,14 +280,13 @@ const HomePageRoutes = () => {
 					<br />
 					{text !== "" ? '~' + text + '~' : "~No Matching Interest~"}
 					<br />
-					{prof && prof.location && this.props.mycords ? <CoordsCard profile={prof} /> : `They don't exist`}
+					{dist >= 0  ? `${dist}/miles away` : `They don't exist`}
 				</Typography>
 			</CardContent>
-			<CardActions disableSpacing style={{display: 'inline-flex', position: 'absolute', bottom: -25, right: '33%'}}>
+			{/* <CardActions disableSpacing style={{display: 'inline-flex', position: 'absolute', bottom: 0, right: '15%'}}>
 		
 				<IconButton aria-label="Add to favorites" 
 					// onClick={() => {
-						
 						// if (window.confirm('Are you sure you want to delete the picture? you can not have it back.')){
 							// 	return delPicture(imageObject, authUser);
 							// }
@@ -277,7 +297,7 @@ const HomePageRoutes = () => {
 					<ThumbUp /> 
 							</Badge>
 				  </IconButton>
-				{/*
+				
 				<IconButton aria-label="Share">
 				<ShareIcon />
 				</IconButton>
@@ -286,8 +306,8 @@ const HomePageRoutes = () => {
 				<div style={{padding: `2px`}}>
 					<p>text</p>
 				</div>
-				</IconButton> */}
-			</CardActions>
+				</IconButton>
+			</CardActions> */}
 			</Card>
 			</MuiThemeProvider>
 			);
@@ -398,6 +418,7 @@ const HomePageRoutes = () => {
 	}
 
 	componentDidMount() {
+		console.log(this.props);
 		this.setState({ loading: true  });
 		doMongoDBGetUserWithAuthEmail(this.props.authUser).then(res => {
 			let me = res;
@@ -417,7 +438,7 @@ const HomePageRoutes = () => {
 		return(
 			<MuiThemeProvider theme={theme}>
 					<div align="center">
-						{loading ? 
+						{loading && this.props.isGeolocationAvailable && this.props.isGeolocationEnabled ? 
 						<p>Loading</p>
 						:
 						<this.ImageList  authUser={this.props.authUser}  />
@@ -687,6 +708,11 @@ const Home = withFirebase(HomeHome);
 const Images = compose(
 	withRouter,
 	withFirebase,
+	geolocated({
+		positionOptions: {
+			enableHighAccuracy: false,
+		},
+		userDecisionTimeout: 5000})
 )(ImagesBase);
 
 const condition = authUser => !!authUser;
@@ -694,9 +720,4 @@ const condition = authUser => !!authUser;
 export default compose(
 	withEmailVerification,
 	withAuthorization(condition),
-	geolocated({
-		positionOptions: {
-			enableHighAccuracy: false,
-		},
-		userDecisionTimeout: 5000})
 )(HomePage);

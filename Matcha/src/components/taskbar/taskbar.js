@@ -46,7 +46,6 @@ const apiSearch = async (query) => {
 				param === "Concerts" || param === "Hunting" || param === "Reading";
 				
 				const firstAdd = ret === "";
-			console.log(interets);
 			if (param === "Male" || param === "Female") {
 				if (firstAdd){
 					ret = `mystats.mysex=${param}`;
@@ -66,16 +65,17 @@ const apiSearch = async (query) => {
 	}
 
 	await axios.get(`http://localhost:3001/search/p_${createSearch(query)}_all`).
-	then(async res => {
-		await console.log(res.data);
-		await console.log(results);
+	then(async res => {;
 		
-		res.data.sort((a, b) => {
-			if(a.username < b.username) return -1;
-			if(a.username > b.username) return 1;
-			return 0; 
-		})
-		await res.data.map(async (profileObject) => {
+		// res.data.sort((a, b) => {
+		// 	if(a.username < b.username) return -1;
+		// 	if(a.username > b.username) return 1;
+		// 	return 0; 
+		// })
+		let filter = res.data.filter(obj => obj.__v);
+		// filter = filter.filter(o)
+
+		await filter.map(async (profileObject) => {
 			results += ` | ${profileObject.username}`;
 			return (
 				<div>
@@ -261,8 +261,8 @@ const PrimarySearchAppBar = ({history}) => {
         <Toolbar>
             <TemporaryDrawer/>
 			<ButtonBase onClick={() => {history.push(ROUTES.HOME)}}>
-				<Typography className={classes.title} variant="h6" noWrap>
-					Material-UI
+				<Typography className={classes.title} variant="h6" bold noWrap>
+					MATCHA
 				</Typography>
 			</ButtonBase>
           <div className={classes.search}>

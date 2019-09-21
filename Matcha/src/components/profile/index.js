@@ -21,7 +21,7 @@ import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import SettingsIcon from '@material-ui/icons/Settings';
 import ReportIcon from '@material-ui/icons/Report';
-import { Switch, Route, Link } from 'react-router-dom';
+import { Switch, Route, Link, withRouter } from 'react-router-dom';
 import {ProfileCard, ProfileCardEdit, VisitProfileCard} from '../_cards';
 import { withAuthentication, AuthUserContext, withProfileVerification, withAuthorization,} from '../session';
 import { compose } from 'recompose';
@@ -361,7 +361,8 @@ const ProfilePage = () => {
 	)
 }
 
-class ProfileVisit extends React.Component {
+
+class ProfileVisitBase extends React.Component {
 	constructor(props){
 		super(props);
 
@@ -390,7 +391,7 @@ class ProfileVisit extends React.Component {
 					</div>
 					<VisitProfileCard profile={profile}/>
 					<div style={styles.panel}>
-						<RightPanel/>
+						{/* <RightPanel/> */}
 					</div>
 				</CardContent> 
 			</Paper>
@@ -401,9 +402,12 @@ class ProfileVisit extends React.Component {
 
 
 	componentDidMount() {
-		this.setState({
-			loading:true, profile:this.props.location.state.profile
-		});
+		this.setState({loading: true});
+		if (this.props.location && this.props.location.state){
+			this.setState({profile: this.props.location.state.profile});
+		} else{
+			return this.props.history.push(ROUTES.PROFILE);
+		}
 		if (this.props.location.state.profile){
 			if (this.props.location.state.visit) {
 				//do tell backend that you have visited the user. marking the profile. 
@@ -429,6 +433,8 @@ class ProfileVisit extends React.Component {
 	}
 }
 
+
+
 class ProfileProfile extends React.Component {
     render() {
         return(
@@ -445,6 +451,7 @@ class ProfileProfile extends React.Component {
 }
 
 const condition = authUser => !!authUser;
+const ProfileVisit = withRouter(ProfileVisitBase);
 
 export default compose(
 	withProfileVerification,
