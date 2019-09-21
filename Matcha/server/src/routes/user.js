@@ -53,6 +53,20 @@ router.post('/add', async (req, res) => {
 })
 
 
+router.get('/swiped/:id', async (req, res) => {
+	const user = await req.context.models.User.findOne().where("username").all(req.params.id);
+	return res.send(user ? user.swiped : []);
+})
+
+router.put('/swipe', async (req, res) => {
+	if (req.context.me){
+		req.context.me.swiped = req.body.swiped;
+		await req.context.me.save();
+	}
+	return res.send(req.context.me? req.context.me : "No" );
+})
+
+
 // simple error handling for below request. stops the server from stoppin
 const errorHandle = (val) => {
 	console.log(`User with userid of '${val}' does not exist... `);
@@ -72,19 +86,19 @@ router.get('/findbyusername/:userId', async (req, res) => {
 		} else {
 			return res.send(profile);
 		}
-	}
-	).exec(function (err) {
-		if (err) {
-			errorHandle(req.params.userId);
-			res.writeHead(301, "no data")
-			res.write("good stuff", (err) => {
-				if (err) { console.log(err) };
-			});
-			return res.send();
-		} else {
-			return res.send(user);
-		}
 	})
+	// ).exec(function (err) {
+	// 	if (err) {
+	// 		errorHandle(req.params.userId);
+	// 		res.writeHead(301, "no data")
+	// 		res.write("good stuff", (err) => {
+	// 			if (err) { console.log(err) };
+	// 		});
+	// 		return res.send();
+	// 	} else {
+	// 		return res.send(user);
+	// 	}
+	// })
 });
 
 

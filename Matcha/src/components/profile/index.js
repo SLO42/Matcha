@@ -374,7 +374,7 @@ class ProfileVisitBase extends React.Component {
 	}
 
 
-	VisitExpress = ({profile, gallery}) => {
+	VisitExpress = ({authUser, profile, gallery}) => {
 		const classes = useStyles();
 		
 		return (
@@ -389,7 +389,7 @@ class ProfileVisitBase extends React.Component {
 					<div  style={styles.tty}>
 						<VistImageAvatars profile={profile} classes={classes} gallery={gallery}/>
 					</div>
-					<VisitProfileCard profile={profile}/>
+					<VisitProfileCard authUser={authUser} profile={profile}/>
 					<div style={styles.panel}>
 						{/* <RightPanel/> */}
 					</div>
@@ -428,7 +428,12 @@ class ProfileVisitBase extends React.Component {
 	render() {
 		const {loading, profile, gallery} = this.state;
 		return(
-				loading ? <h2>...Loading</h2> : <this.VisitExpress gallery={gallery} profile={profile}/>
+				loading ? <h2>...Loading</h2> : 
+				<AuthUserContext.Consumer>
+				{authUser => ( authUser ?
+					<this.VisitExpress authUser={authUser} gallery={gallery} profile={profile}/>
+					: null )}
+				</AuthUserContext.Consumer>
 		)
 	}
 }
@@ -451,7 +456,7 @@ class ProfileProfile extends React.Component {
 }
 
 const condition = authUser => !!authUser;
-const ProfileVisit = withRouter(ProfileVisitBase);
+const ProfileVisit = withAuthentication(withRouter(ProfileVisitBase));
 
 export default compose(
 	withProfileVerification,

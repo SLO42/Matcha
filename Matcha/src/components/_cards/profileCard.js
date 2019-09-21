@@ -3,12 +3,13 @@ import Card from '@material-ui/core/Card';
 import { CardHeader, CardMedia, CardContent,
 		Typography, CardActions, IconButton, makeStyles,
 } from '@material-ui/core';
-import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
-import {doMongoDBGetProfileWithAuth, doMongoDBGetUserWithAuthEmail} from '../axios';
+import {doMongoDBGetProfileWithAuth, getSwiped} from '../axios';
 import CoordsCard from './coords';
+import FavoriteIcon from '@material-ui/icons/Favorite';
 import { compose } from 'recompose';
 import { withFirebase } from '../firebase';
+import {AuthUserContext, withAuthentication} from '../session';
 
 const useStyles = makeStyles(theme => ({
 	card: {
@@ -98,12 +99,23 @@ class ProfileCard extends Component{
 	}
 }
 
-const VisitProfileCardStuff = ({profile}) => {
+const VisitProfileCardStuff = ({liked, setliked, authUser, profile, firebase}) => {
 	const classes = useStyles();
-	const clicked = () => window.alert(profile);
+	
+
+	const doConfirm = async () => {
+		if (window.confirm(`Are you sure you would like ${profile.username}?` )){
+			const res = await firebase.doLikeUser(authUser.profile, profile);
+			if (res === "No"){
+				window.alert("something went wrong?");
+			} else {
+				setliked(res.data.swiped);
+			}
+		} else window.alert("Okay no to that");
+	}
 	let value = "";
 
-	if (profile){
+	if (profile && authUser){
 		return(
 			<Card className={classes.card}>
 				<CardHeader
@@ -120,8 +132,10 @@ const VisitProfileCardStuff = ({profile}) => {
 					<CoordsCard profile={profile} edit={0}/>
 				</CardContent>
 				<CardActions disableSpacing>
-					<IconButton aria-label="Share">
-						<ShareIcon	/>
+		
+					<IconButton aria-label="Share" onClick={doConfirm}>
+						<FavoriteIcon	/>
+						{liked ? "You Like this user" : "Click here to like"}
 					</IconButton>
 				</CardActions>
 			</Card>
@@ -144,28 +158,48 @@ class VisitProfileCardBase extends Component{
 		this.state = {
 			loading: true,
 			profile: null,
+			swiped: null,
 		};
 	}
 
+	setliked = (swiped) => {
+		this.setState({loading: true});
+		this.setState({swiped});
+		this.setState({loading: false});
+	}
+
+	doIt = async () => await getSwiped(this.props.authUser.username).then(res => res.data).
+	catch(err => {if (err) return err});
 
 	async componentDidMount() {
+		this.setState({loading: true});
 		if (this.props.profile){
-			this.setState({profile: this.props.profile, loading: false});
+			this.setState({ profile: this.props.profile});
 		}
+		if(this.props.authUser){
+			this.setState({swiped: await this.doIt()})
+		}
+		this.setState({loading: false})
 	};
+
 	
 	render() {
 		const {
 			loading,
 			profile,
 		} = this.state;
-
+		
+		const isLiked = () => {
+			if (this.state.swiped){
+				return this.state.swiped.includes(profile.username)
+			}
+		} 
 		return (
 			<div>
 				{
 					loading ? 
 					<p>Loading...</p> : 
-					<VisitProfileCardStuff profile={profile} firebase={this.props.firebase}/> 
+					 (<VisitProfileCardStuff liked={isLiked()} setliked={this.setliked} authUser={this.props.authUser} profile={profile} firebase={this.props.firebase}/> )
 				} 
 			</div>
 		)
@@ -174,6 +208,7 @@ class VisitProfileCardBase extends Component{
 
 const VisitProfileCard = compose(
 	withFirebase,
+	withAuthentication,
 )(VisitProfileCardBase);
 
 export {VisitProfileCard}

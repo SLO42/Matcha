@@ -27,7 +27,8 @@ const userSchema = new mongoose.Schema({
 		level: Number,
 		group: String,
 	},
-	swiped: [{username: String, liked: Boolean}]
+	swiped: [String],
+	matches: [String],
 })
 
 // IDK how this works but im sure it works somehow... was added
@@ -36,6 +37,7 @@ userSchema.statics.findByLoginEmailUid = async function (login) {
 	let user = await this.findOne({
 		username: login,
 	});
+
 	if (!user) {
 		user = await this.findOne({fireid: login });
 	}
@@ -43,7 +45,6 @@ userSchema.statics.findByLoginEmailUid = async function (login) {
 	if (!user) {
 		user = await this.findOne({ email: login });
 	}
-
 	return user;
 };
 

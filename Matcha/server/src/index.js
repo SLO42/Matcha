@@ -53,9 +53,15 @@ app.use( async (req, res, next) => {
 	else if (req.body && req.body['profile']){
 		id = req.body['profile'].fireid;
 	}
+	else if (req.body && req.body['username']){
+		id = req.body['username'];
+	}
 	else if (req.body && req.body['fireid']){
 		id = req.body['fireid'];
 	} else id = 101;
+	if (req['originalUrl'].indexOf('swiped') !== -1 ){
+		id = req['originalUrl'].slice(7 + req['originalUrl'].indexOf('swiped'), req['originalUrl'].length)
+	}
 	console.log("id = " +  id);
 	console.log("===============^ more ^===============")
 	req.context = {

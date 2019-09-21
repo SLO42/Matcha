@@ -34,6 +34,21 @@ async function doMongoDBGetUserWithAuthEmail(authUser){
 	});
 	return result;
 }
+async function doMongoDBGetUserWithAuthUsername(username){
+	const apiTable = process.env.REACT_APP_AXIOS_SEARCH_USERS;
+	const apiModify = process.env.REACT_APP_AXIOS_SEARCH_MODIFY_ONE;
+	const apiUserToFind = `${apiTable}username=${username}${apiModify}`;
+	let result = {};
+	await axios.get(apiUserToFind).
+	then(async res => {
+		// console.log(res.data);
+		result = res.data;
+		return res.data;
+	}).catch(err => {
+		if (err) result = err.status;
+	});
+	return result;
+}
 
 async function doMongoDBGetGalleryWithAuth(authUser){
 	const apiTable = process.env.REACT_APP_AXIOS_SEARCH_GALLERY;
@@ -60,4 +75,5 @@ export {doMongoDBGetProfileWithAuth,
 	doMongoDBGetGalleryWithAuth, 
 	doMongoDBGetUserWithAuthEmail,
 	doUpdateGallery,
+	doMongoDBGetUserWithAuthUsername,
 };

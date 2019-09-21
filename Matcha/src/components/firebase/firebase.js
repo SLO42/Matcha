@@ -6,6 +6,8 @@ import {doMongoDBGetUserIdWithFireid,
 	doMongoDBCreateUser,
 	doMongoDBGetProfileWithFireid,
 	doMongoDBCreateProfile,
+	doMongoDBGetUserWithAuthUsername,
+	doSwipe,
 } from '../axios';
 import Axios from 'axios';
 
@@ -237,9 +239,75 @@ this.auth.onAuthStateChanged(authUser => {
   }
 });
 
+doCreateMatch = async (me, match) => {
+	let myprof = await doMongoDBGetProfileWithFireid(me.fireid).then(res => {if (res) return res}).catch(err => {if (err) return err});
+	let matchprof = await doMongoDBGetProfileWithFireid(match.fireid).then(res => {if (res) return res}).catch(err => {if (err) return err});
+
+	if (myprof && matchprof){
+		const id = myprof.username + myprof.fireid + " a " + matchprof.fireid + matchprof.username;
+
+		const myRef = this.user(myprof.fireid);
+		const matchRef = this.user(matchprof.fireid);
+
+		myRef.child("match").push(id);
+		myRef.child("seen").set({[id]: false});
+		matchRef.child("match").push(id);
+		matchRef.child("seen").set({[id]: false});
+
+		this.convos().child(`${id}`).set({
+			users: [myprof.username, matchprof.username],
+			messages: [{user: "auto", txt: `Congrats on your match! \n  <3 `, dom: new Date().toLocaleString()}],
+		})
+	}
+}
+
+doLikeUser = async (me, match) => {
+
+	let myprof = await doMongoDBGetUserWithAuthUsername(me.username).then(res => {if (res) return res}).catch(err => {if (err) return err});
+	let matchprof = await doMongoDBGetUserWithAuthUsername(match.username).then(res => {if (res) return res}).catch(err => {if (err) return err});
+
+
+	if (myprof && matchprof){
+		if (myprof.swiped.includes(match.username)){
+			myprof.swiped = myprof.swiped.filter(name => name !== match.username )
+		} else {
+			myprof.swiped.push(match.username);
+		}
+		if (myprof.swiped.includes(match.username) && matchprof.swiped.includes(me.username)){
+			this.doCreateMatch(me, match);
+		}
+		return await doSwipe(myprof, myprof.swiped).then(res => {return res}).catch(err => {if (err) return err });
+	}
+}
+
+doSendText = (mid, me, txt) => {
+	const mesRef = this.messages(mid);
+	let i = 0;
+
+	mesRef.on("value", sh => {i = sh.numChildren()});
+
+	mesRef.child(`${i}`).set({
+		txt,
+		time: new Date().toLocaleDateString(),
+		user: me.username,
+	})
+}
+
+
 user = uid => this.db.ref(`users/${uid}`);
 
 users = () => this.db.ref('users');
+
+convos = () => this.db.ref(`convos`);
+
+convo = mid => this.db.ref(`convos/${mid}`);
+
+convoUsers = mid => this.db.ref(`convos/${mid}/users`);
+
+messages = mid => this.db.ref(`convos/${mid}/messages`);
+
+message = (mid, n) => this.db.ref(`convos/${mid}/messages/${n}`);
 }
+
 
 export default Firebase
