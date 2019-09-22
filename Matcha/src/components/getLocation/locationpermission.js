@@ -12,7 +12,7 @@ const locationOptions = {
     if (!geolocation) return "denied";
   
     try {
-	  const result = await getPosition(locationOptions);
+	  await getPosition(locationOptions);
       return "granted";
     } catch (ex) {
       return "denied";

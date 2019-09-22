@@ -265,7 +265,7 @@ const PrimarySearchAppBar = ({authUser, history, firebase}) => {
         <Toolbar>
             <TemporaryDrawer/>
 			<ButtonBase onClick={() => {history.push(ROUTES.HOME)}}>
-				<Typography className={classes.title} variant="h6" bold noWrap>
+				<Typography className={classes.title} variant="h6" noWrap>
 					MATCHA
 				</Typography>
 			</ButtonBase>

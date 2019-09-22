@@ -8,9 +8,7 @@ const needsProfileCreation = authUser =>
 
 const withProfileVerification = Component => {
 	class WithProfileVerification extends React.Component {
-		constructor(props) {
-			super(props);
-		}
+		
 		render() {
 			return (
 				<AuthUserContext.Consumer>

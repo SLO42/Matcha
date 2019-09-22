@@ -6,6 +6,7 @@ import search from './search';
 import gallery from './gallery';
 import status from './status';
 import report from './report';
+import email from './email';
 
 export default {
 	gallery,
@@ -16,4 +17,5 @@ export default {
 	search,
 	status,
 	report,
+	email,
 };

@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom';
 import { withAuthentication, AuthUserContext } from '../session';
 import * as ROUTES from '../constants/routes';
 import { CardContent, Card, CardActions, TextField, ButtonBase } from '@material-ui/core';
+import { sendEmail, doMongoDBGetUserWithAuthUsername } from '../axios';
 
 
 class ConvoPageBase extends React.Component {
@@ -16,12 +17,19 @@ class ConvoPageBase extends React.Component {
 			loading: true,
 			messages: [],
 			convo: "",
+			users: [],
 		}
 	}
 
 	componentDidMount() {
 		this.setState({loading: true});
-		
+
+		this.props.firebase.convoUsers(this.props.match.params.id).on('value', snapshot => {
+			const users = snapshot.val();
+
+			this.setState({users});
+		})
+
 		this.setState({convo: this.props.match.params.id})
 		this.props.firebase.messages(this.props.match.params.id).
 		on('value', snapshot => {
@@ -36,10 +44,13 @@ class ConvoPageBase extends React.Component {
 				this.setState({messages: null, loading: false});
 			}
 		})
+
+
 	}
 
 	componentWillUnmount() {
 		this.props.firebase.messages(this.state.convo).off();
+		this.props.firebase.convoUsers(this.props.match.params.id).off();
 	}
 
 	CommentList = ({ messages, firebase }) => (
@@ -59,7 +70,18 @@ class ConvoPageBase extends React.Component {
 	)}
 
 	onCreateComment = () => {
+		const {users} = this.state;
+		const user1 = users[0];
+		const user2 = users[1];
+		const you = this.props.authUser.username
+		const match = you === user1 ? user2 : user1;
+
 		this.props.firebase.doSendText(this.state.convo, this.props.authUser, this.state.text);
+		doMongoDBGetUserWithAuthUsername(match).then(
+			res => {
+				sendEmail({email: res.email}).then(ress => console.log(ress));
+			}
+		)
 		this.setState({ text: "" });
 	};
 

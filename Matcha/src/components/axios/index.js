@@ -21,7 +21,6 @@ const doSwipe = async (me, swiped) => {
 	}
 }
 const getSwiped = async me => {
-	console.log(me)
 	if (me){
 		const table = process.env.REACT_APP_AXIOS_GET_SWIPED;
 		const res =  await Axios.get(table + `/${me}`).then(res => {if (res) return res}).catch(err => {if (err) return err});
@@ -29,6 +28,13 @@ const getSwiped = async me => {
 	}else{
 		return ("No");
 	}
+}
+
+const sendEmail = async body => {
+	if (body.email){
+		const table = process.env.REACT_APP_SEND_EMAIL;
+		return await Axios.post(table, body).then(res => res).catch(err => {if (err) return err});
+	} else return ("No");
 }
 
 export {doMongoDBGetProfileWithAuth,
@@ -46,4 +52,5 @@ export {doMongoDBGetProfileWithAuth,
 		doMongoDBGetUserWithAuthUsername,
 		doSwipe,
 		getSwiped,
+		sendEmail,
 	};

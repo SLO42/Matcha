@@ -1,13 +1,14 @@
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/database';
-import Profile from '../session/profile';
 import {doMongoDBGetUserIdWithFireid,
 	doMongoDBCreateUser,
 	doMongoDBGetProfileWithFireid,
 	doMongoDBCreateProfile,
 	doMongoDBGetUserWithAuthUsername,
 	doSwipe,
+	sendEmail,
+	doMongoDBGetUserWithAuthEmail,
 } from '../axios';
 import Axios from 'axios';
 
@@ -254,6 +255,17 @@ doCreateMatch = async (me, match) => {
 		matchRef.child("match").child(`${id}`).set(dat);
 		matchRef.child("seen").child(`${id}`).set(false);
 
+		await doMongoDBGetUserWithAuthUsername(match.username).then(res => {
+			if (res){
+				sendEmail({email: res.email})
+			}
+		}).catch(err => {if (err) return err})
+		await doMongoDBGetUserWithAuthUsername(me.username).then(res => {
+			if (res){
+				sendEmail({email: res.email})
+			}
+		}).catch(err => {if (err) return err})
+		
 		this.convos().child(`${id}`).set({
 			users: [myprof.username, matchprof.username],
 			messages: [{user: "auto", txt: `Congrats on your match! \n  <3 `, dom: new Date().toLocaleString()}],
@@ -323,6 +335,7 @@ doSendText = (mid, me, txt) => {
 		time: new Date().toLocaleDateString(),
 		user: me.username,
 	})
+	
 }
 
 

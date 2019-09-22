@@ -11,18 +11,18 @@ async function main() {
 
     // create reusable transporter object using the default SMTP transport
     let transporter = nodemailer.createTransport({
-        host: 'smtp.ethereal.email',
-        port: 587,
-        secure: false, // true for 465, false for other ports
+        host: 'smtp.sendgrid.net',
+        port: 465,
+        secure: true, // true for 465, false for other ports
         auth: {
-            user: 'pearline.kulas@ethereal.email', // generated ethereal user
-            pass: 'vWnTravvZg8CQ4X42w' // generated ethereal password
+            user: 'apikey', // generated ethereal user
+            pass: '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' // generated ethereal password
         }
     });
 
     // send mail with defined transport object
     let info = await transporter.sendMail({
-        from: '"Spoopy 👻" <pearline.kulas@ethereal.email>', // sender address
+        from: '"Spoopy 👻" <sam.olive.lee@gmail.com>', // sender address
         to: 'pj259166@gmail.com', // list of receivers
         subject: 'Hello ✔ GI', // Subject line
         text: 'GO home?', // plain text body
@@ -37,7 +37,7 @@ async function main() {
     // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
 }
 
-main().catch(console.error);
+
 
 export default class SendNotificationEmail extends React.Component {
     render() {

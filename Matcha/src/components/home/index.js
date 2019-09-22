@@ -422,7 +422,6 @@ function distance(lat1, lon1, lat2, lon2, unit) {
 	}
 
 	componentDidMount() {
-		console.log(this.props);
 		this.setState({ loading: true  });
 		doMongoDBGetUserWithAuthEmail(this.props.authUser).then(res => {
 			let me = res;
