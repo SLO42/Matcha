@@ -16,3 +16,5 @@ export const SETTINGS = '/settings';
 export const FIND_USERS = '/swiping';
 export const REPORT_USER = '/reported';
 export const BLOCK_USER = '/deported';
+export const CONVO = '/convo/:id';
+export const CONVOS = '/convo';

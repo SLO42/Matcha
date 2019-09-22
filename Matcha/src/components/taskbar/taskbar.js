@@ -22,6 +22,8 @@ import Navigation from '../navigation';
 import { withRouter} from 'react-router-dom';
 import * as ROUTES from '../constants/routes';
 import CardActionArea from '@material-ui/core/CardActionArea';
+import { compose } from 'recompose';
+import { withFirebase } from '../firebase';
 
 let results = "";
 
@@ -67,13 +69,7 @@ const apiSearch = async (query) => {
 	await axios.get(`http://localhost:3001/search/p_${createSearch(query)}_all`).
 	then(async res => {;
 		
-		// res.data.sort((a, b) => {
-		// 	if(a.username < b.username) return -1;
-		// 	if(a.username > b.username) return 1;
-		// 	return 0; 
-		// })
 		let filter = res.data.filter(obj => obj.__v);
-		// filter = filter.filter(o)
 
 		await filter.map(async (profileObject) => {
 			results += ` | ${profileObject.username}`;
@@ -90,12 +86,9 @@ const apiSearch = async (query) => {
 			)
 		})
 		results += ' |';
-		await console.log(results);
 		return res;
 	}).
-	catch(err => {if (err) console.log(err)});
-	await window.alert(results);
-	// return `http://localhost:3001/search/p_${query}_all`;
+	catch(err => {if (err) return err});
 } 
 
 const theme = createMuiTheme({
@@ -176,11 +169,13 @@ const useStyles = makeStyles(theme => ({
 
 
 
-const PrimarySearchAppBar = ({history}) => {
+const PrimarySearchAppBar = ({authUser, history, firebase}) => {
   const classes = useStyles();
 
   const isMenuOpen = Boolean(false);
   const isMobileMenuOpen = Boolean(false);
+
+
 
   function handleProfileMenuOpen(event) {
   }
@@ -204,16 +199,24 @@ const PrimarySearchAppBar = ({history}) => {
   );
 
   const [value, setValue] = React.useState("");
+  const [dang, setDang] = React.useState(0);
   const changeSearch = event => {
 	setValue(event.target.value);
+}
+  const changeDang = () => {
+	if (authUser){
+		firebase.doGetUnread(authUser).then(res => {
+			setDang(res);
+		});
+	}
 }
 
   const _handleKeyDown = (e) => {
 	  if (e.key === 'Enter') {
-		console.log(value);
 		apiSearch(value);
 	  }
   }
+  changeDang();
 
   const mobileMenuId = 'primary-search-account-menu-mobile';
   const renderMobileMenu = (
@@ -227,7 +230,7 @@ const PrimarySearchAppBar = ({history}) => {
     >
       <MenuItem>
         <IconButton aria-label="Show 4 new mails" color="">
-          <Badge badgeContent={4} color="secondary">
+          <Badge badgeContent={dang} color="secondary">
             <MailIcon />
           </Badge>
         </IconButton>
@@ -254,6 +257,7 @@ const PrimarySearchAppBar = ({history}) => {
       </MenuItem>
     </Menu>
   );
+
   return (
     <MuiThemeProvider theme={theme}>
     <div className={classes.grow}>
@@ -283,8 +287,8 @@ const PrimarySearchAppBar = ({history}) => {
           </div>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <IconButton aria-label="Show 4 new mails" color="secondary">
-              <Badge badgeContent={4} color="secondary">
+            <IconButton aria-label="Show 4 new mails" color="secondary" onClick={() => {history.push(ROUTES.LANDING)}}>
+              <Badge badgeContent={dang} color="secondary">
                 <MailIcon />
               </Badge>
             </IconButton>
@@ -298,7 +302,7 @@ const PrimarySearchAppBar = ({history}) => {
               aria-label="Account of current user"
               aria-controls={menuId}
               aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
+              onClick={() => {history.push(ROUTES.PROFILE)}}
               color="secondary"
             >
               <AccountCircle />
@@ -318,11 +322,18 @@ const PrimarySearchAppBar = ({history}) => {
         <div>
 	  </div>
       </AppBar>
-      {results !== "" ?<h1> {results} </h1> : <h1 style={{color: "#ffff00"}}>Waiting For search</h1>}
+      {results !== "" ?<h1> {results} </h1> : null }
+	{/* //   <h1 style={{color: "#ffff00"}}>Waiting For search</h1>} */}
     </div>
     </MuiThemeProvider>
   );
 }
 
+const TaskBar = compose(
+	withRouter,
+	withFirebase,
+)(PrimarySearchAppBar);
 
-export default withRouter(PrimarySearchAppBar);
+export {apiSearch};
+
+export default TaskBar;

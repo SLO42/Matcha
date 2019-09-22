@@ -28,6 +28,7 @@ router.put('/add', async (req, res) => {
 	let profile = await req.context.models.Profile.findOne().where("username").all(req.body.user);
 	if(profile){
 		profile.reportedcount = profile.reportedcount + 1;
+		profile.fame = profile.fame - process.env.DATABASE_FAME_REPORT_DEC;
 		await profile.save();
 	}
 	return res.send("probably");

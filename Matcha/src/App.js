@@ -11,7 +11,7 @@ import FormPage from './components/formPage';
 import SignUpPage from './components/signup';
 import * as ROUTES from './components/constants/routes';
 import Navigation from './components/navigation';
-import {withAuthentication, withAuthorization, }  from './components/session';
+import {withAuthentication, withAuthorization, AuthUserContext, }  from './components/session';
 import SignInPage from './components/signin';
 import AccountPage from './components/account';
 import HomePage from './components/home';
@@ -26,6 +26,7 @@ import {
 import LandingPage from './components/landing';
 import BlockUserCard from './components/block/block';
 import ReportUserCard from './components/report/report';
+import ConvoCard from './components/convos';
 
 const theme = createMuiTheme({
   palette: {
@@ -70,6 +71,7 @@ class App extends Component {
       isRendering: false,
 	  isLocationEnabled: true,
 	  searchData: {},
+	  notify: 0,
 	};
 	
   }
@@ -134,8 +136,9 @@ class App extends Component {
         </div>
       );
     }
-
+	const Nada = () => <div></div>
     return (
+
 		<MuiThemeProvider theme={theme}>
 			<Router>
 				<div style={styles.container}>
@@ -145,10 +148,16 @@ class App extends Component {
 						</div>
           }
           <div style={styles.taskbar}>
-          <Taskbar/>
+			  <AuthUserContext.Consumer>
+			  {authUser => authUser ?
+			  	<Taskbar authUser={authUser}/> : <Taskbar />
+			}
+			  </AuthUserContext.Consumer>
+		  <Nada />
 		  {/* <Status/> */}
           </div>
-        <Route path={ROUTES.LANDING} component={LandingPage} />
+        <Route path={ROUTES.LANDING}  component={LandingPage}  />
+		<Route path={ROUTES.CONVO} component={ConvoCard} />
         <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
 				<Route path={ROUTES.SIGN_IN} component={SignInPage} />
 				<Route path={ROUTES.HOME} component={HomePage} />

@@ -61,7 +61,7 @@ doBlockUser = (user) => {
 			let list = res.blocked;
 			if (!list.includes(user)){
 				list.push(user);
-				const update = {fireid: this.auth.currentUser.uid, blocked: list};
+				const update = {fireid: this.auth.currentUser.uid, blocked: list,};
 				const table = process.env.REACT_APP_AXIOS_UPDATE_PROFILE;
 				Axios.put(table, update).then(
 					res => { }).catch(err => {if (err) return err})
@@ -248,16 +248,34 @@ doCreateMatch = async (me, match) => {
 
 		const myRef = this.user(myprof.fireid);
 		const matchRef = this.user(matchprof.fireid);
-
-		myRef.child("match").push(id);
-		myRef.child("seen").set({[id]: false});
-		matchRef.child("match").push(id);
-		matchRef.child("seen").set({[id]: false});
+		const dat = new Date().toLocaleDateString();
+		myRef.child("match").child(`${id}`).set(dat);
+		myRef.child("seen").child(`${id}`).set(false);
+		matchRef.child("match").child(`${id}`).set(dat);
+		matchRef.child("seen").child(`${id}`).set(false);
 
 		this.convos().child(`${id}`).set({
 			users: [myprof.username, matchprof.username],
 			messages: [{user: "auto", txt: `Congrats on your match! \n  <3 `, dom: new Date().toLocaleString()}],
 		})
+	}
+}
+
+doGetUnread = async (me) =>{
+	let myprof = await doMongoDBGetUserWithAuthUsername(me.username).then(res => {if (res) return res}).catch(err => {if (err) return err});
+	let count = 0;
+	if (myprof){
+		await this.seen(myprof.fireid).once('value', snapshot => {
+			const list = snapshot.val();
+			if (list){
+				Object.keys(list).forEach(key => {
+					if(list[key] === false){
+						count = count + 1;
+					}
+				})
+			}
+		})
+		return count;
 	}
 }
 
@@ -269,7 +287,21 @@ doLikeUser = async (me, match) => {
 
 	if (myprof && matchprof){
 		if (myprof.swiped.includes(match.username)){
+
 			myprof.swiped = myprof.swiped.filter(name => name !== match.username )
+			await this.matches(myprof.fireid).once('value', snap => {
+				const list = snap.val();
+
+				Object.keys(list).forEach(key => {
+					if (key.includes(match.username)){
+						this.convo(key).set(null);
+						this.matches(myprof.fireid).child(`${key}`).set(null);
+						this.matches(matchprof.fireid).child(`${key}`).set(null);
+						this.seen(myprof.fireid).child(`${key}`).set(null);
+						this.seen(matchprof.fireid).child(`${key}`).set(null);
+					}
+				})
+			})
 		} else {
 			myprof.swiped.push(match.username);
 		}
@@ -295,6 +327,10 @@ doSendText = (mid, me, txt) => {
 
 
 user = uid => this.db.ref(`users/${uid}`);
+
+matches = uid => this.db.ref(`users/${uid}/match`)
+
+seen = uid => this.db.ref(`users/${uid}/seen`)
 
 users = () => this.db.ref('users');
 

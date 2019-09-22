@@ -289,9 +289,9 @@ export const ChigBungusExpress = ({authUser}) => {
 				</div>
 				{ value ? <ProfileCardEdit authUser={authUser}/> : 
 				<ProfileCard authUser={authUser}/>}
-				<div style={styles.panel}>
+				{/* <div style={styles.panel}>
 					<RightPanel/>
-				</div>
+				</div> */}
 			</CardContent> 
 		</Paper>
 	);

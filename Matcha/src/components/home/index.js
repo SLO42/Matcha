@@ -319,10 +319,10 @@ function distance(lat1, lon1, lat2, lon2, unit) {
 		if (!this.props.authUser){
 			return ;
 		}
+		const profile = this.props.authUser.profile;
+		const mystats = profile.mystats;
+		const wants = profile.wants;
 		const createSearch = (config) => {
-			const profile = this.props.authUser.profile;
-			const mystats = profile.mystats;
-			const wants = profile.wants;
 
 			let ret;
 			if (wants){
@@ -344,6 +344,10 @@ function distance(lat1, lon1, lat2, lon2, unit) {
 	
 		await axios.get(`http://localhost:3001/search/p_${createSearch(null)}_all`).
 		then(async res => {
+
+			const notMine = mystats.prefsex === "Male" ? "Female" : "Male";
+
+
 			let filtered = res.data.filter(obj => obj.__v);
 			filtered = filtered.filter(obj => obj.username !== this.props.authUser.profile.username);
 

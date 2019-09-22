@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Card from '@material-ui/core/Card';
 import { CardHeader, CardMedia, CardContent,
-		Typography, CardActions, IconButton, makeStyles, ButtonBase,
+		Typography, CardActions, IconButton, makeStyles, ButtonBase,Input, 
 } from '@material-ui/core';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
@@ -25,6 +25,45 @@ const useStyles = makeStyles(theme => ({
 		paddingTop: '56.25%',
 	},
 }))
+
+const InputFields = ({profile}) => {
+	
+	const [first, setFirst] = React.useState( profile ? profile.firstname : "");
+	const [last, setLast] = React.useState( profile ? profile.lastname : "");
+
+	const changefirst = event => {
+		setFirst(event.target.value);
+		profile.firstname = event.target.value;
+	}
+	const changelast = event => {
+		setLast(event.target.value);
+		profile.lastname = event.target.value;
+	}
+
+	return (
+		<div>
+
+			<Input
+				value={first}
+				type="text"
+				onChange={changefirst}
+				placeholder={"firstname"}
+				name={"firstname"}
+				autoComplete={"Firstname"}
+				/>
+			<br />
+			<Input
+				value={last}
+				type="text"
+				onChange={changelast}
+				placeholder={"Lastname"}
+				name={"Lastname"}
+				autoComplete={"Lastname"}
+			/>
+		<br />
+		</div>
+	)
+}
 
 const ProfileCardStuff = ({profile, authUser}) => {
 	const classes = useStyles();
@@ -63,6 +102,7 @@ const ProfileCardStuff = ({profile, authUser}) => {
 					<Chips key={2} profile={profile} checkStage={checkStage}/>
 					<TextBio key={3} profile={profile} checkStage={checkStage} />
 					<MyGender key={4} profile={profile} checkStage={checkStage} />
+					<InputFields key={4.5} profile={profile} />
 					<MatchGender key={5} profile={profile} checkStage={checkStage} />
 					<ImageCard key={6} profile={profile} authUser={authUser}/>
 					<Save profile={profile} />
