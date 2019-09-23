@@ -73,7 +73,8 @@ class EmailChangeForm extends Component {
         />
         <Button
         style={styles.button}
-        disabled={isInvalid}
+		disabled={isInvalid}
+		type={"submit"}
         >
           Change My Email
         </Button>
