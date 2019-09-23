@@ -23,12 +23,13 @@ class LandingPageBase extends Component {
 			this.onListenForMatches();
 	}
 	componentWillUnmount() {
+		this.props.firebase.matches(this.props.authUser.uid).off();
 		// this.abortController
-		// this.props.firebase.matches(this.props.authUser.uid).off();
 		// if (this.state.keytree.length){
-		// 	this.state.keytree.map(key => {
-		// 		this.props.firebase.convo(key).off();
-		// 		return key;
+			this.state.keytree.map(key => {
+				this.props.firebase.convo(key).off();
+				return key;
+			})
 		// 	})
 		// }
 	}
@@ -36,13 +37,13 @@ class LandingPageBase extends Component {
 	
 
 	onListenForMatches = async () =>{
-		// this.setState({loading: true});
-
-			await this.props.firebase.matches(this.props.authUser.uid).once('value', snap => {
+		this.setState({loading: true});
+		
+		await this.props.firebase.matches(this.props.authUser.uid).on('value', snap => {
 				const matchObj = snap.val();
 				if (matchObj){
 					Object.keys(matchObj).forEach(key => {
-						this.props.firebase.convo(key).once('value', snapshot => {
+						this.props.firebase.convo(key).on('value', snapshot => {
 							const convo = snapshot.val();
 							if (!convo){
 								this.setState({loading:true, keytree: [], convos: []})
@@ -57,7 +58,9 @@ class LandingPageBase extends Component {
 											
 											if (conObj.users[0] === convo.users[0] && conObj.users[1] === convo.users[1])
 											{
+												this.setState({loading: true})
 												this.state.convos[index] = convo;
+												this.setState({loading: false})
 											}
 											return conObj;
 											// }
@@ -67,7 +70,8 @@ class LandingPageBase extends Component {
 							})
 						})
 					}
-				}).then(() => this.setState({loading: false}));
+				})
+		this.setState({loading: false})
 
 	}
 
@@ -130,6 +134,7 @@ class LandingPageBase extends Component {
 				</div>
 			)
 		} else {
+			this.setState({loading: false});
 			return <div>
 				
 			</div>

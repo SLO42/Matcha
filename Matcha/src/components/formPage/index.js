@@ -112,7 +112,6 @@ class FormPageBase extends React.Component {
 					if (res){
 						if (res.coords){
 							const loco = res.coords;
-							console.log(res);
 							this.state.profile.location.lon = loco.longitude;
 							this.state.profile.location.lat = loco.latitude;
 							this.setState({})
