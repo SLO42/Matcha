@@ -1,2 +1,26 @@
 # Matcha
 Second project in the 42 web dev branch, and the goal of the project is to recreate a "tinder"/dating app clone
+
+Make sure you have Docker and Docker-Machine installed via brew.
+then:
+docker-machine create default //once 
+docker network create my-net  //once
+
+if for some reason mongodb does not auto start rerun this command as needed 
+docker run -d -p 27017:27017 -p 3002:27018 --network my-net -v linker:/etc/mongo --restart=always --name=mongodb -e MONGO_INITDB_ROOT_USERNAME=Cancer -e MONGO_INITDB_ROOT_PASSWORD=Toxic -e MONGOD_DATABASE=matcha mongo mongod
+
+
+after docker is running. 
+make sure your docker host ip is marked in the Matcha/server/.env
+
+for the lab i used 192.168.99.100
+you may need to change this if docker used a different ip.
+
+change DATABASE_RESET_ON_RESTART to true.
+this allows for the install file to create the tables and such for use.
+
+then run from root.
+
+npm install; cd Matcha && npm install; cd server && npm install;
+this will install from the package.json's all the packages we use.
+then you may get back to root and run npm start. which should in theory run both front and backend
