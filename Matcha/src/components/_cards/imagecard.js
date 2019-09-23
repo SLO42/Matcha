@@ -1,20 +1,13 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import clsx from "clsx";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from "@material-ui/core/CardMedia";
-import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
-import Collapse from "@material-ui/core/Collapse";
-import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
-import Typography from "@material-ui/core/Typography";
 import { red } from "@material-ui/core/colors";
-import FavoriteIcon from "@material-ui/icons/Favorite";
 import ClearIcon from "@material-ui/icons/Clear";
 import AddIcon from "@material-ui/icons/Add";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Feedback from "@material-ui/icons/Feedback";
 import ButtonBase from '@material-ui/core/ButtonBase';
 import Menu from '@material-ui/core/Menu';
@@ -22,7 +15,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { doMongoDBGetGalleryWithAuth, doUpdateGallery } from "../axios";
 import MyCamera from '../camera';
 import { Button } from "@material-ui/core";
-import Axios from "axios";
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -125,7 +117,7 @@ export default class ImageCard extends React.Component {
 	}
 
 	removeNfix = (picture) => {
-		const {list, stuff} = this.state;
+		const {stuff} = this.state;
 		const result = stuff.filter(img => img !== picture);
 		let i = 0;
 		let gallery = {};
@@ -238,7 +230,7 @@ export default class ImageCard extends React.Component {
 	componentDidMount() {
 		this.setState({loading: true});
 
-		const {profile, authUser} = this.props;
+		const {authUser} = this.props;
 
 		doMongoDBGetGalleryWithAuth(authUser).then(
 			async res => {

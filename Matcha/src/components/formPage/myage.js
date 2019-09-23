@@ -31,9 +31,7 @@ const MyAge = ({profile, checkStage}) => {
 				onChange={handleDateChange}
 				disableFuture={true}
 				maxDate={max}
-				KeyboardButtonProps={{
-					'aria-label': 'change date',
-				}}
+				
 			/>
       	</Grid>
   );

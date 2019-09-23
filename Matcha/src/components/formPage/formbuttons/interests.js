@@ -1,22 +1,17 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Avatar from '@material-ui/core/Avatar';
+
 import Chip from '@material-ui/core/Chip';
-import FaceIcon from '@material-ui/icons/Face';
-import DoneIcon from '@material-ui/icons/Done';
 import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCampground } from '@fortawesome/free-solid-svg-icons';
-import { faFootballBall } from '@fortawesome/free-solid-svg-icons';
 import { faCoffee } from '@fortawesome/free-solid-svg-icons';
 import { faMusic } from '@fortawesome/free-solid-svg-icons';
 import { faRunning } from '@fortawesome/free-solid-svg-icons';
@@ -29,13 +24,11 @@ import { faWineGlassAlt } from '@fortawesome/free-solid-svg-icons';
 import { faBeer } from '@fortawesome/free-solid-svg-icons';
 import { faBookOpen } from '@fortawesome/free-solid-svg-icons';
 import { faShoppingBag } from '@fortawesome/free-solid-svg-icons';
-import { faTheaterMasks } from '@fortawesome/free-solid-svg-icons';
 import { faFish } from '@fortawesome/free-solid-svg-icons';
 import { faCannabis } from '@fortawesome/free-solid-svg-icons';
 import { faAnkh } from '@fortawesome/free-solid-svg-icons';
 import { faPlaneDeparture } from '@fortawesome/free-solid-svg-icons';
 import { faSkiing } from '@fortawesome/free-solid-svg-icons';
-import { faPagelines } from '@fortawesome/free-solid-svg-icons';
 import { faBicycle } from '@fortawesome/free-solid-svg-icons';
 import { faWheelchair } from '@fortawesome/free-solid-svg-icons';
 
@@ -89,7 +82,7 @@ const interestOptions = [
 	{name: "Fishing", value: faFish},
 	{name: "Smoking", value: faCannabis},
 	{name: "Concerts", value: faMusic},
-	{name: "Hunting", value: faMusic},
+	{name: "Hunting", value: faHippo},
 	{name: "Reading", value: faBookOpen},
 	{name: "Skiing", value: faSkiing},
 ];
@@ -211,6 +204,7 @@ const Chips = ({profile, checkStage}) => {
 						if (val.name === value){
 							icon = val.value;
 						}
+						return icon
 					});
 					
 					return (
@@ -267,28 +261,6 @@ const Chips = ({profile, checkStage}) => {
 	);
 }
 
-
-  function handleDelete() {
-    alert('You clicked the delete icon.');
-  }
-
-  const arrayRemove = (arr, value) => {
-	return arr.filter( ele => {
-		return ele != value;
-	});
-  }
-
-  function handleClick(anything) {
-	if (profile.mystats.interest.includes(anything)){
-		profile.mystats.interest = arrayRemove(profile.mystats.interest, anything);
-		alert("removed from interests: " + anything);
-	} else {
-		profile.mystats.interest.push(anything);
-		profile.mystats.interest.sort((a, b) => {return a - b});
-		alert("added to interestes: " + anything); 
-	}
-//    console.log(userObj.interest);
-  }
 
   return (
     <div className={classes.root}>

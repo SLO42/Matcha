@@ -40,8 +40,8 @@ app.use( async (req, res, next) => {
 	// console.log("================ Body ================")
 	// console.log(req.body)
 	// console.log("===============^ Body ^===============")
-	console.log("================ more ================")
-	console.log("Request url: " + req['originalUrl']);
+	// console.log("================ more ================")
+	// console.log("Request url: " + req['originalUrl']);
 	let id = null;
 	// console.log(req['originalUrl'])
 	if (req['originalUrl'].indexOf('fireid=') !== -1 ){
@@ -62,8 +62,8 @@ app.use( async (req, res, next) => {
 	if (req['originalUrl'].indexOf('swiped') !== -1 ){
 		id = req['originalUrl'].slice(7 + req['originalUrl'].indexOf('swiped'), req['originalUrl'].length)
 	}
-	console.log("id = " +  id);
-	console.log("===============^ more ^===============")
+	// console.log("id = " +  id);
+	// console.log("===============^ more ^===============")
 	req.context = {
 		models,
 		me: await models.User.findByLoginEmailUid(id),
@@ -156,20 +156,21 @@ const runServer = async () => {
 // Checks to see if the Docker-Machine Default is running and if not than to start it.
 machine.isRunning(async (err, running) => {
 	if (err){
-		console.log(err);
+		// console.log(err);
+		return err;
 	}
 	if (running === true){
-		console.log("Docker Machine is already running\nStarting Backend Communication Server");
+		// console.log("Docker Machine is already running\nStarting Backend Communication Server");
 		runServer();
 	} else {
-		console.log("Docker Machine is not running");
-		console.log("starting Docker-Machine Default");
+		// console.log("Docker Machine is not running");
+		// console.log("starting Docker-Machine Default");
 		await machine.start(async (err) => {
 			if (err){
-				console.log(err);
+				// console.log(err);
 				throw err;
 			}
-			await console.log("DockerMachine Started\nWaiting 5 seconds before Starting Backend Communication Server");
+			// await console.log("DockerMachine Started\nWaiting 5 seconds before Starting Backend Communication Server");
 			// change num to fit the good time
 			await setTimeout(async () => { await runServer();}, 5000);
 		})
@@ -188,4 +189,4 @@ machine.isRunning(async (err, running) => {
 // 	);
 // })
 // Testing index.js (will run regardless if server starts)
-console.log('Hello Node.js project.');
+// console.log('Hello Node.js project.');

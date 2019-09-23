@@ -22,7 +22,6 @@ const errorHandle = (val) => {
 
 router.get('/:format', async (req, res) => {
 	const format = req.params.format;
-	console.log(format);
 
 
 	const params = format.split("_");
@@ -64,7 +63,6 @@ router.get('/:format', async (req, res) => {
 		else if (key === "reportie") userToFind = value;
 		else if (key === "reported") {findReported = 1; userToFind = value;}
 	}
-	console.log(query);
 
 
 
@@ -100,7 +98,7 @@ router.get('/:format', async (req, res) => {
 	} else if (ifPorifle && qaunitityAll){
 		if (interstList[0]){
 			if (gender){
-				console.log("Request for Interests and Gender")
+				// console.log("Request for Interests and Gender")
 				const searchProfileForInterstAndGenderAll = await req.context.models.Profile.find().
 					where('mystats.interest').all(interstList).
 					where('mystats.mysex').all(gender).
@@ -109,7 +107,7 @@ router.get('/:format', async (req, res) => {
 							errorHandle(req.params.format);
 							res.writeHead(301, `profile  not found`)
 							res.write(`profile not found`, (err) => {
-								if (err) { console.log(err) };
+								if (err) { return (err) };
 							});
 							return res.status(404).send("does not exist");
 						} else {
@@ -117,7 +115,7 @@ router.get('/:format', async (req, res) => {
 						}
 					})
 			} else {
-				console.log("Request for Only Interests")
+				// console.log("Request for Only Interests")
 				const searchProfileForInterstAll = await req.context.models.Profile.find().
 					where('mystats.interest').all(interstList).
 					exec(function (err, result) {
@@ -125,7 +123,7 @@ router.get('/:format', async (req, res) => {
 							errorHandle(req.params.format);
 							res.writeHead(301, `profile  not found`)
 							res.write(`profile not found`, (err) => {
-								if (err) { console.log(err) };
+								if (err) { return (err) };
 							});
 							return res.status(404).send("does not exist");
 						} else {
@@ -135,7 +133,7 @@ router.get('/:format', async (req, res) => {
 			}
 		} else {
 			if (gender){
-				console.log("Request for Gender")
+				// console.log("Request for Gender")
 					const searchProfileForGenderAll = await req.context.models.Profile.find().
 						where('mystats.mysex').all(gender).
 						exec(function (err, result) {
@@ -143,7 +141,7 @@ router.get('/:format', async (req, res) => {
 								errorHandle(req.params.format);
 								res.writeHead(301, `profile  not found`)
 								res.write(`profile not found`, (err) => {
-									if (err) { console.log(err) };
+									if (err) { return (err) };
 								});
 								return res.status(404).send("does not exist");
 							} else {
@@ -151,7 +149,7 @@ router.get('/:format', async (req, res) => {
 							}
 						})
 			} else if (userToFind) {
-					console.log("Request profile via username")
+					// console.log("Request profile via username")
 					const searchProfileForUserAll = 
 						await req.context.models.Profile.findByUsername(userToFind)
 						// .exec(function (err, result) {
@@ -159,7 +157,7 @@ router.get('/:format', async (req, res) => {
 						// 		errorHandle(req.params.format);
 						// 		res.writeHead(301, `profile  not found`)
 						// 		res.write(`profile not found`, (err) => {
-						// 			if (err) { console.log(err) };
+						// 			if (err) { return (err) };
 						// 		});
 						// 		return res.status(404).send("does not exist");
 						// 	} else {
@@ -167,14 +165,14 @@ router.get('/:format', async (req, res) => {
 						// 	}
 						// })
 			} else {
-					console.log("Request all Profiles")
+					// console.log("Request all Profiles")
 					const searchProfileForAll = await req.context.models.Profile.find().
 						exec(function (err, result) {
 							if (err) {
 								errorHandle(req.params.format);
 								res.writeHead(301, `profile  not found`)
 								res.write(`profile not found`, (err) => {
-									if (err) { console.log(err) };
+									if (err) { return (err) };
 								});
 								return res.status(404).send("does not exist");
 							} else {
@@ -195,7 +193,7 @@ router.get('/:format', async (req, res) => {
 							errorHandle(req.params.format);
 							res.writeHead(301, `profile  not found`)
 							res.write(`profile not found`, (err) => {
-								if (err) { console.log(err) };
+								if (err) { return (err) };
 							});
 							return res.status(404).send("does not exist");
 						} else {
@@ -210,7 +208,7 @@ router.get('/:format', async (req, res) => {
 							errorHandle(req.params.format);
 							res.writeHead(301, `profile  not found`)
 							res.write(`profile not found`, (err) => {
-								if (err) { console.log(err) };
+								if (err) { return (err) };
 							});
 							return res.status(404).send("does not exist");
 						} else {
@@ -227,7 +225,7 @@ router.get('/:format', async (req, res) => {
 							errorHandle(req.params.format);
 							res.writeHead(301, `profile  not found`)
 							res.write(`profile not found`, (err) => {
-								if (err) { console.log(err) };
+								if (err) { return (err) };
 							});
 							return res.status(404).send("does not exist");
 						} else {
@@ -251,7 +249,7 @@ router.get('/:format', async (req, res) => {
 							errorHandle(req.params.format);
 							res.writeHead(301, `profile  not found`)
 							res.write(`profile not found`, (err) => {
-								if (err) { console.log(err) };
+								if (err) { return (err) };
 							});
 							return res.status(404).send("does not exist");
 						} else {
@@ -276,7 +274,7 @@ router.get('/:format', async (req, res) => {
 						errorHandle(req.params.format);
 						res.writeHead(301, `profile  not found`)
 						res.write(`profile not found`, (err) => {
-							if (err) { console.log(err) };
+							if (err) { return (err) };
 						});
 						return res.status(404).send("does not exist");
 					} else {
@@ -291,7 +289,7 @@ router.get('/:format', async (req, res) => {
 						errorHandle(req.params.format);
 						res.writeHead(301, `profile  not found`)
 						res.write(`profile not found`, (err) => {
-							if (err) { console.log(err) };
+							if (err) { return (err) };
 						});
 						return res.status(404).send("does not exist");
 					} else {
@@ -306,7 +304,7 @@ router.get('/:format', async (req, res) => {
 						errorHandle(req.params.format);
 						res.writeHead(301, `profile  not found`)
 						res.write(`profile not found`, (err) => {
-							if (err) { console.log(err) };
+							if (err) { return (err) };
 						});
 						return res.status(404).send("does not exist");
 					} else {
@@ -321,7 +319,7 @@ router.get('/:format', async (req, res) => {
 						errorHandle(req.params.format);
 						res.writeHead(301, `profile  not found`)
 						res.write(`profile not found`, (err) => {
-							if (err) { console.log(err) };
+							if (err) { return (err) };
 						});
 						return res.status(404).send("does not exist");
 					} else {
@@ -335,7 +333,7 @@ router.get('/:format', async (req, res) => {
 						errorHandle(req.params.format);
 						res.writeHead(301, `profile  not found`)
 						res.write(`profile not found`, (err) => {
-							if (err) { console.log(err) };
+							if (err) { return (err) };
 						});
 						return res.status(404).send("does not exist");
 					} else {
@@ -359,7 +357,7 @@ router.get('/:format', async (req, res) => {
 						errorHandle(req.params.format);
 						res.writeHead(301, `profile  not found`)
 						res.write(`profile not found`, (err) => {
-							if (err) { console.log(err) };
+							if (err) { return (err) };
 						});
 						return res.status(404).send("does not exist");
 					} else {
@@ -374,7 +372,7 @@ router.get('/:format', async (req, res) => {
 						errorHandle(req.params.format);
 						res.writeHead(301, `profile  not found`)
 						res.write(`profile not found`, (err) => {
-							if (err) { console.log(err) };
+							if (err) { return (err) };
 						});
 						return res.status(404).send("does not exist");
 					} else {
@@ -389,7 +387,7 @@ router.get('/:format', async (req, res) => {
 						errorHandle(req.params.format);
 						res.writeHead(301, `profile  not found`)
 						res.write(`profile not found`, (err) => {
-							if (err) { console.log(err) };
+							if (err) { return (err) };
 						});
 						return res.status(404).send("does not exist");
 					} else {
@@ -404,7 +402,7 @@ router.get('/:format', async (req, res) => {
 						errorHandle(req.params.format);
 						res.writeHead(301, `profile  not found`)
 						res.write(`profile not found`, (err) => {
-							if (err) { console.log(err) };
+							if (err) { return (err) };
 						});
 						return res.status(404).send("does not exist");
 					} else {
@@ -419,7 +417,7 @@ router.get('/:format', async (req, res) => {
 							errorHandle(req.params.format);
 							res.writeHead(301, `profile  not found`)
 							res.write(`profile not found`, (err) => {
-								if (err) { console.log(err) };
+								if (err) { return (err) };
 							});
 							return res.status(404).send("does not exist");
 						} else {
@@ -442,7 +440,7 @@ router.get('/:format', async (req, res) => {
 							errorHandle(req.params.format);
 							res.writeHead(301, `profile  not found`)
 							res.write(`profile not found`, (err) => {
-								if (err) { console.log(err) };
+								if (err) { return (err) };
 							});
 							return res.status(404).send("does not exist");
 						} else {
@@ -457,7 +455,7 @@ router.get('/:format', async (req, res) => {
 							errorHandle(req.params.format);
 							res.writeHead(301, `profile  not found`)
 							res.write(`profile not found`, (err) => {
-								if (err) { console.log(err) };
+								if (err) { return (err) };
 							});
 							return res.status(404).send("does not exist");
 						} else {
@@ -475,7 +473,7 @@ router.get('/:format', async (req, res) => {
 							errorHandle(req.params.format);
 							res.writeHead(301, `profile  not found`)
 							res.write(`profile not found`, (err) => {
-								if (err) { console.log(err) };
+								if (err) { return (err) };
 							});
 							return res.status(404).send("does not exist");
 						} else {
@@ -490,7 +488,7 @@ router.get('/:format', async (req, res) => {
 							errorHandle(req.params.format);
 							res.writeHead(301, `profile  not found`)
 							res.write(`profile not found`, (err) => {
-								if (err) { console.log(err) };
+								if (err) { return (err) };
 							});
 							return res.status(404).send("does not exist");
 						} else {
@@ -514,7 +512,7 @@ router.get('/:format', async (req, res) => {
 							errorHandle(req.params.format);
 							res.writeHead(301, `profile  not found`)
 							res.write(`profile not found`, (err) => {
-								if (err) { console.log(err) };
+								if (err) { return (err) };
 							});
 							return res.status(404).send("does not exist");
 						} else {
@@ -529,7 +527,7 @@ router.get('/:format', async (req, res) => {
 							errorHandle(req.params.format);
 							res.writeHead(301, `profile  not found`)
 							res.write(`profile not found`, (err) => {
-								if (err) { console.log(err) };
+								if (err) { return (err) };
 							});
 							return res.status(404).send("does not exist");
 						} else {
@@ -543,7 +541,7 @@ router.get('/:format', async (req, res) => {
 							errorHandle(req.params.format);
 							res.writeHead(301, `profile  not found`)
 							res.write(`profile not found`, (err) => {
-								if (err) { console.log(err) };
+								if (err) { return (err) };
 							});
 							return res.status(404).send("does not exist");
 						} else {
@@ -561,7 +559,7 @@ router.get('/:format', async (req, res) => {
 							errorHandle(req.params.format);
 							res.writeHead(301, `profile  not found`)
 							res.write(`profile not found`, (err) => {
-								if (err) { console.log(err) };
+								if (err) { return (err) };
 							});
 							return res.status(404).send("does not exist");
 						} else {
@@ -576,7 +574,7 @@ router.get('/:format', async (req, res) => {
 							errorHandle(req.params.format);
 							res.writeHead(301, `profile  not found`)
 							res.write(`profile not found`, (err) => {
-								if (err) { console.log(err) };
+								if (err) { return (err) };
 							});
 							return res.status(404).send("does not exist");
 						} else {
@@ -590,7 +588,7 @@ router.get('/:format', async (req, res) => {
 							errorHandle(req.params.format);
 							res.writeHead(301, `profile  not found`)
 							res.write(`profile not found`, (err) => {
-								if (err) { console.log(err) };
+								if (err) { return (err) };
 							});
 							return res.status(404).send("does not exist");
 						} else {
@@ -615,7 +613,7 @@ router.get('/:format', async (req, res) => {
 							errorHandle(req.params.format);
 							res.writeHead(301, `profile  not found`)
 							res.write(`profile not found`, (err) => {
-								if (err) { console.log(err) };
+								if (err) { return (err) };
 							});
 							return res.status(404).send("does not exist");
 						} else {
@@ -631,7 +629,7 @@ router.get('/:format', async (req, res) => {
 							errorHandle(req.params.format);
 							res.writeHead(301, `profile  not found`)
 							res.write(`profile not found`, (err) => {
-								if (err) { console.log(err) };
+								if (err) { return (err) };
 							});
 							return res.status(404).send("does not exist");
 						} else {
@@ -646,7 +644,7 @@ router.get('/:format', async (req, res) => {
 							errorHandle(req.params.format);
 							res.writeHead(301, `profile  not found`)
 							res.write(`profile not found`, (err) => {
-								if (err) { console.log(err) };
+								if (err) { return (err) };
 							});
 							return res.status(404).send("does not exist");
 						} else {
@@ -664,7 +662,7 @@ router.get('/:format', async (req, res) => {
 							errorHandle(req.params.format);
 							res.writeHead(301, `profile  not found`)
 							res.write(`profile not found`, (err) => {
-								if (err) { console.log(err) };
+								if (err) { return (err) };
 							});
 							return res.status(404).send("does not exist");
 						} else {
@@ -680,7 +678,7 @@ router.get('/:format', async (req, res) => {
 							errorHandle(req.params.format);
 							res.writeHead(301, `profile  not found`)
 							res.write(`profile not found`, (err) => {
-								if (err) { console.log(err) };
+								if (err) { return (err) };
 							});
 							return res.status(404).send("does not exist");
 						} else {
@@ -695,7 +693,7 @@ router.get('/:format', async (req, res) => {
 							errorHandle(req.params.format);
 							res.writeHead(301, `profile  not found`)
 							res.write(`profile not found`, (err) => {
-								if (err) { console.log(err) };
+								if (err) { return (err) };
 							});
 							return res.status(404).send("does not exist");
 						} else {
@@ -714,7 +712,7 @@ router.get('/:format', async (req, res) => {
 			// 		errorHandle(req.params.format);
 			// 		res.writeHead(301, `profile ${req.params.format} not found`)
 			// 		res.write(`profile ${req.params.format} not found`, (err) => {
-			// 			if (err) { console.log(err) };
+			// 			if (err) { return (err) };
 			// 		});
 			// 		return res.status(404).send("does not exist");
 			// 	} else {

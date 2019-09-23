@@ -9,7 +9,7 @@ export const doMongoDBCreateUserWithEmailAndAuth = (email, authUser) => {
 	axios.post(apiUserAdd, {
 		uid: authUser.uid,
 		email,
-	}).then(response => console.log(authUser.uid + " >| " + response)).catch(err => console.log(authUser.uid + " >| " + err));
+	}).then(response => response).catch(err => {if (err) return err });
 }
 
 async function doMongoDBGetUserIdWithFireid(fireId) {

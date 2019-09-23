@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import { withFirebase } from '../firebase';
 import { compose } from 'recompose';
-import { withAuthentication, AuthUserContext } from '../session';
-import { GridListTile, Card, GridList, CardActionArea, CardHeader, CardMedia, CardContent, Typography } from '@material-ui/core';
-import { Switch, Route, Link, withRouter } from 'react-router-dom';
+import { withAuthentication, AuthUserContext,withAuthorization } from '../session';
+import { GridListTile, Card, GridList, CardActionArea, CardHeader, CardContent, Typography } from '@material-ui/core';
+import { Link, } from 'react-router-dom';
 import * as ROUTES from '../constants/routes';
-import { doMongoDBGetProfileWithUserid } from '../axios';
-import { isThisISOWeek } from 'date-fns/esm';
+
 
 class LandingPageBase extends Component {
 	constructor(props){
@@ -21,26 +20,29 @@ class LandingPageBase extends Component {
 	}
 
 	 componentDidMount(){
-		this.onListenForMatches().then(() => this.setState({loading: false}));
+			this.onListenForMatches();
 	}
 	componentWillUnmount() {
-		this.props.firebase.matches(this.props.authUser.uid).off();
-		if (this.state.keytree.length){
-			this.state.keytree.map(key => {
-				this.props.firebase.convo(key).off();
-			})
-		}
+		// this.abortController
+		// this.props.firebase.matches(this.props.authUser.uid).off();
+		// if (this.state.keytree.length){
+		// 	this.state.keytree.map(key => {
+		// 		this.props.firebase.convo(key).off();
+		// 		return key;
+		// 	})
+		// }
 	}
+	
 	
 
 	onListenForMatches = async () =>{
 		// this.setState({loading: true});
-		await this.props.firebase.matches(this.props.authUser.uid)
-			.on('value', snap => {
+
+			await this.props.firebase.matches(this.props.authUser.uid).once('value', snap => {
 				const matchObj = snap.val();
 				if (matchObj){
 					Object.keys(matchObj).forEach(key => {
-						this.props.firebase.convo(key).on('value', snapshot => {
+						this.props.firebase.convo(key).once('value', snapshot => {
 							const convo = snapshot.val();
 							if (!convo){
 								this.setState({loading:true, keytree: [], convos: []})
@@ -56,18 +58,17 @@ class LandingPageBase extends Component {
 											if (conObj.users[0] === convo.users[0] && conObj.users[1] === convo.users[1])
 											{
 												this.state.convos[index] = convo;
-												this.setState({});
 											}
-										// }
-									})
+											return conObj;
+											// }
+										})
+									}
 								}
-							}
+							})
 						})
-					})
-				} else {
-					setTimeout( () => this.setState({convos: [], loading:true}), 1100);
-				}
-			})
+					}
+				}).then(() => this.setState({loading: false}));
+
 	}
 
 	ConvoCard = ({convo, index}) => {
@@ -100,19 +101,21 @@ class LandingPageBase extends Component {
 
 			 </div>
 			)
-		} else return null
-
+		} else {
+			this.fixstate()
+			return  <div>
+	</div>
+		}
 	}
 	
 	fixstate = () => {
-		setTimeout(this.setState({loading: true}), 450);
-		setTimeout(this.setState({loading: false}), 2000);
+		this.setState({loading: true});
+		setTimeout(this.setState({loading: false}), 1000);
 	}
 	
 	ConvoList = () => {
-		const {loading, convos, totalNotify} = this.state;
-		if (convos && this.props.authUser){
-
+		const {loading, convos} = this.state;
+		if (convos){
 			return (
 				loading ? <p>loading...</p> :
 				<div>
@@ -127,22 +130,22 @@ class LandingPageBase extends Component {
 				</div>
 			)
 		} else {
-			this.fixstate();
-			return <div></div>
+			return <div>
+				
+			</div>
 		}
 	}
 
 
     render() {
 	const {loading} = this.state;
-		setTimeout(() => this.setState({loading: false}), 3000);
       return ( loading ? 
     <p>loading</p> : <this.ConvoList />
 
       )};
 }
 
-
+const condition = authUser => !!authUser;
 const Landing = compose(
 	withFirebase,
 	withAuthentication,
@@ -152,4 +155,5 @@ const LandingPage = () => <AuthUserContext.Consumer>
 	{authUser => (authUser ? <Landing authUser={authUser} /> : null ) }
 </AuthUserContext.Consumer>
 
-export default withFirebase(LandingPage);
+
+export default withAuthorization(condition)(LandingPage);

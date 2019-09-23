@@ -4,11 +4,9 @@ import 'firebase/database';
 import {doMongoDBGetUserIdWithFireid,
 	doMongoDBCreateUser,
 	doMongoDBGetProfileWithFireid,
-	doMongoDBCreateProfile,
 	doMongoDBGetUserWithAuthUsername,
 	doSwipe,
 	sendEmail,
-	doMongoDBGetUserWithAuthEmail,
 } from '../axios';
 import Axios from 'axios';
 
@@ -79,14 +77,13 @@ doReportUser = (user, reason) => {
 		user,
 		reason,
 	}
-	Axios.put(table, add).then(res => {console.log(res)}).catch(err => {if (err) return err});
+	Axios.put(table, add).then(res => res).catch(err => {if (err) return err});
 	
 }
 
 doUpdateProfile = async ({fireid}) => {
 	await doMongoDBGetProfileWithFireid(fireid).then(
 		res => {
-			console.log(res);
 			this.setProfile(res);
 		}
 	)
@@ -143,11 +140,9 @@ this.auth.onAuthStateChanged(authUser => {
 			next(authUser);
 		}else if (!(authUser.mongoId) || !(authUser.profile)) {
 			if (!(authUser.mongoId) || (authUser.mongoId === String)){
-				doMongoDBGetUserIdWithFireid(authUser.uid).
-				then(res => {
+				doMongoDBGetUserIdWithFireid(authUser.uid).then(res => {
 					if (!(authUser.profile) || (authUser.profile === String)){
-						doMongoDBGetProfileWithFireid(authUser.uid).
-						then(result => {
+						doMongoDBGetProfileWithFireid(authUser.uid).then(result => {
 							authUser = {
 								profile: result,
 								mongoId: res,
@@ -174,8 +169,7 @@ this.auth.onAuthStateChanged(authUser => {
 						next(authUser);
 					}}
 			)} else {
-				doMongoDBGetProfileWithFireid(authUser.mongoId).
-				then(profile => {
+				doMongoDBGetProfileWithFireid(authUser.mongoId).then(profile => {
 					authUser = {
 						profile,
 						mongoId: authUser.mongoId,

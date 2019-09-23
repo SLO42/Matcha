@@ -4,7 +4,6 @@ import nodemailer from 'nodemailer';
 const router = Router();
 
 router.post('/send', async (req, res) => {
-	let testAccount = await nodemailer.createTestAccount();
 
 	let transporter = nodemailer.createTransport({
         host: 'smtp.sendgrid.net',

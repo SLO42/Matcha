@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import Card from '@material-ui/core/Card';
-import { CardHeader, CardMedia, CardContent,
-		Typography, CardActions, IconButton, makeStyles, ButtonBase,Input, 
+import { CardHeader, CardContent,
+		 makeStyles, ButtonBase,Input, 
 } from '@material-ui/core';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
-import {doMongoDBGetProfileWithAuth, doMongoDBGetUserWithAuthEmail} from '../axios';
 import TextBio from '../formPage/textfield';
 import Chips from '../formPage/formbuttons/interests.js';
 import MatchGender from '../formPage/formbuttons/matchgender';
@@ -67,7 +64,6 @@ const InputFields = ({profile}) => {
 
 const ProfileCardStuff = ({profile, authUser}) => {
 	const classes = useStyles();
-	const clicked = () => window.alert(profile);
 	let value = "";
 
 	const checkStage = val => {

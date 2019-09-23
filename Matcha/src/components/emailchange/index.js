@@ -3,6 +3,7 @@ import firebase from 'firebase/app';
 import { withFirebase } from '../firebase';
 import Button from '@material-ui/core/Button';
 import Input from '@material-ui/core/Input';
+
 const INITIAL_STATE = {
   emailOne: '',
   error: null,

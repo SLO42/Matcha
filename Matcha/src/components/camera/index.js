@@ -1,6 +1,5 @@
 import React from 'react';
 import Webcam from "react-webcam";
-import { isThisISOWeek } from 'date-fns';
 
 
 class MyCamera extends React.Component{
@@ -54,8 +53,8 @@ class MyCamera extends React.Component{
 			timeStamp: now,
 		};
 		this.props.updatePhoto(picture);
-		await this.setState({photo: newpic, replaced: picture});
-		await this.setState(this.state);
+		this.setState({photo: newpic, replaced: picture});
+		this.setState(this.state);
 	  };
 
 	render() {

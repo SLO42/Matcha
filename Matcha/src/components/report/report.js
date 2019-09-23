@@ -15,7 +15,6 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import BlockIcon from '@material-ui/icons/Block';
 import ReportProblemIcon from '@material-ui/icons/ReportProblem';
-import SendIcon from '@material-ui/icons/Send';
 import { IconButton } from '@material-ui/core';
 import {Link, withRouter} from 'react-router-dom';
 import * as ROUTES from '../constants/routes';

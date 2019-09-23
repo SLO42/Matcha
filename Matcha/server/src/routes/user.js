@@ -69,7 +69,7 @@ router.put('/swipe', async (req, res) => {
 
 // simple error handling for below request. stops the server from stoppin
 const errorHandle = (val) => {
-	console.log(`User with userid of '${val}' does not exist... `);
+	// console.log(`User with userid of '${val}' does not exist... `);
 };
 
 
@@ -80,7 +80,7 @@ router.get('/findbyusername/:userId', async (req, res) => {
 			errorHandle(req.params.userId);
 			res.writeHead(301, `profile ${req.params.userId} not found`)
 			res.write(`profile ${req.params.userId} not found`, (err) => {
-				if (err) { console.log(err) };
+				if (err) { return (err) };
 			});
 			return res.status(404).send("does not exist");
 		} else {
@@ -115,7 +115,7 @@ router.get('/findbyuserid/:userId', async (req, res) => {
 				errorHandle(req.params.userId);
 				res.writeHead(301, `profile ${req.params.userId} not found`)
 				res.write(`profile ${req.params.userId} not found`, (err) => {
-					if (err) { console.log(err) };
+					if (err) { return (err) };
 				});
 				return res.status(404).send("does not exist");
 			} else {
@@ -127,7 +127,7 @@ router.get('/findbyuserid/:userId', async (req, res) => {
 			errorHandle(req.params.userId);
 			res.writeHead(301, "no data")
 			res.write("good stuff", (err) => {
-				if (err) { console.log(err) };
+				if (err) { return (err) };
 			});
 			return res.send();
 		} else {

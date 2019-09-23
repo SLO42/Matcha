@@ -3,8 +3,7 @@ import { withFirebase } from '../firebase';
 import { compose } from 'recompose';
 import { withRouter } from 'react-router-dom';
 import { withAuthentication, AuthUserContext } from '../session';
-import * as ROUTES from '../constants/routes';
-import { CardContent, Card, CardActions, TextField, ButtonBase } from '@material-ui/core';
+import { CardContent, Card, TextField, ButtonBase } from '@material-ui/core';
 import { sendEmail, doMongoDBGetUserWithAuthUsername } from '../axios';
 
 
@@ -31,8 +30,7 @@ class ConvoPageBase extends React.Component {
 		})
 
 		this.setState({convo: this.props.match.params.id})
-		this.props.firebase.messages(this.props.match.params.id).
-		on('value', snapshot => {
+		this.props.firebase.messages(this.props.match.params.id).on('value', snapshot => {
 			const mesObj = snapshot.val();
 
 			if (mesObj){
@@ -79,7 +77,7 @@ class ConvoPageBase extends React.Component {
 		this.props.firebase.doSendText(this.state.convo, this.props.authUser, this.state.text);
 		doMongoDBGetUserWithAuthUsername(match).then(
 			res => {
-				sendEmail({email: res.email}).then(ress => console.log(ress));
+				sendEmail({email: res.email}).then(ress => ress);
 			}
 		)
 		this.setState({ text: "" });

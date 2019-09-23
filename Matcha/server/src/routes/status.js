@@ -51,14 +51,14 @@ router.put('/cleanup', async (req, res) => {
 	// 	}
 	// 	return accumulator;
 	// })
-	console.log("==BEFORE==");
-	console.log(server.online);
+	// console.log("==BEFORE==");
+	// console.log(server.online);
 
 	server.online = Array.from(new Set(online));
 	
-	console.log("==AFTER==");
-	console.log(server.online);
-	console.log("==FINISH==");
+	// console.log("==AFTER==");
+	// console.log(server.online);
+	// console.log("==FINISH==");
 	await server.save();
 	return res.send(server.online);
 

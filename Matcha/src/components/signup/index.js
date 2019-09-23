@@ -3,13 +3,12 @@ import { Link, withRouter } from 'react-router-dom';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { withFirebase } from '../firebase';
 import * as ROUTES from '../constants/routes';
-import { Input, ButtonBase } from '@material-ui/core';
+import { Input } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 
 import {doMongoDBGetUsers, doMongoDBCreateProfile} from '../axios';
-import { runInThisContext } from 'vm';
 
 
 const SignUpPage = () => (
@@ -101,12 +100,6 @@ const ERROR_MSG_ACCOUNT_EXISTS = `
 `;
 const ERROR_CODE_COMPLEX_PASS = 'matcha: Need a more difficult password';
 
-const ERROR_PASS_NOT_COMPLEX = `
-  Make a new pass word with the following stats:
-  1 | Capital letter ex:('A', 'B', 'C', ... 'Z') 
-  1 | Special Character that is not '.', '$', '#', '[', ']', '/'
-  6 | Character Minimum 
-`;
 
 class SignUpFormBase extends React.Component {
   constructor(props) {
@@ -130,13 +123,14 @@ class SignUpFormBase extends React.Component {
 				if (obj.username === username){
 					rtv = 1;
 				}
+				return obj
 			})
 			return rtv;
 		}
 		const checker = (password) => {
 			let rtv = 0;
 			const checkCap = /(!?([A-Z]+))/gm;
-			const checkNotSpec = /((?=[.$#\[\]\/]).)/gm;
+			const checkNotSpec = /((?=[.$#[\]/]).)/gm;
 			const checkSpec = /((?=[!-/]|[:-@]|[\^-`]|[{-~]).)/gm;
 			if (!checkCap.test(password)){
 				let error = {code: ERROR_CODE_COMPLEX_PASS,
@@ -201,8 +195,7 @@ class SignUpFormBase extends React.Component {
   };
 
   async componentDidMount() {
-	doMongoDBGetUsers().
-	then(res => {
+	  doMongoDBGetUsers().then(res => {
 		
 		this.setState({users: Array.from(res)});
 		return res;

@@ -1,31 +1,7 @@
 import React from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import NativeSelect from '@material-ui/core/NativeSelect';
-import InputBase from '@material-ui/core/InputBase';
 import TextField from '@material-ui/core/TextField';
 import { Paper } from '@material-ui/core';
-import checkLocationPermission from "../getLocation/locationpermission";
 
-const useStyles = makeStyles(theme => ({
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-  },
-  dense: {
-    marginTop: theme.spacing(2),
-  },
-  menu: {
-    width: 200,
-  },
-}));
 
 
 class LocationDisplaysMain extends React.Component {
@@ -48,7 +24,7 @@ class LocationDisplaysMain extends React.Component {
 			if(filter.test(event.target.value)){
 				this.editLat(event.target.value);
 			} else {
-				console.log("nah");
+				return ;
 			}
 		}
 		const onChangelon = event => {
@@ -57,7 +33,7 @@ class LocationDisplaysMain extends React.Component {
 			if(filter.test(event.target.value)){
 				this.editLong(event.target.value);
 			} else {
-				console.log("nah");
+				return ;
 			}
 		}
 	return (
@@ -128,7 +104,7 @@ class LocationDisplaysMain extends React.Component {
 	}
 	
 	render() {
-		const {loading, lat, long, edit} = this.state;
+		const {loading, edit} = this.state;
 
 		return(
 			loading ? <p>Loading...</p> :

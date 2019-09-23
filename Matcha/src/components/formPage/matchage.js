@@ -60,8 +60,8 @@ const MatchAgeSlider = ({profile, checkStage}) => {
 		options.push(i);
 		i++;
 	}
-	const DisplayOptions = () => options.map(i => (
-		<option value={i}>{i}</option>
+	const DisplayOptions = () => options.map((i, index) => (
+		<option key={index} value={i}>{i}</option>
 	))
 //   const handleChange = (event, newValue) => {
 // 	setValue(newValue);

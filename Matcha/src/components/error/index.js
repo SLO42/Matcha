@@ -1,15 +1,7 @@
 import React from 'react';
-import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
-import { fade } from '@material-ui/core/styles/colorManipulator';
 import { withStyles } from '@material-ui/core/styles';
-import MenuIcon from '@material-ui/icons/Menu';
-import AccountBox from '@material-ui/icons/AccountBox';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import Navigation from '../navigation';
-import * as ROUTES from '../constants/routes';
 import Rating from '@material-ui/lab/Rating';
 import Box from '@material-ui/core/Box';
 

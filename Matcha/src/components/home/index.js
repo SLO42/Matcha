@@ -3,23 +3,11 @@ import { compose } from 'recompose';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import Grid from '@material-ui/core/Grid';
 import CardMedia from '@material-ui/core/CardMedia';
-import CardActions from '@material-ui/core/CardActions';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
-import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import red from '@material-ui/core/colors/red';
-import ThumbUp from '@material-ui/icons/ThumbUp';
-import ShareIcon from '@material-ui/icons/Share';
-import SaveIcon from '@material-ui/icons/Save';
-import CommentIcon from '@material-ui/icons/Comment';
-import SettingsIcon from '@material-ui/icons/Settings';
 import CardHeader from '@material-ui/core/CardHeader';
-import Badge from '@material-ui/core/Badge';
-import { Button, Paper, InputBase, CircularProgress, ButtonBase, CardActionArea } from '@material-ui/core';
+import { ButtonBase, CardActionArea } from '@material-ui/core';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import {
 	withAuthorization,
@@ -31,14 +19,9 @@ import * as ROUTES from '../constants/routes';
 import { withFirebase } from '../firebase';
 import { GridList, GridListTile } from '@material-ui/core';
 import { geolocated } from "react-geolocated";
-import LocationDisplays from '../location';
-import Geocode from "react-geocode";
-import * as geolib from 'geolib';
 import { doMongoDBGetUserWithAuthEmail } from '../axios';
 import axios from 'axios';
 import TTY from '../profile/tty.jpg';
-import { getLocationPermission } from '../getLocation/locationpermission';
-import CoordsCard from '../_cards/coords';
 
 const theme = createMuiTheme({
   palette: {
@@ -51,60 +34,60 @@ const theme = createMuiTheme({
 },
 });
 
-const styles = { 
-	paper: {
-		rounded: true,
-		width: "30vw",
-		align: "center",
-	},
-	input: {
-		width: "18vw",
-	},
-	button: {
-		width: "6vw",
-    background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
-      border: 0,
-      borderRadius: 3,
-      boxShadow: '0 3px 5px 2px rgba(44, 56, 126, .3)',
-      color: 'white',
-      rounded: "true",
-      variant: "contained",
-      textColor: "primary",
-	},
-	messages: {
-    width: "70%",
-    position: "center",
-    margin: "auto",
-  },
-  card2: {
-    margin: "auto",
-  width: "25vh",
-  position: "center",
-  },
-  delete: {
-    type: "submit",
-    variant: "contained",
-    size: "medium",
-    background: 'linear-gradient(45deg, #FE6B8B 30%, #bb0a1e 90%)',
-    border: '0',
-    borderRadius: '3',
-    boxShadow: '0 3px 5px 2px rgba(33, 203, 243, .3)',
-    color: 'white',
-    rounded: "true",
-  },
-  edit: {
-    type: "submit",
-    variant: "contained",
-    size: "medium",
-    background: 'linear-gradient(50deg, #2c387e 20%, #33eaff 80%)',
-    border: '0',
-    borderRadius: '3',
-    boxShadow: '0 3px 5px 2px rgba(33, 203, 243, .3)',
-    color: 'white',
-    rounded: "true",
-    textColor: "primary",
-  },
-}
+// const styles = { 
+// 	paper: {
+// 		rounded: true,
+// 		width: "30vw",
+// 		align: "center",
+// 	},
+// 	input: {
+// 		width: "18vw",
+// 	},
+// 	button: {
+// 		width: "6vw",
+//     background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+//       border: 0,
+//       borderRadius: 3,
+//       boxShadow: '0 3px 5px 2px rgba(44, 56, 126, .3)',
+//       color: 'white',
+//       rounded: "true",
+//       variant: "contained",
+//       textColor: "primary",
+// 	},
+// 	messages: {
+//     width: "70%",
+//     position: "center",
+//     margin: "auto",
+//   },
+//   card2: {
+//     margin: "auto",
+//   width: "25vh",
+//   position: "center",
+//   },
+//   delete: {
+//     type: "submit",
+//     variant: "contained",
+//     size: "medium",
+//     background: 'linear-gradient(45deg, #FE6B8B 30%, #bb0a1e 90%)',
+//     border: '0',
+//     borderRadius: '3',
+//     boxShadow: '0 3px 5px 2px rgba(33, 203, 243, .3)',
+//     color: 'white',
+//     rounded: "true",
+//   },
+//   edit: {
+//     type: "submit",
+//     variant: "contained",
+//     size: "medium",
+//     background: 'linear-gradient(50deg, #2c387e 20%, #33eaff 80%)',
+//     border: '0',
+//     borderRadius: '3',
+//     boxShadow: '0 3px 5px 2px rgba(33, 203, 243, .3)',
+//     color: 'white',
+//     rounded: "true",
+//     textColor: "primary",
+//   },
+// }
 
 const useStyles = makeStyles(theme => ({
 	card: {
@@ -163,21 +146,6 @@ const HomeHome = () => (
 			</AuthUserContext.Consumer>
 )
 
-const CommentList = ({ messages }) => (
-	<ul>
-		{messages.map(message => (
-			<CommentItem key={message} message={message} />
-		))}
-	</ul>
-)
-
-const CommentItem = ({ message }) => (
-	<li>
-		<strong>{message.userId}</strong> {message.text}
-	</li>
-)
-
-
 
 const HomePageRoutes = () => {
 
@@ -191,7 +159,7 @@ const HomePageRoutes = () => {
 
 //https://www.geodatasource.com/developers/javascript 
 function distance(lat1, lon1, lat2, lon2, unit) {
-	if ((lat1 == lat2) && (lon1 == lon2)) {
+	if ((lat1 === lat2) && (lon1 === lon2)) {
 		return 0;
 	}
 	else {
@@ -206,8 +174,8 @@ function distance(lat1, lon1, lat2, lon2, unit) {
 		dist = Math.acos(dist);
 		dist = dist * 180/Math.PI;
 		dist = dist * 60 * 1.1515;
-		if (unit=="K") { dist = dist * 1.609344 }
-		if (unit=="N") { dist = dist * 0.8684 }
+		if (unit === "K") { dist = dist * 1.609344 }
+		if (unit === "N") { dist = dist * 0.8684 }
 		return Math.floor(dist);
 	}
 }
@@ -283,31 +251,6 @@ function distance(lat1, lon1, lat2, lon2, unit) {
 					{dist >= 0  ? `${dist}/miles away` : `They don't exist`}
 				</Typography>
 			</CardContent>
-			{/* <CardActions disableSpacing style={{display: 'inline-flex', position: 'absolute', bottom: 0, right: '15%'}}>
-		
-				<IconButton aria-label="Add to favorites" 
-					// onClick={() => {
-						// if (window.confirm('Are you sure you want to delete the picture? you can not have it back.')){
-							// 	return delPicture(imageObject, authUser);
-							// }
-							// }}
-							color={ 'primary' }
-							>
-						<Badge>
-					<ThumbUp /> 
-							</Badge>
-				  </IconButton>
-				
-				<IconButton aria-label="Share">
-				<ShareIcon />
-				</IconButton>
-				<IconButton>
-				<CommentIcon />
-				<div style={{padding: `2px`}}>
-					<p>text</p>
-				</div>
-				</IconButton>
-			</CardActions> */}
 			</Card>
 			</MuiThemeProvider>
 			);
@@ -315,12 +258,11 @@ function distance(lat1, lon1, lat2, lon2, unit) {
 	}
 
 	apiSearch = async (config) => {
-		let results = "";
 		if (!this.props.authUser){
 			return ;
 		}
 		const profile = this.props.authUser.profile;
-		const mystats = profile.mystats;
+		// const mystats = profile.mystats;
 		const wants = profile.wants;
 		const createSearch = (config) => {
 
@@ -342,10 +284,9 @@ function distance(lat1, lon1, lat2, lon2, unit) {
 			}
 		}
 	
-		await axios.get(`http://localhost:3001/search/p_${createSearch(null)}_all`).
-		then(async res => {
+		await axios.get(`http://localhost:3001/search/p_${createSearch(null)}_all`).then(async res => {
 
-			const notMine = mystats.prefsex === "Male" ? "Female" : "Male";
+			// const notMine = mystats.prefsex === "Male" ? "Female" : "Male";
 
 
 			let filtered = res.data.filter(obj => obj.__v);
@@ -355,6 +296,7 @@ function distance(lat1, lon1, lat2, lon2, unit) {
 			if (test){
 				this.props.authUser.profile.blocked.map(name => {
 					filtered = filtered.filter(obj => obj.username !== name);
+					return filtered;
 				})
 
 			}
@@ -367,8 +309,7 @@ function distance(lat1, lon1, lat2, lon2, unit) {
 			// 	return 0; 
 			// }l
 			return filtered;
-		}).
-		catch(err => {if (err) console.log(err)});
+		}).catch(err => {if (err) console.log(err)});
 		// await window.alert(results);
 		// return `http://localhost:3001/search/p_${query}_all`;
 	} 
@@ -411,7 +352,7 @@ function distance(lat1, lon1, lat2, lon2, unit) {
 										<this.ImageCard pobj={pobj} mycords={this.props.authUser.profile.location} /* classes={{ root: classes.images }} imageObject={image} authUser={authUser} */ />
 									</div>
 								</GridListTile>)
-							: index === (am + 1) || (am === this.state.profiles.length && did++ < 1) || am > this.state.profiles.length && did++ < 1 ? <div>
+							: (index === (am + 1) || (am === this.state.profiles.length && did++ < 1) || am > this.state.profiles.length) && did++ < 1 ? <div>
 								{am > 0 && <ButtonBase onClick={() => back()}>Back</ButtonBase> } { am + 1 < this.state.profiles.length && <ButtonBase onClick={() => flip()}>Next</ButtonBase>}
 							</div>
 							: null
@@ -436,7 +377,7 @@ function distance(lat1, lon1, lat2, lon2, unit) {
   }
 
 	render() {
-		const {images, loading } = this.state;
+		const { loading } = this.state;
 
 		return(
 			<MuiThemeProvider theme={theme}>
@@ -453,239 +394,236 @@ function distance(lat1, lon1, lat2, lon2, unit) {
 
 }
 
- class MessagesBase extends Component {
-  constructor(props) {
-    super(props);
+//  class MessagesBase extends Component {
+//   constructor(props) {
+//     super(props);
 
-    this.state = {
-      text: '',
-      loading: false,
-      messages: [],
-      limit: 5,
-    };
-  }
+//     this.state = {
+//       text: '',
+//       loading: false,
+//       messages: [],
+//       limit: 5,
+//     };
+//   }
 
-  componentDidMount() {
-    // this.onListenForMessages();
-  }
+//   componentDidMount() {
+//     // this.onListenForMessages();
+//   }
 
-//   onListenForMessages = () => {
-//     this.setState({ loading: true });
+// //   onListenForMessages = () => {
+// //     this.setState({ loading: true });
 
-//     this.props.firebase
-//       .messages()
-//       .orderByChild('createdAt')
-//       .limitToLast(this.state.limit)
-//       .on('value', snapshot => {
-//         const messageObject = snapshot.val();
+// //     this.props.firebase
+// //       .messages()
+// //       .orderByChild('createdAt')
+// //       .limitToLast(this.state.limit)
+// //       .on('value', snapshot => {
+// //         const messageObject = snapshot.val();
 
-//         if (messageObject) {
-//           const messageList = Object.keys(messageObject).map(key => ({
-//             ...messageObject[key],
-//             uid: key,
-//           }));
+// //         if (messageObject) {
+// //           const messageList = Object.keys(messageObject).map(key => ({
+// //             ...messageObject[key],
+// //             uid: key,
+// //           }));
 
-//           this.setState({
-//             messages: messageList,
-//             loading: false,
-//           });
-//         } else {
-//           this.setState({ messages: null, loading: false });
-//         }
-//       });
+// //           this.setState({
+// //             messages: messageList,
+// //             loading: false,
+// //           });
+// //         } else {
+// //           this.setState({ messages: null, loading: false });
+// //         }
+// //       });
+// //   };
+
+//   componentWillUnmount() {
+//     // this.props.firebase.messages().off();
+//   }
+
+//   onChangeText = event => {
+//     // this.setState({ text: event.target.value });
 //   };
 
-  componentWillUnmount() {
-    // this.props.firebase.messages().off();
-  }
+// //   onCreateMessage = (event, authUser) => {
+// //     this.props.firebase.messages().push({
+// //       text: this.state.text,
+// //       userId: authUser.uid,
+// //       createdAt: this.props.firebase.serverValue.TIMESTAMP,
+// //     });
 
-  onChangeText = event => {
-    // this.setState({ text: event.target.value });
-  };
+//     // this.setState({ text: '' });
 
-//   onCreateMessage = (event, authUser) => {
-//     this.props.firebase.messages().push({
-//       text: this.state.text,
-//       userId: authUser.uid,
-//       createdAt: this.props.firebase.serverValue.TIMESTAMP,
-//     });
+//     // event.preventDefault();
+// //   };
 
-    // this.setState({ text: '' });
+// //   onEditMessage = (message, text) => {
+// //     this.props.firebase.message(message.uid).set({
+// //       ...message,
+// //       text,
+// //       editedAt: this.props.firebase.serverValue.TIMESTAMP,
+// //     });
+// //   };
 
-    // event.preventDefault();
-//   };
+// //   onRemoveMessage = uid => {
+// //     this.props.firebase.message(uid).remove();
+// //   };
 
-//   onEditMessage = (message, text) => {
-//     this.props.firebase.message(message.uid).set({
-//       ...message,
-//       text,
-//       editedAt: this.props.firebase.serverValue.TIMESTAMP,
-//     });
-//   };
+// //   onNextPage = () => {
+// //     this.setState(
+// //       state => ({ limit: state.limit + 5 }),
+// //       this.onListenForMessages,
+// //     );
+// //   };
 
-//   onRemoveMessage = uid => {
-//     this.props.firebase.message(uid).remove();
-//   };
+//   render() {
+//     const { users } = this.props;
+//     const { text, messages, loading } = this.state;
+//     return (
+//       <MuiThemeProvider theme={theme}>
+//       <AuthUserContext.Consumer>
+//         {authUser => (
+//           <div>
+//             {!loading && messages && (
+//               <Button style={styles.button} onClick={this.onNextPage}>
+//                 More
+//               </Button>
+//             )}
 
-//   onNextPage = () => {
-//     this.setState(
-//       state => ({ limit: state.limit + 5 }),
-//       this.onListenForMessages,
-//     );
-//   };
+//             {loading && <div><CircularProgress color="secondary"/></div>}
 
-  render() {
-    const { users } = this.props;
-    const { text, messages, loading } = this.state;
-    return (
-      <MuiThemeProvider theme={theme}>
-      <AuthUserContext.Consumer>
-        {authUser => (
-          <div>
-            {!loading && messages && (
-              <Button style={styles.button} onClick={this.onNextPage}>
-                More
-              </Button>
-            )}
-
-            {loading && <div><CircularProgress color="secondary"/></div>}
-
-            <div style={styles.messages}>
-            <Card
-        display="flex"
-        rounded="true"
+//             <div style={styles.messages}>
+//             <Card
+//         display="flex"
+//         rounded="true"
         
-        >
-        <CardContent>
-            {messages && (
-              <MessageList
-                messages={messages.map(message => ({
-                  ...message,
-                  user: users 
-                    ? users[message.userId]
-                    : { userId: message.userId },
-                }))}
-                onEditMessage={this.onEditMessage}
-                onRemoveMessage={this.onRemoveMessage}
-              />
-            )}
-            {!messages && <div>There are no messages ...</div>}
-            </CardContent>
-        </Card>
-        </div>
-        <br/>
-              <div align="center">
-              <Paper style={styles.paper}>   
-               <InputBase
-               placeholder="type a message"
-                type="text"
-                value={text}
-                onChange={this.onChangeText}>
-                </InputBase>
-                <Button onClick={event =>this.onCreateMessage(event, authUser)} style={styles.button}>Send</Button>
-            </Paper>
-            </div>
-            <br/>
-          </div>
+//         >
+//         <CardContent>
+//             {messages && (
+//               <MessageList
+//                 messages={messages.map(message => ({
+//                   ...message,
+//                   user: users 
+//                     ? users[message.userId]
+//                     : { userId: message.userId },
+//                 }))}
+//                 onEditMessage={this.onEditMessage}
+//                 onRemoveMessage={this.onRemoveMessage}
+//               />
+//             )}
+//             {!messages && <div>There are no messages ...</div>}
+//             </CardContent>
+//         </Card>
+//         </div>
+//         <br/>
+//               <div align="center">
+//               <Paper style={styles.paper}>   
+//                <InputBase
+//                placeholder="type a message"
+//                 type="text"
+//                 value={text}
+//                 onChange={this.onChangeText}>
+//                 </InputBase>
+//                 <Button onClick={event =>this.onCreateMessage(event, authUser)} style={styles.button}>Send</Button>
+//             </Paper>
+//             </div>
+//             <br/>
+//           </div>
           
-        )}
-      </AuthUserContext.Consumer>
-      </MuiThemeProvider>
-    );
-  }
-}
+//         )}
+//       </AuthUserContext.Consumer>
+//       </MuiThemeProvider>
+//     );
+//   }
+// }
 
- const MessageList = ({
-  messages,
-  onEditMessage,
-  onRemoveMessage,
-}) => (
-  <ul style={{ listStyleType: "none" }}>
-    {messages.map(message => (
-      <MessageItem
-        key={message.uid}
-        message={message}
-        onEditMessage={onEditMessage}
-        onRemoveMessage={onRemoveMessage}
-      />
-    ))}
-  </ul>
-);
+//  const MessageList = ({
+//   messages,
+//   onEditMessage,
+//   onRemoveMessage,
+// }) => (
+//   <ul style={{ listStyleType: "none" }}>
+//     {messages.map(message => (
+//       <MessageItem
+//         key={message.uid}
+//         message={message}
+//         onEditMessage={onEditMessage}
+//         onRemoveMessage={onRemoveMessage}
+//       />
+//     ))}
+//   </ul>
+// );
 
-class MessageItem extends Component {
-  constructor(props) {
-    super(props);
+// class MessageItem extends Component {
+//   constructor(props) {
+//     super(props);
 
-    this.state = {
-      editMode: false,
-      editText: this.props.message.text,
-    };
-  }
+//     this.state = {
+//       editMode: false,
+//       editText: this.props.message.text,
+//     };
+//   }
 
-  onToggleEditMode = () => {
-    this.setState(state => ({
-      editMode: !state.editMode,
-      editText: this.props.message.text,
-    }));
-  };
+//   onToggleEditMode = () => {
+//     this.setState(state => ({
+//       editMode: !state.editMode,
+//       editText: this.props.message.text,
+//     }));
+//   };
 
-  onChangeEditText = event => {
-    this.setState({ editText: event.target.value });
-  };
+//   onChangeEditText = event => {
+//     this.setState({ editText: event.target.value });
+//   };
 
-  onSaveEditText = () => {
-    this.props.onEditMessage(this.props.message, this.state.editText);
+//   onSaveEditText = () => {
+//     this.props.onEditMessage(this.props.message, this.state.editText);
 
-    this.setState({ editMode: false });
-  };
+//     this.setState({ editMode: false });
+//   };
 
-  render() {
-    const { message, onRemoveMessage } = this.props;
-    const { editMode, editText } = this.state;
+//   render() {
+//     const { message, onRemoveMessage } = this.props;
+//     const { editMode, editText } = this.state;
 
-    return (
-      <li>
-        {editMode ? (
-          <Paper>
-          <InputBase
-            type="text"
-            value={editText}
-            onChange={this.onChangeEditText}
-          />
-          </Paper>
-        ) : (
-          <span>
-            <strong style={{ color: 'hotPink' }}>
-              {message.user.username || message.user.userId}
-            </strong>{' '}
-            {message.text} {message.editedAt && <span>(Edited)</span>}
-          </span>
-        )}
+//     return (
+//       <li>
+//         {editMode ? (
+//           <Paper>
+//           <InputBase
+//             type="text"
+//             value={editText}
+//             onChange={this.onChangeEditText}
+//           />
+//           </Paper>
+//         ) : (
+//           <span>
+//             <strong style={{ color: 'hotPink' }}>
+//               {message.user.username || message.user.userId}
+//             </strong>{' '}
+//             {message.text} {message.editedAt && <span>(Edited)</span>}
+//           </span>
+//         )}
 
-        {editMode ? (
-          <span>
-            <Button style={styles.Button} onClick={this.onSaveEditText}>Save</Button>
-            <Button style={styles.Button} onClick={this.onToggleEditMode}>Reset</Button>
-          </span>
-        ) : (
-          <Button style={styles.edit} onClick={this.onToggleEditMode}><EditIcon/></Button>
-        )}
+//         {editMode ? (
+//           <span>
+//             <Button style={styles.Button} onClick={this.onSaveEditText}>Save</Button>
+//             <Button style={styles.Button} onClick={this.onToggleEditMode}>Reset</Button>
+//           </span>
+//         ) : (
+//           <Button style={styles.edit} onClick={this.onToggleEditMode}><EditIcon/></Button>
+//         )}
 
-        {!editMode && (
-          <Button style={styles.delete}
-            onClick={() => onRemoveMessage(message.uid)}
-          >
-            <DeleteIcon/>
-          </Button>
-        )}
-      </li>
-    );
-  }
-}
+//         {!editMode && (
+//           <Button style={styles.delete}
+//             onClick={() => onRemoveMessage(message.uid)}
+//           >
+//             <DeleteIcon/>
+//           </Button>
+//         )}
+//       </li>
+//     );
+//   }
+// }
 class HomePage extends Component {
-  constructor(props) {
-    super(props);
-  }
 
   async componentDidMount() {
   
@@ -705,8 +643,6 @@ class HomePage extends Component {
   }
 }
 
-
-const Messages = withFirebase(MessagesBase);
 const Home = withFirebase(HomeHome);
 const Images = compose(
 	withRouter,

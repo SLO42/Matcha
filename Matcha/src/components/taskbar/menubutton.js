@@ -1,7 +1,5 @@
 import React from 'react';
-import IconButton from '@material-ui/core/IconButton';
 import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 const styles =  createMuiTheme({
@@ -34,9 +32,6 @@ class MenuButton extends React.Component {
 
   render() {
     /* const { classes } = this.props; */
-    const { /* auth, */ anchorEl } = this.state;
-    const open = Boolean(anchorEl);
-    const Wrapper = this.props.iconType;
     const listItems = this.props.items.map((link) =>
       <MenuItem key={"handle"} onClick={this.handleClose} >{link}</MenuItem>
     );

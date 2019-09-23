@@ -1,29 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-/* import SignOutButton from '../signout';*/
 
-import Divider from '@material-ui/core/Divider';
 import * as ROUTES from '../constants/routes';
-import { AuthUserContext, withAuthorization } from '../session';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
+import { AuthUserContext } from '../session';
+import {  makeStyles } from '@material-ui/core/styles';
 import SignOutButton from '../signout';
 import { compose } from 'recompose';
 import RoomIcon from '@material-ui/icons/Room';
-import { ButtonBase, IconButton, ListItemText, ListItemIcon } from '@material-ui/core';
+import { ListItemText, ListItemIcon } from '@material-ui/core';
 import HomeIcon from '@material-ui/icons/Home';
 import ListItem from '@material-ui/core/ListItem';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import FaceIcon from '@material-ui/icons/Face';
 import List from '@material-ui/core/List';
-
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: '#2c387e',
-    },
-},
-});
 
 const useStyles = makeStyles({
 	list: {
@@ -76,15 +65,7 @@ const NavigationAuth = () => (
 );
 
 const NavigationFinal = () => {
-	const [anchorEl, setAnchorEl] = React.useState(null);
 const classes = useStyles();
-	function handleClick(event) {
-		setAnchorEl(event.currentTarget);
-	}
-
-	function handleClose() {
-		setAnchorEl(null);
-	}
 
 	return (
 		<List>

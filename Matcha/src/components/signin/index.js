@@ -92,15 +92,6 @@ const INITIAL_STATE = {
   error: null,
 };
 
-const ERROR_CODE_ACCOUNT_EXISTS =
-  'auth/account-exists-with-different-credential';
-
-const ERROR_MSG_ACCOUNT_EXISTS = `
-  An account with an E-Mail address to
-  this social account already exists. Try to login from
-  this account instead and associate your social accounts on
-  your personal account page.
-`;
 
 class SignInFormBase extends Component {
   constructor(props) {
@@ -123,8 +114,7 @@ class SignInFormBase extends Component {
 				.catch(error => {
 					this.setState({ error });
 				});}
-			).
-			catch(err => {if (err) return err});
+			).catch(err => {if (err) return err});
 		}
 		wait();
 	} else {
@@ -132,7 +122,7 @@ class SignInFormBase extends Component {
 		  .doSignInWithEmailAndPassword(email, password)
 		  .then(() => {
 			this.setState({ ...INITIAL_STATE });
-			this.props.history.push(ROUTES.LANDING);
+			setTimeout(() => this.props.history.push(ROUTES.LANDING), 650);
 		  })
 		  .catch(error => {
 			this.setState({ error });

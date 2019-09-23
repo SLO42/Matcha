@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import Card from '@material-ui/core/Card';
-import { CardHeader, CardMedia, CardContent,
+import { CardHeader,  CardContent,
 		Typography, CardActions, IconButton, makeStyles,
 } from '@material-ui/core';
 import ShareIcon from '@material-ui/icons/Share';
-import {doMongoDBGetProfileWithAuth, getSwiped} from '../axios';
+import { getSwiped} from '../axios';
 import CoordsCard from './coords';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { compose } from 'recompose';
 import { withFirebase } from '../firebase';
-import {AuthUserContext, withAuthentication} from '../session';
+import { withAuthentication} from '../session';
 
 const useStyles = makeStyles(theme => ({
 	card: {
@@ -24,7 +24,6 @@ const useStyles = makeStyles(theme => ({
 
 const ProfileCardStuff = ({profile}) => {
 	const classes = useStyles();
-	const clicked = () => window.alert(profile);
 	let value = "";
 
 	if (profile){
@@ -82,7 +81,6 @@ class ProfileCard extends Component{
 	
 	render() {
 		const {
-			authUser,
 			loading,
 			profile,
 		} = this.state;
@@ -127,7 +125,7 @@ const VisitProfileCardStuff = ({liked, setliked, authUser, profile, firebase}) =
 					</p>
 				<CardContent>
 					<Typography variant="body2" color="textSecondary" component="p">
-						Interests: {profile.mystats.interest.join(" ")}
+					Interests: {profile.mystats.interest.join(", ")}
 					</Typography>
 					<CoordsCard profile={profile} edit={0}/>
 				</CardContent>
@@ -168,8 +166,7 @@ class VisitProfileCardBase extends Component{
 		this.setState({loading: false});
 	}
 
-	doIt = async () => await getSwiped(this.props.authUser.username).then(res => res.data).
-	catch(err => {if (err) return err});
+	doIt = async () => await getSwiped(this.props.authUser.username).then(res => res.data).catch(err => {if (err) return err});
 
 	async componentDidMount() {
 		this.setState({loading: true});

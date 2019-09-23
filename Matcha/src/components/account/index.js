@@ -15,7 +15,6 @@ import { Input } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
-import SendEmailNotification from '../notifications/email.js';
 
  const theme = createMuiTheme({
   palette: {
@@ -104,7 +103,7 @@ function AccountPage() {
         <h2 style={{color: "#ffff00"}}>Here you can manage your password and link other accounts.</h2>
         
         <div style={styles.passwordchange} >
-        { <SendEmailNotification /> }
+        {/* { <SendEmailNotification /> } */}
         </div>
         
         <Card

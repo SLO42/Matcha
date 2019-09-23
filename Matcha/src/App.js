@@ -1,17 +1,13 @@
 import React, { Component } from 'react';
-import GoogleMap from 'google-map-react';
 import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import checkLocationPermission from "./components/getLocation/locationpermission";
 import Taskbar from './components/taskbar/taskbar';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import FormPage from './components/formPage';
 import SignUpPage from './components/signup';
 import * as ROUTES from './components/constants/routes';
-import Navigation from './components/navigation';
-import {withAuthentication, withAuthorization, AuthUserContext, }  from './components/session';
+import {withAuthentication, AuthUserContext, }  from './components/session';
 import SignInPage from './components/signin';
 import AccountPage from './components/account';
 import HomePage from './components/home';
@@ -131,12 +127,14 @@ class App extends Component {
       return (
         <div className="bg-dark">
           <div className="warning">
-            <h3 className="u-font-size-s u-nowrap">Enable Permission Bitch 🖕</h3>
+			
+		    <h3 className="u-font-size-s u-nowrap">Enable Permission please</h3> 
           </div>
         </div>
       );
     }
 	const Nada = () => <div></div>
+		/*eslint-disable */	
     return (
 
 		<MuiThemeProvider theme={theme}>

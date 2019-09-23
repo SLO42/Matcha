@@ -6,8 +6,6 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
 import Badge from '@material-ui/core/Badge';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
@@ -17,11 +15,8 @@ import TemporaryDrawer from './menu';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { Paper, ButtonBase } from '@material-ui/core';
 import axios from 'axios';
-import MenuButton from './menubutton';
-import Navigation from '../navigation';
 import { withRouter} from 'react-router-dom';
 import * as ROUTES from '../constants/routes';
-import CardActionArea from '@material-ui/core/CardActionArea';
 import { compose } from 'recompose';
 import { withFirebase } from '../firebase';
 
@@ -35,7 +30,6 @@ const apiSearch = async (query) => {
 		let ammountofvalues = params.length;
 		let i = 0;
 		while (ammountofvalues--) {
-			console.log(i);
 			let param = params[i++];
 			param = param.charAt(0).toUpperCase() + param.slice(1);
 			// search by $or: {{wants.prefsex: {`${currentuser.mystats.mysex}`}, {"Bisexual"}}}
@@ -66,8 +60,7 @@ const apiSearch = async (query) => {
 		return ret;
 	}
 
-	await axios.get(`http://localhost:3001/search/p_${createSearch(query)}_all`).
-	then(async res => {;
+	await axios.get(`http://localhost:3001/search/p_${createSearch(query)}_all`).then(async res => {;
 		
 		let filter = res.data.filter(obj => obj.__v);
 
@@ -75,7 +68,6 @@ const apiSearch = async (query) => {
 			results += ` | ${profileObject.username}`;
 			return (
 				<div>
-					{() => console.log("FUCK")}
 				<Paper>
 					<p>
 						
@@ -87,8 +79,7 @@ const apiSearch = async (query) => {
 		})
 		results += ' |';
 		return res;
-	}).
-	catch(err => {if (err) return err});
+	}).catch(err => {if (err) return err});
 } 
 
 const theme = createMuiTheme({
@@ -172,31 +163,20 @@ const useStyles = makeStyles(theme => ({
 const PrimarySearchAppBar = ({authUser, history, firebase}) => {
   const classes = useStyles();
 
-  const isMenuOpen = Boolean(false);
-  const isMobileMenuOpen = Boolean(false);
-
-
-
-  function handleProfileMenuOpen(event) {
-  }
-
-
-  const handleMobileMenuOpen = event => {
-  }
 
   const menuId = 'primary-search-account-menu';
-  const renderMenu = (
-    <IconButton
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={isMenuOpen}
-    >
-      {/* <MenuItem onClick={}>Profile</MenuItem>
-      <MenuItem onClick={}>My account</MenuItem> */}
-    </IconButton>
-  );
+//   const renderMenu = (
+//     <IconButton
+//       anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+//       id={menuId}
+//       keepMounted
+//       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+//       open={isMenuOpen}
+//     >
+//       {/* <MenuItem onClick={}>Profile</MenuItem>
+//       <MenuItem onClick={}>My account</MenuItem> */}
+//     </IconButton>
+//   );
 
   const [value, setValue] = React.useState("");
   const [dang, setDang] = React.useState(0);
@@ -219,44 +199,44 @@ const PrimarySearchAppBar = ({authUser, history, firebase}) => {
   changeDang();
 
   const mobileMenuId = 'primary-search-account-menu-mobile';
-  const renderMobileMenu = (
-    <Menu
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      id={mobileMenuId}
-      keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-	  open={isMobileMenuOpen}
-    //   items={[<Navigation/>]}
-    >
-      <MenuItem>
-        <IconButton aria-label="Show 4 new mails" color="">
-          <Badge badgeContent={dang} color="secondary">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton aria-label="Show 11 new notifications" color="">
-          <Badge badgeContent={11} color="secondary">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          aria-label="Account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color=""
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
-      </MenuItem>
-    </Menu>
-  );
+//   const renderMobileMenu = (
+//     <Menu
+//       anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+//       id={mobileMenuId}
+//       keepMounted
+//       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+// 	  open={isMobileMenuOpen}
+//     //   items={[<Navigation/>]}
+//     >
+//       <MenuItem>
+//         <IconButton aria-label="Show 4 new mails" color="">
+//           <Badge badgeContent={dang} color="secondary">
+//             <MailIcon />
+//           </Badge>
+//         </IconButton>
+//         <p>Messages</p>
+//       </MenuItem>
+//       <MenuItem>
+//         <IconButton aria-label="Show 11 new notifications" color="">
+//           <Badge badgeContent={11} color="secondary">
+//             <NotificationsIcon />
+//           </Badge>
+//         </IconButton>
+//         <p>Notifications</p>
+//       </MenuItem>
+//       <MenuItem onClick={handleProfileMenuOpen}>
+//         <IconButton
+//           aria-label="Account of current user"
+//           aria-controls="primary-search-account-menu"
+//           aria-haspopup="true"
+//           color=""
+//         >
+//           <AccountCircle />
+//         </IconButton>
+//         <p>Profile</p>
+//       </MenuItem>
+//     </Menu>
+//   );
 
   return (
     <MuiThemeProvider theme={theme}>
@@ -313,7 +293,7 @@ const PrimarySearchAppBar = ({authUser, history, firebase}) => {
               aria-label="Show more"
               aria-controls={mobileMenuId}
               aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
+              onClick={() => window.alert("you pressed it")}
             >
               <MoreIcon />
             </IconButton>

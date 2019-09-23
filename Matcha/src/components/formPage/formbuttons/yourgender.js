@@ -4,9 +4,7 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
-import { pink, cyan } from "@material-ui/core/colors";
-import RadioButtonUncheckedIcon from "@material-ui/icons/RadioButtonUnchecked";
-import RadioButtonCheckedIcon from "@material-ui/icons/RadioButtonChecked";
+import { cyan } from "@material-ui/core/colors";
 import { withStyles } from "@material-ui/core/styles";
 
 const CyanRadio = withStyles({

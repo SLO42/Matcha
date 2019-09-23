@@ -53,22 +53,21 @@ class FormPageBase extends React.Component {
 		
 	}
 
-	updatePhoto = picture => {
-		this.state.profile.picture = picture;
-		this.setState({});
-	}
+	updatePhoto = (picture) => {
+		/*eslint-disable */	
+	this.state.profile.picture = picture;
+	this.setState({});
+}
 
 	postUser = async () => {
 		const updateProfile = process.env.REACT_APP_AXIOS_UPDATE_PROFILE;
-		let {profile, picture} = this.state;
+		let {profile} = this.state;
 		profile.fireid = this.props.authUser.uid;
-		await axios.put(updateProfile, profile).
-		then(async res => {
+		await axios.put(updateProfile, profile).then(async res => {
 			this.props.authUser.profile = await res.data;
 			const gallery = {0: "nah"};
 			await doMongoCreateGallery(this.props.authUser.uid, gallery);
-		}).
-		then(() => this.props.history.push(ROUTES.LANDING))
+		}).then(() => this.props.history.push(ROUTES.LANDING))
 	}
 	
 	checkStage = value => {
@@ -106,8 +105,8 @@ class FormPageBase extends React.Component {
 			if (authProf.__v > 0) this.props.history.push(ROUTES.PROFILE);
 			if (authProf.location){
 				this.state.profile.location.lon = authProf.location.lon;
-				this.state.profile.location.lat = authProf.location.lon;
-				this.setState({});
+				this.state.profile.location.lat =  authProf.location.lat;
+				this.setState({})
 			}else {
 				getLocationPermission().then(res => {
 					if (res){
@@ -116,7 +115,7 @@ class FormPageBase extends React.Component {
 							console.log(res);
 							this.state.profile.location.lon = loco.longitude;
 							this.state.profile.location.lat = loco.latitude;
-							this.setState({});
+							this.setState({})
 						}
 					}
 				})
