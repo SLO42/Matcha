@@ -11,13 +11,13 @@ router.post('/send', async (req, res) => {
         secure: true, // true for 465, false for other ports
         auth: {
             user: 'apikey', // generated ethereal user
-            pass: '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' // generated ethereal password
+            pass: 'KEY' // generated ethereal password
         }
     });
 
     // send mail with defined transport object
     let info = await transporter.sendMail({
-        from: '"Matcha By Saolivei👻" <saolivei@student.42.us.org>', // sender address
+        from: '"Matcha By Saolivei👻" <HOST>', // sender address
         to: req.body.email, // list of receivers
         subject: 'Hello ✔ Human', // Subject line
         text: 'GO home?', // plain text body
